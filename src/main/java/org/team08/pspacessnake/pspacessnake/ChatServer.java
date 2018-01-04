@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Random;
 
 public class ChatServer {
-    final static String URI = "tcp://127.0.0.1:9001/";
+    final static String URI = "tcp://ec2-18-218-0-120.us-east-2.compute.amazonaws.com:9001/";
     private final static String GATE_URI = URI + "?kepp";
 
     public static void main(String[] args) throws InterruptedException {

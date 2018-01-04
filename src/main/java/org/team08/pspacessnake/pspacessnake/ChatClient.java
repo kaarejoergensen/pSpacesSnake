@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Scanner;
 
 class ChatClient   {
-    private final static String REMOTE_URI = "tcp://127.0.0.1:9001/";
+    private final static String REMOTE_URI = "tcp://ec2-18-218-0-120.us-east-2.compute.amazonaws.com:9001/";
 
     public static void main(String[] args) throws IOException, InterruptedException {
         Scanner scanner = new Scanner(System.in);
