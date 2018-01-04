@@ -9,24 +9,21 @@ import java.awt.event.KeyEvent;
 
 public class Board extends JPanel implements ActionListener {
 
-    private final int B_WIDTH = 300;
-    private final int B_HEIGHT = 300;
-    private final int DOT_SIZE = 10;
-    private final int ALL_DOTS = 900;
+    private final int B_WIDTH = 800;
+    private final int B_HEIGHT = 800;
+    private final int DOT_SIZE = 2;
+    private final int ALL_DOTS = B_WIDTH*B_HEIGHT;
     private final int RAND_POS = 29;
-    private final int DELAY = 140;
+    private final int DELAY = 50;
 
     private final int x[] = new int[ALL_DOTS];
     private final int y[] = new int[ALL_DOTS];
 
     private int dots;
-    private int apple_x;
-    private int apple_y;
 
     private boolean leftDirection = false;
-    private boolean rightDirection = true;
-    private boolean upDirection = false;
-    private boolean downDirection = false;
+    private boolean rightDirection = false;
+    private Double direction = 0d;
     private boolean inGame = true;
 
     private Timer timer;
@@ -44,14 +41,10 @@ public class Board extends JPanel implements ActionListener {
 
     private void initGame() {
 
-        dots = 3;
+        dots = 0;
 
-        for (int z = 0; z < dots; z++) {
-            x[z] = 50 - z * 10;
-            y[z] = 50;
-        }
-
-        locateApple();
+        x[0] = 500;
+        y[0] = 50;
 
         timer = new Timer(DELAY, this);
         timer.start();
@@ -68,14 +61,8 @@ public class Board extends JPanel implements ActionListener {
 
         if (inGame) {
 
-            g.fillOval(apple_x, apple_y, 5, 5);
-
-            for (int z = 0; z < dots; z++) {
-                if (z == 0) {
-                    g.fillOval(x[z], y[z], 5, 5);
-                } else {
-                    g.fillOval(x[z], y[z], 5,5);
-                }
+            for (int z = dots; z > 0; z--) {
+                g.fillOval(x[z], y[z], 5,5);
             }
 
             Toolkit.getDefaultToolkit().sync();
@@ -97,37 +84,27 @@ public class Board extends JPanel implements ActionListener {
         g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2);
     }
 
-    private void checkApple() {
-
-        if ((x[0] == apple_x) && (y[0] == apple_y)) {
-
-            dots++;
-            locateApple();
-        }
-    }
-
     private void move() {
 
-        for (int z = dots; z > 0; z--) {
-            x[z] = x[(z - 1)];
-            y[z] = y[(z - 1)];
-        }
-
+//        for (int z = dots; z > 0; z--) {
+//            x[z] = x[(z - 1)];
+//            y[z] = y[(z - 1)];
+//        }
         if (leftDirection) {
-            x[0] -= DOT_SIZE;
+            direction -= 10 + 360;
         }
 
         if (rightDirection) {
-            x[0] += DOT_SIZE;
+            direction += 10;
         }
+        direction %= 360;
 
-        if (upDirection) {
-            y[0] -= DOT_SIZE;
-        }
+        double angle = direction * (Math.PI / 180);
+        x[dots + 1] = (int) (x[dots] + DOT_SIZE * Math.cos(angle));
+        y[dots + 1] = (int) (y[dots] +  DOT_SIZE * Math.sin(angle));
+        System.out.println(direction + " " + + DOT_SIZE * Math.cos(direction*Math.PI/180) + " " + DOT_SIZE * Math.sin(direction*Math.PI/180));
 
-        if (downDirection) {
-            y[0] += DOT_SIZE;
-        }
+        dots++;
     }
 
     private void checkCollision() {
@@ -160,22 +137,13 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-    private void locateApple() {
-
-        int r = (int) (Math.random() * RAND_POS);
-        apple_x = ((r * DOT_SIZE));
-
-        r = (int) (Math.random() * RAND_POS);
-        apple_y = ((r * DOT_SIZE));
-    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
         if (inGame) {
 
-            checkApple();
-            checkCollision();
+//            checkCollision();
             move();
         }
 
@@ -183,32 +151,31 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private class TAdapter extends KeyAdapter {
-
         @Override
         public void keyPressed(KeyEvent e) {
-
             int key = e.getKeyCode();
 
-            if ((key == KeyEvent.VK_LEFT) && (!rightDirection)) {
+            if (key == KeyEvent.VK_LEFT) {
                 leftDirection = true;
-                upDirection = false;
-                downDirection = false;
-            }
-
-            if ((key == KeyEvent.VK_RIGHT) && (!leftDirection)) {
-                rightDirection = true;
-                upDirection = false;
-                downDirection = false;
-            }
-
-            if ((key == KeyEvent.VK_UP) && (!downDirection)) {
-                upDirection = true;
                 rightDirection = false;
+            }
+
+            if (key == KeyEvent.VK_RIGHT) {
+                rightDirection = true;
                 leftDirection = false;
             }
+        }
 
-            if ((key == KeyEvent.VK_DOWN) && (!upDirection)) {
-                downDirection = true;
+        @Override
+        public void keyReleased(KeyEvent e) {
+            int key = e.getKeyCode();
+
+            if (key == KeyEvent.VK_LEFT) {
+                leftDirection = false;
+                rightDirection = false;
+            }
+
+            if (key == KeyEvent.VK_RIGHT) {
                 rightDirection = false;
                 leftDirection = false;
             }
