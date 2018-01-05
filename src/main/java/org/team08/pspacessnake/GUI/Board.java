@@ -17,7 +17,7 @@ public class Board extends JPanel implements ActionListener {
     private final int DOT_SIZE = 2;
     private final int ALL_DOTS = B_WIDTH*B_HEIGHT;
     private final int RAND_POS = 29;
-    private final int DELAY = 35;
+    private final int DELAY = 50;
     private final int INIT_X = 500;
     private final int INIT_Y = 50;
 
@@ -70,7 +70,8 @@ public class Board extends JPanel implements ActionListener {
     private void doDrawing(Graphics g) {
 
         if (inGame) {
-
+        	
+        	g.setColor(Color.CYAN);
             for (int z = dots; z > 0; z--) {
                 g.fillOval(x[z], y[z], 5,5);
             }
