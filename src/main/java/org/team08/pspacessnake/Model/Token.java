@@ -32,22 +32,4 @@ public class Token {
                 ", name='" + name + '\'' +
                 '}';
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Token token = (Token) o;
-
-        if (ID != null ? !ID.equals(token.ID) : token.ID != null) return false;
-        return name != null ? name.equals(token.name) : token.name == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = ID != null ? ID.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        return result;
-    }
 }

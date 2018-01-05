@@ -44,8 +44,7 @@ public class Client {
             String roomName = scanner.nextLine();
             space.put("createRoom", roomName, token);
             Object[] room = space.get(new ActualField("createRoomResult"), new FormalField(String.class), new
-                    ActualField
-                    (roomName), new ActualField(token));
+                    ActualField(roomName), new ActualField(token));
             UID = (String) room[1];
         } else {
             UID = ((Room) rooms.get(Integer.parseInt(choice) - 2)[2]).getID();
