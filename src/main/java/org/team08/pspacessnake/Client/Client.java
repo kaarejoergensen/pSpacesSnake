@@ -4,6 +4,7 @@ import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
 import org.jspace.Space;
+import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
 
@@ -62,16 +63,67 @@ public class Client {
         room.getTokens().forEach(t -> System.out.print(t.getName() + " "));
         System.out.println();
 
-        new Thread(new Reader(new RemoteSpace(REMOTE_URI + UID + "?keep"), token)).start();
-        new Thread(new Writer(new RemoteSpace(REMOTE_URI + UID + "?keep"), scanner, token)).start();
+        new Thread(new ChatReader(new RemoteSpace(REMOTE_URI + UID + "?keep"), token)).start();
+        new Thread(new ChatWriter(new RemoteSpace(REMOTE_URI + UID + "?keep"), scanner, token)).start();
+        new Thread(new GameReader(new RemoteSpace(REMOTE_URI + UID + "?keep"))).start();
+        new Thread(new GameWriter(new RemoteSpace(REMOTE_URI + UID + "?keep"), token)).start();
     }
 }
 
-class Reader implements Runnable {
+class GameReader implements Runnable {
+	private Space space;
+	
+	public GameReader(Space space) {
+		this.space = space;
+	}
+	
+	@Override
+	public void run() {
+		while (true) {
+			try {
+				Object playerNum = space.query(new FormalField(Integer.class));
+				Object[] players = space.query(new FormalField(List.class));
+				for (int i = 0; i < (int) playerNum; i++) {
+					updateGUI((Player) players[i]);
+				}
+			} catch (InterruptedException e) {
+				
+			}
+		}
+	}
+}
+class GameWriter implements Runnable {
+	private Space space;
+	private Token token;
+	private boolean left = false;
+	private boolean right = false;
+	
+	public GameWriter(Space space, Token token) {
+		this.space = space;
+		this.token = token;
+	}
+	
+	@Override
+	public void run() {
+		
+		KeyListener();
+		while (true) {
+			try {
+				if (left || right) {
+					space.put(token, left, right);
+				}				
+			} catch (InterruptedException e) {
+				
+			}
+		}
+	}
+}
+
+class ChatReader implements Runnable {
     private Space space;
     private Token token;
 
-    public Reader(Space space, Token token) {
+    public ChatReader(Space space, Token token) {
         this.space = space;
         this.token = token;
     }
@@ -91,12 +143,12 @@ class Reader implements Runnable {
 }
 
 
-class Writer implements Runnable {
+class ChatWriter implements Runnable {
     private Space space;
     private Scanner scanner;
     private Token token;
 
-    public Writer(Space space, Scanner scanner, Token token) {
+    public ChatWriter(Space space, Scanner scanner, Token token) {
         this.space = space;
         this.scanner = scanner;
         this.token = token;
