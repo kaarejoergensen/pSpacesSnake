@@ -6,6 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
+
+
 
 public class Board extends JPanel implements ActionListener {
 
@@ -14,7 +17,9 @@ public class Board extends JPanel implements ActionListener {
     private final int DOT_SIZE = 2;
     private final int ALL_DOTS = B_WIDTH*B_HEIGHT;
     private final int RAND_POS = 29;
-    private final int DELAY = 50;
+    private final int DELAY = 35;
+    private final int INIT_X = 500;
+    private final int INIT_Y = 50;
 
     private final int x[] = new int[ALL_DOTS];
     private final int y[] = new int[ALL_DOTS];
@@ -27,6 +32,11 @@ public class Board extends JPanel implements ActionListener {
     private boolean inGame = true;
 
     private Timer timer;
+    
+    private Point2D.Double myPos = new Point2D.Double(INIT_X, INIT_Y);
+     
+    
+    
 
     public Board() {
 
@@ -99,10 +109,14 @@ public class Board extends JPanel implements ActionListener {
         }
         direction %= 360;
 
-        double angle = direction * (Math.PI / 180);
-        x[dots + 1] = (int) (x[dots] + DOT_SIZE * Math.cos(angle));
-        y[dots + 1] = (int) (y[dots] +  DOT_SIZE * Math.sin(angle));
-        System.out.println(direction + " " + + DOT_SIZE * Math.cos(direction*Math.PI/180) + " " + DOT_SIZE * Math.sin(direction*Math.PI/180));
+        double angle = direction * (Math.PI / 180); //convert to radians
+        //double newX = myPos.getX() + DOT_SIZE * Math.cos(angle);
+        //double newY = myPos.getY() + DOT_SIZE * Math.sin(angle);
+        myPos.setLocation(myPos.getX() + DOT_SIZE * Math.cos(angle), myPos.getY() + DOT_SIZE * Math.sin(angle));
+        x[dots + 1] = Math.round((float)myPos.getX());
+        y[dots + 1] = Math.round((float)myPos.getY());
+        //System.out.println(direction + " " + + DOT_SIZE * Math.cos(direction*Math.PI/180) + " " + DOT_SIZE * Math.sin(direction*Math.PI/180));
+        System.out.printf("Retning: %f\t X: %f\t Y: %f \n", direction, myPos.getX(), myPos.getY());
 
         dots++;
     }
