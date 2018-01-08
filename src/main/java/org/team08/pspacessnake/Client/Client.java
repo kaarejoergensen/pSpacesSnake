@@ -7,6 +7,11 @@ import org.jspace.Space;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
 
+import javafx.application.Application;
+
+import org.team08.pspacessnake.GUI.*;
+import org.team08.pspacessnake.GUI.logic.Point;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
@@ -60,9 +65,19 @@ public class Client {
         Room room = (Room) space.queryp(new ActualField("room"), new ActualField(UID), new FormalField(Room.class))[2];
         room.getTokens().forEach(t -> System.out.print(t.getName() + " "));
         System.out.println();
+        
+
 
         new Thread(new Reader(new RemoteSpace(REMOTE_URI + UID + "?keep"), token)).start();
         new Thread(new Writer(new RemoteSpace(REMOTE_URI + UID + "?keep"), scanner, token)).start();
+        
+        //GUI stuff
+
+        space.put("Player moved","test", new Point(50,50));
+////        Object[] startPoints = space.queryp(new ActualField("Starting position"), new FormalField(List.class));
+////        gui.startingPositions((List<Point>) startPoints[1]);
+
+        Application.launch(SpaceGui.class, args);
     }
 }
 
@@ -113,3 +128,5 @@ class Writer implements Runnable {
         }
     }
 }
+
+
