@@ -18,6 +18,7 @@ import java.util.ArrayList;
  * @author Subhomoy Haldar
  * @version 2016.12.17
  */
+@SuppressWarnings("restriction")
 public class Main extends Application {
 
     private static final int WIDTH = 1000;
