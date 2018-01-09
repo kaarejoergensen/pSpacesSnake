@@ -11,7 +11,7 @@ public class Board extends JPanel implements ActionListener {
 
     private final int B_WIDTH = 800;
     private final int B_HEIGHT = 800;
-    private final int DOT_SIZE = 2;
+    private final int DOT_SIZE = 4;
     private final int ALL_DOTS = B_WIDTH*B_HEIGHT;
     private final int RAND_POS = 29;
     private final int DELAY = 50;
@@ -91,7 +91,7 @@ public class Board extends JPanel implements ActionListener {
 //            y[z] = y[(z - 1)];
 //        }
         if (leftDirection) {
-            direction -= 10 + 360;
+            direction -= 10;
         }
 
         if (rightDirection) {
@@ -143,7 +143,7 @@ public class Board extends JPanel implements ActionListener {
 
         if (inGame) {
 
-//            checkCollision();
+            checkCollision();
             move();
         }
 

@@ -8,6 +8,11 @@ import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
 
+import javafx.application.Application;
+
+import org.team08.pspacessnake.GUI.*;
+import org.team08.pspacessnake.GUI.logic.Point;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
@@ -45,8 +50,7 @@ public class Client {
             String roomName = scanner.nextLine();
             space.put("createRoom", roomName, token);
             Object[] room = space.get(new ActualField("createRoomResult"), new FormalField(String.class), new
-                    ActualField
-                    (roomName), new ActualField(token));
+                    ActualField(roomName), new ActualField(token));
             UID = (String) room[1];
         } else {
             UID = ((Room) rooms.get(Integer.parseInt(choice) - 2)[2]).getID();
@@ -62,11 +66,21 @@ public class Client {
         Room room = (Room) space.queryp(new ActualField("room"), new ActualField(UID), new FormalField(Room.class))[2];
         room.getTokens().forEach(t -> System.out.print(t.getName() + " "));
         System.out.println();
+        
+
 
         new Thread(new ChatReader(new RemoteSpace(REMOTE_URI + UID + "?keep"), token)).start();
         new Thread(new ChatWriter(new RemoteSpace(REMOTE_URI + UID + "?keep"), scanner, token)).start();
         new Thread(new GameReader(new RemoteSpace(REMOTE_URI + UID + "?keep"))).start();
         new Thread(new GameWriter(new RemoteSpace(REMOTE_URI + UID + "?keep"), token)).start();
+ 
+        //GUI stuff
+
+        space.put("Player moved","test", new Point(50,50));
+////        Object[] startPoints = space.queryp(new ActualField("Starting position"), new FormalField(List.class));
+////        gui.startingPositions((List<Point>) startPoints[1]);
+
+        Application.launch(SpaceGui.class, args);
     }
 }
 
@@ -84,7 +98,7 @@ class GameReader implements Runnable {
 				Object playerNum = space.query(new FormalField(Integer.class));
 				Object[] players = space.query(new FormalField(List.class));
 				for (int i = 0; i < (int) playerNum; i++) {
-					updateGUI((Player) players[i]);
+				//	updateGUI((Player) players[i]);
 				}
 			} catch (InterruptedException e) {
 				
@@ -106,7 +120,7 @@ class GameWriter implements Runnable {
 	@Override
 	public void run() {
 		
-		KeyListener();
+		//KeyListener();
 		while (true) {
 			try {
 				if (left || right) {
@@ -166,3 +180,5 @@ class ChatWriter implements Runnable {
         }
     }
 }
+
+
