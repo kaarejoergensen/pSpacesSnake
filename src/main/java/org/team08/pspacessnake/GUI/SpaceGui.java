@@ -24,6 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 
+@SuppressWarnings("restriction")
 public class SpaceGui extends Application {
 	private Space space;
 	private int rows;
@@ -36,7 +37,7 @@ public class SpaceGui extends Application {
 	private static GraphicsContext context;
 
 	private List<Point> points;
-
+	
 	public void start(Stage primaryStage) throws Exception {
         points = new LinkedList<>();
 		StackPane root = new StackPane();
