@@ -14,6 +14,7 @@ import org.jspace.Space;
 
 import org.team08.pspacessnake.GUI.logic.Point;
 import org.team08.pspacessnake.GUI.logic.Snake;
+import org.team08.pspacessnake.Model.Token;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -25,7 +26,7 @@ import javafx.stage.Stage;
 
 
 @SuppressWarnings("restriction")
-public class SpaceGui extends Application {
+public class SpaceGui {
 	private Space space;
 	private int rows;
 	private int cols;
@@ -33,11 +34,11 @@ public class SpaceGui extends Application {
 	private final static String REMOTE_URI = "tcp://127.0.0.1:9001/";
 	public static final int WIDTH = 1000;
 	public static final int HEIGHT = 1000;
-	private static GraphicsContext context;
 	private boolean keyPressed = false;
 	private List<Point> points;
+	private static GraphicsContext context;
 	
-	public void start(Stage primaryStage) throws Exception {
+	public SpaceGui(Token token, Stage primaryStage) throws UnknownHostException, IOException {
 		points = new LinkedList<>();
 		StackPane root = new StackPane();
 		Canvas canvas = new Canvas(WIDTH, HEIGHT);
@@ -107,7 +108,6 @@ public class SpaceGui extends Application {
 		primaryStage.show();
 
 
-		new Thread(new UpdateGuiThread(space,this)).start();
 
 	}
 
@@ -148,26 +148,4 @@ public class SpaceGui extends Application {
 	}
 }
 
-class UpdateGuiThread implements Runnable {
-	private Space space;
-	private SpaceGui gui;
 
-	public UpdateGuiThread(Space space, SpaceGui gui) {
-		this.space = space;
-		this.gui = gui;
-	}
-
-	@Override
-	public void run() {
-		while (true) {
-			try {
-				Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(String.class), 
-						new FormalField(Point.class));
-
-				gui.updateGui((Point) newPoint[2]); 
-
-			} catch (InterruptedException e) {}
-		}
-
-	}
-}
