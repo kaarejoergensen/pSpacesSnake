@@ -7,24 +7,36 @@ import org.jspace.Space;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
 
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
+import org.team08.pspacessnake.GUI.*;
+import org.team08.pspacessnake.GUI.logic.Point;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
-public class Client {
+@SuppressWarnings("restriction")
+public class Client extends Application {
     private final static String REMOTE_URI = "tcp://127.0.0.1:9001/";
-
+    private static Token token;
+    private static Space space;
     public static void main(String[] args) throws IOException, InterruptedException {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter name: ");
         String name = scanner.nextLine();
 
-        Space space = new RemoteSpace(REMOTE_URI + "space?keep");
+        space = new RemoteSpace(REMOTE_URI + "space?keep");
 
         space.put("createClient", name);
         Object[] createClientResult = space.get(new ActualField("createClientResult"), new ActualField(name), new
                 FormalField(Token.class));
-        Token token = (Token) createClientResult[2];
+        token = (Token) createClientResult[2];
 
         System.out.println("1: Create new room");
         List<Object[]> rooms = space.queryAll(new ActualField("room"), new FormalField(String.class), new FormalField
@@ -60,10 +72,50 @@ public class Client {
         Room room = (Room) space.queryp(new ActualField("room"), new ActualField(UID), new FormalField(Room.class))[2];
         room.getTokens().forEach(t -> System.out.print(t.getName() + " "));
         System.out.println();
+        
+
 
         new Thread(new Reader(new RemoteSpace(REMOTE_URI + UID + "?keep"), token)).start();
         new Thread(new Writer(new RemoteSpace(REMOTE_URI + UID + "?keep"), scanner, token)).start();
+        
+        //GUI stuff
+
+        space.put("Player moved","test", new Point(50,50));
+////        Object[] startPoints = space.queryp(new ActualField("Starting position"), new FormalField(List.class));
+////        gui.startingPositions((List<Point>) startPoints[1]);
+
+        Application.launch(args);
     }
+
+    public void start(Stage primaryStage) throws Exception {
+    	System.out.print("Hey");
+		SpaceGui gui = new SpaceGui(token, primaryStage);
+		new Thread(new GameReader(space, gui)).start();
+    }
+    
+}
+class GameReader implements Runnable {
+	private Space space;
+	private SpaceGui gui;
+
+	public GameReader(Space space, SpaceGui gui) {
+		this.space = space;
+		this.gui = gui;
+	}
+
+	@Override
+	public void run() {
+		while (true) {
+			try {
+				Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(String.class), 
+						new FormalField(Point.class));
+
+				gui.updateGui((Point) newPoint[2]); 
+
+			} catch (InterruptedException e) {}
+		}
+
+	}
 }
 
 class Reader implements Runnable {
@@ -113,3 +165,5 @@ class Writer implements Runnable {
         }
     }
 }
+
+
