@@ -28,7 +28,7 @@ public class Client extends Application {
     private static Space space;
     public static void main(String[] args) throws IOException, InterruptedException {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter name: ");
+        System.out.print("Enter your name: ");
         String name = scanner.nextLine();
 
         space = new RemoteSpace(REMOTE_URI + "space?keep");
@@ -52,7 +52,7 @@ public class Client extends Application {
         String choice = scanner.nextLine();
         String UID;
         if (Integer.parseInt(choice) == 1) {
-            System.out.print("Enter name: ");
+            System.out.print("New room name: ");
             String roomName = scanner.nextLine();
             space.put("createRoom", roomName, token);
             Object[] room = space.get(new ActualField("createRoomResult"), new FormalField(String.class), new
@@ -165,5 +165,4 @@ class Writer implements Runnable {
         }
     }
 }
-
 
