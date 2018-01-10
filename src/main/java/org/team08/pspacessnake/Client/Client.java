@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Scanner;
 
 @SuppressWarnings("restriction")
-public class Client {
+public class Client extends Application {
     private final static String REMOTE_URI = "tcp://127.0.0.1:9001/";
     private static Token token;
     private static Space space;
@@ -88,6 +88,7 @@ public class Client {
     }
 
     public void start(Stage primaryStage) throws Exception {
+    	System.out.print("Hey");
 		SpaceGui gui = new SpaceGui(token, primaryStage);
 		new Thread(new GameReader(space, gui)).start();
     }
