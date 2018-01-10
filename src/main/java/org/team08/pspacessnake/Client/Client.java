@@ -78,7 +78,6 @@ public class Client {
 
         new Thread(new ChatReader(new RemoteSpace(REMOTE_URI + UID + "?keep"), token)).start();
         new Thread(new ChatWriter(new RemoteSpace(REMOTE_URI + UID + "?keep"), scanner, token)).start();
-        new Thread(new GameReader(new RemoteSpace(REMOTE_URI + UID + "?keep"))).start();
         new Thread(new GameWriter(new RemoteSpace(REMOTE_URI + UID + "?keep"), token)).start();
  
         //GUI stuff
@@ -117,29 +116,6 @@ class GameReader implements Runnable {
 			} catch (InterruptedException e) {}
 		}
 
-	}
-}
-
-class GameReader implements Runnable {
-	private Space space;
-	
-	public GameReader(Space space) {
-		this.space = space;
-	}
-	
-	@Override
-	public void run() {
-		while (true) {
-			try {
-				Object playerNum = space.query(new FormalField(Integer.class));
-				Object[] players = space.query(new FormalField(List.class));
-				for (int i = 0; i < (int) playerNum; i++) {
-				//	updateGUI((Player) players[i]);
-				}
-			} catch (InterruptedException e) {
-				
-			}
-		}
 	}
 }
 class GameWriter implements Runnable {
