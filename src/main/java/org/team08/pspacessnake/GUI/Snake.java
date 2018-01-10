@@ -8,14 +8,14 @@ public class Snake extends JFrame {
 
     public Snake() {
 
-        add(new Board());
+        this.add(new Board());
 
-        setResizable(false);
-        pack();
+        this.setResizable(false);
+        this.pack();
 
-        setTitle("Snake");
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setTitle("Snake");
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public static void main(String[] args) {

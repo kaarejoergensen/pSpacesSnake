@@ -87,20 +87,17 @@ public class Board extends JPanel implements ActionListener {
 
     private void doDrawing(Graphics g) {
 
-        if (inGame) {
-
-        	g.setColor(Color.ORANGE);
-            for (int z = dots; z > 0; z--) {
-                g.fillOval(x[z], y[z], THICKNESS, THICKNESS);
-            }
-
+	if (inGame) {
+		g.setColor(Color.ORANGE);
+		for (int z = dots; z > 0; z--) {
+			g.fillOval(x[z], y[z], THICKNESS, THICKNESS);
+		}
             Toolkit.getDefaultToolkit().sync();
-
-        } else {
-
-            gameOver(g);
-        }
-    }
+		}
+		else {
+			gameOver(g);
+		}
+	}
 
     private void gameOver(Graphics g) {
 
