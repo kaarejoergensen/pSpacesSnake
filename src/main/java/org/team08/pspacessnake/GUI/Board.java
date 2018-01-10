@@ -7,9 +7,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
-import java.awt.geom.Line2D;
-import java.awt.geom.AffineTransform;
-
+import java.util.LinkedList;
+import java.util.ListIterator;
+//import java.awt.geom.Line2D;
+//import java.awt.geom.AffineTransform;
 
 
 public class Board extends JPanel implements ActionListener {
@@ -24,11 +25,11 @@ public class Board extends JPanel implements ActionListener {
     private final int INIT_Y = 50;
     private final int DIR_INCR = 10;	//size of increments to direction when turning.
     private final int THICKNESS = 6;
-    //private AffineTransform leftWall = new AffineTransform();
-    //private AffineTransform rightWall = new AffineTransform();
 
+    
     private final int x[] = new int[ALL_DOTS];
     private final int y[] = new int[ALL_DOTS];
+    
 
     private int dots;
 
@@ -41,9 +42,12 @@ public class Board extends JPanel implements ActionListener {
     
     private Point2D.Double myPos = new Point2D.Double(INIT_X, INIT_Y);
      
+    // Cells of 10x10 pixels
+    private int numRow = (int)Math.floor(B_HEIGHT / 10.0) + 1;
+    private int numCol = (int)Math.floor(B_WIDTH / 10.0) + 1;
+    private LinkedList<Point2D.Double>[][] boardCells = (LinkedList<Point2D.Double>[][]) new LinkedList<?>[numRow][numCol];
+    private ListIterator<Point2D.Double>[][] boardCellsIterators = (ListIterator<Point2D.Double>[][]) new ListIterator<?>[numRow][numCol];
     
-    
-
     public Board() {
 
         addKeyListener(new TAdapter());
@@ -62,6 +66,14 @@ public class Board extends JPanel implements ActionListener {
         x[0] = INIT_X;
         y[0] = INIT_Y;
 
+        // Initialiste 2D arrays
+        for (int row = 0; row < numRow; row++) {
+        	for (int col = 0; col < numCol; col++) {
+        		boardCells[row][col] = new LinkedList<Point2D.Double>();
+        		boardCellsIterators[row][col] = boardCells[row][col].listIterator();
+        	}
+        }
+        
         timer = new Timer(DELAY, this);
         timer.start();
     }
@@ -127,6 +139,10 @@ public class Board extends JPanel implements ActionListener {
         System.out.printf("Retning: %d\t %s \n", direction, myPos);
 
         dots++;
+    }
+    
+    private void registerMove(Point2D.Double newPos) {
+    	
     }
 
     private void checkCollision() {

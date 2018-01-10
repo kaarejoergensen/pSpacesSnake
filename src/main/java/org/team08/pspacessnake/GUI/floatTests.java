@@ -1,21 +1,44 @@
 package org.team08.pspacessnake.GUI;
 
+import java.awt.geom.Point2D;
+import java.util.LinkedList;
+import java.util.ListIterator;
+import java.util.Iterator;
+
 public class floatTests {
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		
-		SnakeStep firstStep = new SnakeStep(0.0, 5.0 , 2.0, 5.0);
-		// firstStep.setLine(firstStep.getX1(), firstStep.getY1(), 2.8d, 0.4d);
-		SnakeStep oponentStep = new SnakeStep(1.0, 6.0 , 1.0, 4.0);
-		
-		
-		
-		
-		System.out.println("Første skridt:\t\t" + firstStep);
-		System.out.println("Længde:\t\t\t" + firstStep.getLength());
-		System.out.println("Tætteste snake Wall:\t" + firstStep.getClosestSnakeWall(oponentStep.getP2(), 5));
-		System.out.println("Direkction to point:\t" + firstStep.getDir(oponentStep.getP2()));
-		System.out.println("Scale:\t\t\t" + firstStep.getScale(oponentStep.getP2(), 5));
-		System.out.println("Do lines intersect:\t" + firstStep.intersectsLine(oponentStep));
+		// Size og game Board in pixels
+	    final int B_HEIGHT = 600;
+	    final int B_WIDTH = 800;
+	    
+	    // Cells of 10x10 pixels
+	    int numRow = (int)Math.floor(B_HEIGHT / 10.0) + 1;
+	    int numCol = (int)Math.floor(B_WIDTH / 10.0) + 1;
+	    LinkedList<Point2D.Double>[][] boardCells = (LinkedList<Point2D.Double>[][]) new LinkedList<?>[numRow][numCol];
+	    ListIterator<Point2D.Double>[][] boardCellsIterators = (ListIterator<Point2D.Double>[][]) new ListIterator<?>[numRow][numCol]; 
+	    
+	    // Initialiste 2D arrays
+	    for (int row = 0; row < numRow; row++) {
+	    	for (int col = 0; col < numCol; col++) {
+	    		boardCells[row][col] = new LinkedList<Point2D.Double>();
+	    		boardCellsIterators[row][col] = boardCells[row][col].listIterator();
+	    	}
+	    }
+	    
+	    // Random points or testing
+	    Point2D.Double somePos = new Point2D.Double(3.4d, 5.1d);
+	    Point2D.Double someOtherPos = new Point2D.Double(0.2d, 2.3d);
+	    
+	    // test 
+	    boardCellsIterators[6][8].add(somePos);
+	    boardCellsIterators[6][8].add(someOtherPos);
+	    boardCellsIterators[6][8] = boardCells[6][8].listIterator(); //reset ListIterator
+	    System.out.println(boardCellsIterators[6][8].next());
+	    System.out.println(boardCellsIterators[6][8].next());
+	    System.out.println(boardCellsIterators[6][8].previous());
+	    System.out.println(boardCellsIterators[6][8].previous());
+	
 	}
-
 }
