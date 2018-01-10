@@ -75,7 +75,7 @@ public class Client extends Application {
         System.out.println();
         
 
-
+        System.out.println("hjælp");
         new Thread(new ChatReader(new RemoteSpace(REMOTE_URI + UID + "?keep"), token)).start();
         new Thread(new ChatWriter(new RemoteSpace(REMOTE_URI + UID + "?keep"), scanner, token)).start();
         new Thread(new GameWriter(new RemoteSpace(REMOTE_URI + UID + "?keep"), token)).start();
