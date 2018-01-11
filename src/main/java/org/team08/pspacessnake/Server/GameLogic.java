@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GameLogic {
     private List<Player> players;
@@ -28,6 +29,8 @@ public class GameLogic {
         this.players.add(player);
         if (this.players.size() > 0) {
             this.isStarted = true;
+        } else {
+        	System.out.print("Waiting for more players");
         }
     }
 
@@ -72,5 +75,9 @@ public class GameLogic {
             player.move();
         }
         return players;
+    }
+    
+    public void setRemember(Boolean holes) {
+    	players.get(0).setRemember(holes);
     }
 }

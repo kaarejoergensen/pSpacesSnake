@@ -10,6 +10,7 @@ public class Player {
     private double dAngle;		//the change of angle per frame.
     private Color color;
     private String direction;	//change of angle
+	private Boolean remember = true;
 
     public Player(Token token) {
         this.token = token;
@@ -91,5 +92,11 @@ public class Player {
 
     public void setDirection(String direction) {
         this.direction = direction;
+    }
+    public void setRemember(Boolean holes) {
+    	this.remember  = holes;
+    }
+    public Boolean getRemember() {
+    	return remember;
     }
 }
