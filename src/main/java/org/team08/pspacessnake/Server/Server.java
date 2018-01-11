@@ -113,8 +113,9 @@ class GameWriter implements Runnable {
                     if (time < 1000.0f / 24) {
                         Thread.sleep((long) (1000.0f / 24 - time));
                     }
+                } else {
+                    Thread.sleep(100);
                 }
-                Thread.sleep(100);
             } catch (InterruptedException ignored) {
             }
         }
