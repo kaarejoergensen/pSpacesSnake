@@ -45,13 +45,13 @@ public class SpaceGui {
 			switch (e.getCode()) {
 			case LEFT:
 				try {
-					space.put("LeftKey", true, token);
+					space.put("LeftKey", "left", token);
 					setKeyIsPressed(true);
 				} catch (InterruptedException ignored) {}
 				break;
 			case RIGHT:
 				try {
-					space.put("RightKey", true, token);
+					space.put("Changed direction", "right", token);
 					setKeyIsPressed(true);
 				} catch (InterruptedException ignored) {}
 				break;
@@ -60,19 +60,19 @@ public class SpaceGui {
 			}
 		});
 		canvas.setOnKeyReleased(e -> {
-			if (keyPressed) {
+			if (!keyPressed) {
                 return;
             }
 			switch (e.getCode()) {
 			case LEFT:
 				try {
-					space.put("LeftKey", false, token);
+					space.put("Changed direction", "none", token);
 					setKeyIsPressed(false);
 				} catch (InterruptedException e1) {}
 				break;
 			case RIGHT:
 				try {
-					space.put("LeftKey", false, token);
+					space.put("Changed direction", "none", token);
 					setKeyIsPressed(false);
 				} catch (InterruptedException e1) {}
 				break;
