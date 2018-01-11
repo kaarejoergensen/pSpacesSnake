@@ -61,7 +61,7 @@ public class GameLogic {
                 player.setAngle(angle);
             }
             Point position = player.getPosition();
-            position = position.translate(0.5 * Math.cos(player.getAngle()), -0.5 * Math.sin(player.getAngle()));
+            position = position.translate(player.getSpeed() * Math.cos(player.getAngle()), -player.getSpeed() * Math.sin(player.getAngle()));
             player.setPosition(position);
         }
         return players;

@@ -13,6 +13,7 @@ public class Player {
     public Player(Token token) {
         this.token = token;
         this.position = new Point(1, 1);
+        this.speed = .5;
         this.angle = 0d;
         this.direction = "none";
     }
