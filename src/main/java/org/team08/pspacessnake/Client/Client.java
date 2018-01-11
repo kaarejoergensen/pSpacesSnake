@@ -6,6 +6,7 @@ import org.jspace.RemoteSpace;
 import org.jspace.Space;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
+import org.team08.pspacessnake.Model.GameSettings;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -75,7 +76,7 @@ public class Client extends Application {
     }
 
     public void start(Stage primaryStage) throws Exception {
-		SpaceGui gui = new SpaceGui(new RemoteSpace(REMOTE_URI + UID + "?keep"), token, primaryStage);
+		SpaceGui gui = new SpaceGui(new RemoteSpace(REMOTE_URI + UID + "?keep"), token, primaryStage, new GameSettings());
 		new Thread(new GameReader(new RemoteSpace(REMOTE_URI + UID + "?keep"), gui, token)).start();
     }
 }
