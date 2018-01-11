@@ -2,21 +2,17 @@ package org.team08.pspacessnake.GUI;
 
 
 import java.io.IOException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.jspace.ActualField;
-import org.jspace.FormalField;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 import org.jspace.RemoteSpace;
 import org.jspace.Space;
 
-import org.team08.pspacessnake.GUI.logic.Point;
-import org.team08.pspacessnake.GUI.logic.Snake;
+import org.team08.pspacessnake.Model.Point;
 import org.team08.pspacessnake.Model.Token;
 
-import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -28,17 +24,15 @@ import javafx.stage.Stage;
 @SuppressWarnings("restriction")
 public class SpaceGui {
 	private Space space;
-	private int rows;
-	private int cols;
-	public final static int SIZE = 5;
+	private final static int SIZE = 5;
 	private final static String REMOTE_URI = "tcp://127.0.0.1:9001/";
-	public static final int WIDTH = 1000;
-	public static final int HEIGHT = 1000;
+	private static final int WIDTH = 1000;
+	private static final int HEIGHT = 1000;
 	private boolean keyPressed = false;
-	private List<Point> points;
+	private List<Circle> points;
 	private static GraphicsContext context;
 	
-	public SpaceGui(Token token, Stage primaryStage) throws UnknownHostException, IOException {
+	public SpaceGui(Token token, Stage primaryStage) throws IOException {
 		points = new LinkedList<>();
 		StackPane root = new StackPane();
 		Canvas canvas = new Canvas(WIDTH, HEIGHT);
@@ -50,17 +44,16 @@ public class SpaceGui {
             }
 			switch (e.getCode()) {
 			case LEFT:
-
 				try {
-					space.put("LeftKey", true);
-					setKeyIsPresset(true);
-				} catch (InterruptedException e1) {}
+					space.put("LeftKey", true, token);
+					setKeyIsPressed(true);
+				} catch (InterruptedException ignored) {}
 				break;
 			case RIGHT:
 				try {
-					space.put("RightKey", false);
-					setKeyIsPresset(true);
-				} catch (InterruptedException e1) {}
+					space.put("RightKey", true, token);
+					setKeyIsPressed(true);
+				} catch (InterruptedException ignored) {}
 				break;
 			default:
 				break;
@@ -73,14 +66,14 @@ public class SpaceGui {
 			switch (e.getCode()) {
 			case LEFT:
 				try {
-					space.put("LeftKey", false);
-					setKeyIsPresset(false);
+					space.put("LeftKey", false, token);
+					setKeyIsPressed(false);
 				} catch (InterruptedException e1) {}
 				break;
 			case RIGHT:
 				try {
-					space.put("LeftKey", false);
-					setKeyIsPresset(false);
+					space.put("LeftKey", false, token);
+					setKeyIsPressed(false);
 				} catch (InterruptedException e1) {}
 				break;
 			default:
@@ -94,10 +87,6 @@ public class SpaceGui {
 
 		Scene scene = new Scene(root);
 		space = new RemoteSpace(REMOTE_URI + "space?keep");
-		rows = (int) WIDTH / SIZE;
-		cols = (int) HEIGHT / SIZE;
-
-		
 
 		reset();
 
@@ -106,45 +95,48 @@ public class SpaceGui {
 		primaryStage.setOnCloseRequest(e -> System.exit(0));
 		primaryStage.setScene(scene);
 		primaryStage.show();
-
-
-
 	}
 
 	public void updateGui(Point point) {
-		points.add(point);
-		reset();
+		Circle circle = new Circle(point.getX(), point.getY(), SIZE / 2);
 
+        context.fillOval(circle.getCenterX() - SIZE / 2, circle.getCenterY() - SIZE / 2, SIZE, SIZE);
+        if (this.collisionDetected(circle)) {
+            System.out.println("COLLISION");
+        }
+        points.add(circle);
 	}
+
+	private boolean collisionDetected(Shape block) {
+	    for (Shape shape : points) {
+	        if (block.getBoundsInParent().intersects(shape.getBoundsInParent())) {
+                System.out.println(((Circle)block).getCenterX() + " " + ((Circle)block).getCenterY());
+                System.out.println(((Circle)shape).getCenterX() + " " + ((Circle)shape).getCenterY());
+	            return true;
+            }
+        }
+        return false;
+    }
 
 	public void reset() {
 		context.setFill(new Color(0.1, 0.1, 0.1, 1));
 		context.fillRect(0, 0, WIDTH, HEIGHT);
 		context.setFill(Color.CORNSILK);
-		for (int i = 0; i < points.size(); i++) {
-			context.fillOval(points.get(i).getX(), points.get(i).getY(), SIZE, SIZE);
+		for (Circle circle : points) {
+			context.fillOval(circle.getCenterX(), circle.getCenterY(), SIZE, SIZE);
 		}
 	}
 
 	public void startingPositions(List<Point> startPosition) {
 		for(int i = 0; i < startPosition.size(); i++ ) {
 			Point point = startPosition.get(i);
-			points.add(point);
+			points.add(new Circle(point.getX(), point.getY(), SIZE));
 		}
 		reset();
 	}
 
-	public List<Point> getPoints() {
-		return points;
-	}
-	
-	private void setKeyIsPresset(boolean keyPressed) {
+	private void setKeyIsPressed(boolean keyPressed) {
 		this.keyPressed = keyPressed;
-	}
-
-	public static void main(String[] args) {
-
-		Application.launch(args);
 	}
 }
 
