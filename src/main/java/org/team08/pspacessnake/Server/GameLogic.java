@@ -26,6 +26,9 @@ public class GameLogic {
             this.players = new ArrayList<>();
         }
         this.players.add(player);
+        if (this.players.size() > 0) {
+            this.isStarted = true;
+        }
     }
 
     public boolean isStarted() {

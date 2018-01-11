@@ -70,13 +70,11 @@ public class Client extends Application {
 
         new Thread(new Reader(new RemoteSpace(REMOTE_URI + UID + "?keep"), token)).start();
         new Thread(new Writer(new RemoteSpace(REMOTE_URI + UID + "?keep"), scanner, token)).start();
-        
-        //GUI stuff
+
         Application.launch(args);
     }
 
     public void start(Stage primaryStage) throws Exception {
-    	System.out.print("Hey");
 		SpaceGui gui = new SpaceGui(new RemoteSpace(REMOTE_URI + UID + "?keep"), token, primaryStage);
 		new Thread(new GameReader(new RemoteSpace(REMOTE_URI + UID + "?keep"), gui, token)).start();
     }
@@ -97,10 +95,14 @@ class GameReader implements Runnable {
 	public void run() {
 		while (true) {
 			try {
-				Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(Point.class),
-                        new ActualField(this.token));
-				gui.updateGui((Point) newPoint[1]);
-			} catch (InterruptedException e) {}
+				List<Object[]> newPoint = space.getAll(new ActualField("Player moved"), new FormalField(Point.class),
+                        new ActualField(token));
+				for (Object[] point : newPoint) {
+                    gui.updateGui((Point) point[1]);
+                }
+			} catch (InterruptedException e) {
+			    e.printStackTrace();
+            }
 		}
 	}
 }

@@ -23,9 +23,7 @@ import javafx.stage.Stage;
 
 @SuppressWarnings("restriction")
 public class SpaceGui {
-    private Space space;
     private final static int SIZE = 5;
-    private final static String REMOTE_URI = "tcp://127.0.0.1:9001/";
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 1000;
     private boolean leftKeyPressed = false;
@@ -33,8 +31,7 @@ public class SpaceGui {
     private List<Circle> points;
     private static GraphicsContext context;
 
-    public SpaceGui(Space space, Token token, Stage primaryStage) throws IOException {
-        this.space = space;
+    public SpaceGui(Space space, Token token, Stage primaryStage) {
         points = new LinkedList<>();
         StackPane root = new StackPane();
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
@@ -80,16 +77,18 @@ public class SpaceGui {
                     break;
             }
             if (e.getCode().equals(KeyCode.LEFT) || e.getCode().equals(KeyCode.RIGHT)) {
-                if (!leftKeyPressed && !rightKeyPressed) {
-                    try {
+                try {
+                    if (!leftKeyPressed && !rightKeyPressed) {
                         space.put("Changed direction", "none", token);
-                    } catch (InterruptedException e1) {
-                        e1.printStackTrace();
+                        System.out.println("Sent direction none");
+                    } else if (rightKeyPressed) {
+                        space.put("Changed direction", "right", token);
+                    } else {
+                        space.put("Changed direction", "left", token);
                     }
-                    System.out.println("Sent direction none");
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
                 }
-                leftKeyPressed = false;
-                rightKeyPressed = false;
             }
         });
 
@@ -98,7 +97,9 @@ public class SpaceGui {
 
         Scene scene = new Scene(root);
 
-        reset();
+        context.setFill(new Color(0.1, 0.1, 0.1, 1));
+        context.fillRect(0, 0, WIDTH, HEIGHT);
+        context.setFill(Color.CORNSILK);
 
         primaryStage.setResizable(false);
         primaryStage.setTitle("Snake");
@@ -108,12 +109,12 @@ public class SpaceGui {
     }
 
     public void updateGui(Point point) {
-        Circle circle = new Circle(point.getX() * SIZE, point.getY() * SIZE, SIZE / 2);
+        Circle circle = new Circle(point.getX() * SIZE * 2, point.getY() * SIZE * 2, SIZE / 2);
 
         context.fillOval(circle.getCenterX() - SIZE / 2, circle.getCenterY() - SIZE / 2, SIZE, SIZE);
-//        if (this.collisionDetected(circle)) {
-//            System.out.println("COLLISION");
-//        }
+        if (this.collisionDetected(circle)) {
+            System.out.println("COLLISION");
+        }
         points.add(circle);
     }
 
@@ -126,23 +127,6 @@ public class SpaceGui {
             }
         }
         return false;
-    }
-
-    public void reset() {
-        context.setFill(new Color(0.1, 0.1, 0.1, 1));
-        context.fillRect(0, 0, WIDTH, HEIGHT);
-        context.setFill(Color.CORNSILK);
-        for (Circle circle : points) {
-            context.fillOval(circle.getCenterX(), circle.getCenterY(), SIZE, SIZE);
-        }
-    }
-
-    public void startingPositions(List<Point> startPosition) {
-        for (int i = 0; i < startPosition.size(); i++) {
-            Point point = startPosition.get(i);
-            points.add(new Circle(point.getX(), point.getY(), SIZE));
-        }
-        reset();
     }
 }
 
