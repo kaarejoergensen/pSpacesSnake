@@ -70,13 +70,11 @@ public class Client extends Application {
 
         new Thread(new Reader(new RemoteSpace(REMOTE_URI + UID + "?keep"), token)).start();
         new Thread(new Writer(new RemoteSpace(REMOTE_URI + UID + "?keep"), scanner, token)).start();
-        
-        //GUI stuff
+
         Application.launch(args);
     }
 
     public void start(Stage primaryStage) throws Exception {
-    	System.out.print("Hey");
 		SpaceGui gui = new SpaceGui(new RemoteSpace(REMOTE_URI + UID + "?keep"), token, primaryStage);
 		new Thread(new GameReader(new RemoteSpace(REMOTE_URI + UID + "?keep"), gui, token)).start();
     }
