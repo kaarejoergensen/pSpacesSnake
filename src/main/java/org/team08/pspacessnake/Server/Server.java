@@ -5,6 +5,7 @@ import org.team08.pspacessnake.Helpers.Utils;
 import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
+import org.team08.pspacessnake.Model.GameSettings;
 
 import java.io.IOException;
 import java.util.List;
@@ -76,7 +77,8 @@ class CreateRooms implements Runnable {
                 space.put("createRoomResult", UID, create[1], create[2]);
                 System.out.println("New room with name " + create[1] + " and UID " + UID + " created!");
 
-                GameLogic gameLogic = new GameLogic();
+                GameSettings gameSettings = new GameSettings(1000, 1000);
+                GameLogic gameLogic = new GameLogic(gameSettings);
                 new Thread(new GameReader(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
                 new Thread(new GameWriter(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
 
@@ -99,6 +101,7 @@ class GameWriter implements Runnable {
 
     @Override
     public void run() {
+    	int frameRate = gameLogic.getGameSettings().getFrameRate();
         while (true) {
             try {
                 if (gameLogic.isStarted()) {
@@ -110,8 +113,8 @@ class GameWriter implements Runnable {
                         }
                     }
                     time = System.currentTimeMillis() - time;
-                    if (time < 1000.0f / 24) {
-                        Thread.sleep((long) (1000.0f / 24 - time));
+                    if (time < 1000.0f / frameRate) {
+                        Thread.sleep((long) (1000.0f / frameRate - time));
                     }
                 }
                 Thread.sleep(100);

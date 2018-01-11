@@ -10,6 +10,7 @@ public class Player {
     private double dAngle;		//the change of angle per frame.
     private Color color;
     private String direction;	//change of angle
+    private boolean isDead = false;
 
     public Player(Token token) {
         this.token = token;
@@ -92,4 +93,15 @@ public class Player {
     public void setDirection(String direction) {
         this.direction = direction;
     }
+
+	/**
+	 * @return the isDead
+	 */
+	private boolean isDead() {
+		return isDead;
+	}
+
+	private void kill() {
+		this.isDead = true;
+	}
 }

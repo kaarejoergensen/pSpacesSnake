@@ -12,6 +12,7 @@ import org.jspace.Space;
 
 import org.team08.pspacessnake.Model.Point;
 import org.team08.pspacessnake.Model.Token;
+import org.team08.pspacessnake.Model.GameSettings;
 
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -26,12 +27,15 @@ public class SpaceGui {
     private final static int SIZE = 5;
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 1000;
+    private static final int CELL_SIZE = 5;
     private boolean leftKeyPressed = false;
     private boolean rightKeyPressed = false;
+    
     private List<Circle> points;
+    
     private static GraphicsContext context;
 
-    public SpaceGui(Space space, Token token, Stage primaryStage) {
+    public SpaceGui(Space space, Token token, Stage primaryStage, GameSettings settings) {
         points = new LinkedList<>();
         StackPane root = new StackPane();
         Canvas canvas = new Canvas(WIDTH, HEIGHT);

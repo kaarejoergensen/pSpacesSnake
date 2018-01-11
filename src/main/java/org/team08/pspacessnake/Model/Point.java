@@ -21,6 +21,12 @@ public class Point {
         return new Point(x + dx, y + dy);
     }
 
+    public double distance(Point point) {
+    	double xDist = Math.abs(this.getX() - point.getX());
+    	double yDist = Math.abs(this.getY() - point.getY());
+    	return Math.sqrt(xDist*xDist + yDist*yDist);
+    }
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
