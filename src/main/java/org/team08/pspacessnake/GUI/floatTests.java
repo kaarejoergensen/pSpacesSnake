@@ -12,7 +12,7 @@ public class floatTests {
     private static final int B_WIDTH = 800;
     private static final int BIN_SIZE = 5;
 
-    // Cells of 10x10 pixels
+    // Cells of BIN_SIZE x BIN_SIZE pixels
     static int numRow = (int)Math.floor(B_HEIGHT / (double) BIN_SIZE) + 1;
     static int numCol = (int)Math.floor(B_WIDTH / (double) BIN_SIZE) + 1;
     static LinkedList<Point2D.Double>[][] boardCells = (LinkedList<Point2D.Double>[][]) new LinkedList<?>[numRow][numCol];
