@@ -8,14 +8,10 @@ import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import org.team08.pspacessnake.GUI.*;
-import org.team08.pspacessnake.GUI.logic.Point;
+import org.team08.pspacessnake.Model.Point;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,13 +21,13 @@ import java.util.Scanner;
 public class Client extends Application {
     private final static String REMOTE_URI = "tcp://127.0.0.1:9001/";
     private static Token token;
-    private static Space space;
+    private static String UID;
     public static void main(String[] args) throws IOException, InterruptedException {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter your name: ");
         String name = scanner.nextLine();
 
-        space = new RemoteSpace(REMOTE_URI + "space?keep");
+        Space space = new RemoteSpace(REMOTE_URI + "space?keep");
 
         space.put("createClient", name);
         Object[] createClientResult = space.get(new ActualField("createClientResult"), new ActualField(name), new
@@ -50,7 +46,6 @@ public class Client extends Application {
         }
 
         String choice = scanner.nextLine();
-        String UID;
         if (Integer.parseInt(choice) == 1) {
             System.out.print("New room name: ");
             String roomName = scanner.nextLine();
@@ -72,49 +67,43 @@ public class Client extends Application {
         Room room = (Room) space.queryp(new ActualField("room"), new ActualField(UID), new FormalField(Room.class))[2];
         room.getTokens().forEach(t -> System.out.print(t.getName() + " "));
         System.out.println();
-        
-
 
         new Thread(new Reader(new RemoteSpace(REMOTE_URI + UID + "?keep"), token)).start();
         new Thread(new Writer(new RemoteSpace(REMOTE_URI + UID + "?keep"), scanner, token)).start();
         
         //GUI stuff
-
-        space.put("Player moved","test", new Point(50,50));
-////        Object[] startPoints = space.queryp(new ActualField("Starting position"), new FormalField(List.class));
-////        gui.startingPositions((List<Point>) startPoints[1]);
-
         Application.launch(args);
     }
 
     public void start(Stage primaryStage) throws Exception {
     	System.out.print("Hey");
 		SpaceGui gui = new SpaceGui(token, primaryStage);
-		new Thread(new GameReader(space, gui)).start();
+		new Thread(new GameReader(new RemoteSpace(REMOTE_URI + UID + "?keep"), gui, token)).start();
     }
-    
 }
+
 class GameReader implements Runnable {
 	private Space space;
 	private SpaceGui gui;
+	private Token token;
 
-	public GameReader(Space space, SpaceGui gui) {
-		this.space = space;
-		this.gui = gui;
-	}
+    public GameReader(Space space, SpaceGui gui, Token token) {
+        this.space = space;
+        this.gui = gui;
+        this.token = token;
+    }
 
-	@Override
+    @Override
 	public void run() {
 		while (true) {
 			try {
-				Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(String.class), 
-						new FormalField(Point.class));
+				Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(Point.class),
+                        new ActualField(this.token));
 
 				gui.updateGui((Point) newPoint[2]); 
 
 			} catch (InterruptedException e) {}
 		}
-
 	}
 }
 

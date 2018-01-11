@@ -1,4 +1,4 @@
-package org.team08.pspacessnake.GUI.logic;
+package org.team08.pspacessnake.Model;
 
 public class Point {
     private final double x;    // The X coordinate
