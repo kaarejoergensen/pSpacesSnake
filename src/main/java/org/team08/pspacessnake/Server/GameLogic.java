@@ -15,31 +15,23 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GameLogic {
-    private List<Player> players;
-    private boolean isStarted = false;
-    private static GameSettings gameSettings;
-    private static int numRows;
-    private static int numCols;
-    private static LinkedList<Point>[][] boardCells;
-    private static ListIterator<Point>[][] boardCellsIterators;
+	private List<Player> players;
+	private boolean isStarted = false;
+	private static GameSettings gameSettings;
+	private static int numRows;
+	private static int numCols;
+	private static LinkedList<Point>[][] boardCells;
+	private static ListIterator<Point>[][] boardCellsIterators;
     
-    /*
-    // Cells of (cellSize x cellSize) pixels
-    private static int numRows = (int)Math.floor(gameSettings.getHeight() / (double) gameSettings.getCellSize()) + 1;
-    private static int numCols = (int)Math.floor(gameSettings.getWidth() / (double) gameSettings.getCellSize()) + 1;
-    private static LinkedList<Point>[][] boardCells = (LinkedList<Point>[][]) new LinkedList<?>[numRows][numCols];
-    private static ListIterator<Point>[][] boardCellsIterators = (ListIterator<Point>[][]) new ListIterator<?>[numRows][numCols];
-     */
-    
-    public GameLogic() {
+	public GameLogic() {
         this.players = new ArrayList<>();
         initiateCellLists();
     }
     
     public GameLogic(GameSettings gameSettings) {
-        this.players = new ArrayList<>();
-        this.gameSettings = gameSettings;
-        initiateCellLists();
+    	this.players = new ArrayList<>();
+    	this.gameSettings = gameSettings;
+    	initiateCellLists();
     }
     
  // Initialiste 2D arrays
@@ -111,25 +103,25 @@ public class GameLogic {
         if (this.players == null) {
             this.players = new ArrayList<>();
         }
-        this.players.add(player);
+		this.players.add(player);
         if (this.players.size() > 0) {
-            this.isStarted = true;
+			this.isStarted = true;
         } else {
         	System.out.print("Waiting for more players");
         }
-    }
+	}
 
-    public boolean isStarted() {
-        return isStarted;
-    }
+ 	public boolean isStarted() {
+    	return isStarted;
+	}
 
-    public void setStarted(boolean started) {
-        isStarted = started;
-    }
+	public void setStarted(boolean started) {
+    	isStarted = started;
+	}
 
-    public void startGame() {
-        this.isStarted = true;
-    }
+	public void startGame() {
+    	this.isStarted = true;
+	}
 
     public void changeDirection(Token token, String direction) {
         for (Player player : players) {
@@ -140,29 +132,15 @@ public class GameLogic {
         }
     }
 
-    public List<Player> nextFrame() {
-        for (Player player : players) {
-        	/*
-        	if (!player.getDirection().equals("none")) {
-                double angle = player.getAngle();
-                if (player.getDirection().equals("left")) {
-                    angle += 0.1;
-                } else if (player.getDirection().equals("right")) {
-                    angle -= 0.1;
-                }
-                player.setAngle(angle);
-            }
-            Point position = player.getPosition();
-            position = position.translate(player.getSpeed() * Math.cos(player.getAngle()), -player.getSpeed() * Math.sin(player.getAngle()));
-            player.setPosition(position);
-            */
-        	player.turn();
-            addPoint(player.move());
-        }
-        return players;
-    }
-    
-    public void setRemember(Boolean holes) {
-    	players.get(0).setRemember(holes);
-    }
+	public List<Player> nextFrame() {
+		for (Player player : players) {
+			player.turn();
+			addPoint(player.move());
+		}
+		return players;
+	}
+	
+	public void setRemember(Boolean holes) {
+		players.get(0).setRemember(holes);
+	}
 }
