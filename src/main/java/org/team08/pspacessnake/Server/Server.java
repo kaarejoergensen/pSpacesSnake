@@ -1,6 +1,7 @@
 package org.team08.pspacessnake.Server;
 
 import org.jspace.*;
+import org.team08.pspacessnake.GUI.logic.Point;
 import org.team08.pspacessnake.Helpers.Utils;
 import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Room;
@@ -71,16 +72,73 @@ class CreateRooms implements Runnable {
 
                 Room room = new Room(UID, (String) create[1]);
                 space.put("room", UID, room);
-
+                GameControl gameLogic = new GameControl();
                 new Thread(new EnterRoom(space, new RemoteSpace(Server.URI + UID + "?keep"), UID)).start();
                 new Thread(new Chat(new RemoteSpace(Server.URI + UID + "?keep"))).start();
-
+                new Thread(new GameReader(new RemoteSpace(Server.URI + UID + "?keep"),gameLogic)).start();
+                new Thread(new GameWriter(new RemoteSpace(Server.URI + UID + "?keep"),gameLogic));
                 space.put("createRoomResult", UID, create[1], create[2]);
                 System.out.println("New room with name " + create[1] + " and UID " + UID + " created!");
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+}
+
+class GameWriter implements Runnable {
+    private Space space;
+    private GameControl gameLogic;
+
+    GameWriter(Space space, GameControl gameLogic) {
+        this.space = space;
+        this.gameLogic = gameLogic;
+    }
+
+
+    @Override
+    public void run() {
+        while (true) {
+            if (gameLogic.isStarted()) {
+                try {
+                space.put(gameLogic.coordinates());
+                } catch (InterruptedException e) {}
+            }
+            try {
+                Thread.sleep((long) (16));
+            } catch (InterruptedException ignore) {
+            }
+
+
+        }
+
+
+
+    }
+}
+
+
+class GameReader implements Runnable {
+    private Space space;
+    private GameControl gameLogic;
+
+    GameReader(Space space, GameControl gamelogic) {
+        this.space = space;
+        this.gameLogic = gamelogic;
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+
+                try {
+                    Object[] direction = space.get(new ActualField("Changed direction"), new FormalField(Token.class),
+                            new FormalField(String.class));
+                    gameLogic.changeDirection((Token) direction[1], (String) direction[2]);
+
+                } catch (InterruptedException e) {}
+        }
+
     }
 }
 
