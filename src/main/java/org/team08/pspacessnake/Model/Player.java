@@ -21,7 +21,7 @@ public class Player {
     }
     
     public Point move() {
-    	this.position = this.position.translate(speed * Math.cos(angle), speed * Math.sin(angle));
+    	this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle));
     	return this.position;
     }
     
