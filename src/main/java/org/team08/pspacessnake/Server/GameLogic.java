@@ -51,7 +51,8 @@ public class GameLogic {
 
     public List<Player> nextFrame() {
         for (Player player : players) {
-            if (!player.getDirection().equals("none")) {
+        	/*
+        	if (!player.getDirection().equals("none")) {
                 double angle = player.getAngle();
                 if (player.getDirection().equals("left")) {
                     angle += 0.1;
@@ -63,6 +64,9 @@ public class GameLogic {
             Point position = player.getPosition();
             position = position.translate(player.getSpeed() * Math.cos(player.getAngle()), -player.getSpeed() * Math.sin(player.getAngle()));
             player.setPosition(position);
+            */
+        	player.turn();
+            player.move();
         }
         return players;
     }

@@ -6,16 +6,34 @@ public class Player {
     private Token token;
     private Point position;
     private Double speed;
-    private Double angle;
+    private Double angle;		//current angler of movement
+    private double dAngle;		//the change of angle per frame.
     private Color color;
-    private String direction;
+    private String direction;	//change of angle
 
     public Player(Token token) {
         this.token = token;
         this.position = new Point(1, 1);
         this.speed = .5;
         this.angle = 0d;
+        this.dAngle = .1;
         this.direction = "none";
+    }
+    
+    public Point move() {
+    	this.position = this.position.translate(speed * Math.cos(angle), speed * Math.sin(angle));
+    	return this.position;
+    }
+    
+    public double turn() {
+    	if (!this.direction.equals("none")) {
+            if (this.direction.equals("left")) {
+                this.angle += this.dAngle;
+            } else if (direction.equals("right")) {
+                this.angle -= this.dAngle;
+            }
+        }
+    	return this.angle;
     }
 
     public Token getToken() {
@@ -47,7 +65,16 @@ public class Player {
     }
 
     public void setAngle(Double angle) {
+    	
         this.angle = angle;
+    }
+    
+    public double getDAngle() {
+        return dAngle;
+    }
+
+    public void setDAngle(double dAngle) {
+        this.dAngle = dAngle;
     }
 
     public Color getColor() {
