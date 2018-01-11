@@ -4,12 +4,13 @@ package org.team08.pspacessnake.GUI;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import org.jspace.Space;
-
+import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Point;
 import org.team08.pspacessnake.Model.Token;
 import org.team08.pspacessnake.Model.GameSettings;
@@ -30,9 +31,7 @@ public class SpaceGui {
     private static final int CELL_SIZE = 5;
     private boolean leftKeyPressed = false;
     private boolean rightKeyPressed = false;
-    
-    private List<Circle> points;
-    
+    private List<Circle> points; 
     private static GraphicsContext context;
 
     public SpaceGui(Space space, Token token, Stage primaryStage, GameSettings settings) {
@@ -100,7 +99,6 @@ public class SpaceGui {
         root.getChildren().add(canvas);
 
         Scene scene = new Scene(root);
-
         context.setFill(new Color(0.1, 0.1, 0.1, 1));
         context.fillRect(0, 0, WIDTH, HEIGHT);
         context.setFill(Color.CORNSILK);
@@ -112,14 +110,29 @@ public class SpaceGui {
         primaryStage.show();
     }
 
-    public void updateGui(Point point) {
-        Circle circle = new Circle(point.getX() * SIZE * 2, point.getY() * SIZE * 2, SIZE / 2);
+	public void holes(Circle circle) {
+		context.setFill(new Color(0.1, 0.1, 0.1, 1));
+		context.fillRect(0, 0, WIDTH, HEIGHT);
+		context.setFill(Color.CORNSILK);
+		context.fillOval(circle.getCenterX() - SIZE / 2, circle.getCenterY() - SIZE / 2, SIZE, SIZE);
+		
+		for (Circle circle1 : points) {
+			context.fillOval(circle1.getCenterX() - SIZE / 2, circle1.getCenterY() - SIZE / 2, SIZE, SIZE);
+		}
+	}
 
-        context.fillOval(circle.getCenterX() - SIZE / 2, circle.getCenterY() - SIZE / 2, SIZE, SIZE);
-        if (this.collisionDetected(circle)) {
-            System.out.println("COLLISION");
-        }
-        points.add(circle);
+    public void updateGui(Point point, Boolean remember) {
+        Circle circle = new Circle(point.getX() * SIZE * 2, point.getY() * SIZE * 2, SIZE / 2);
+		if(remember) {
+        	context.fillOval(circle.getCenterX() - SIZE / 2, circle.getCenterY() - SIZE / 2, SIZE, SIZE);
+        	if (this.collisionDetected(circle)) {
+            	System.out.println("COLLISION");
+        	}
+        	points.add(circle);
+    	}
+    	else {
+    		holes(circle);
+    	}
     }
 
     private boolean collisionDetected(Shape block) {

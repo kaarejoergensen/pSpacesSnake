@@ -1,6 +1,7 @@
 package org.team08.pspacessnake.Server;
 
 import org.jspace.*;
+import org.team08.pspacessnake.GUI.SpaceGui;
 import org.team08.pspacessnake.Helpers.Utils;
 import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Room;
@@ -9,6 +10,7 @@ import org.team08.pspacessnake.Model.GameSettings;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Server {
     final static String URI = "tcp://127.0.0.1:9001/";
@@ -81,7 +83,7 @@ class CreateRooms implements Runnable {
                 GameLogic gameLogic = new GameLogic(gameSettings);
                 new Thread(new GameReader(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
                 new Thread(new GameWriter(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
-
+        		new Thread(new SetHoles(gameLogic)).start();
                 new Thread(new EnterRoom(space, new RemoteSpace(Server.URI + UID + "?keep"), UID, gameLogic)).start();
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
@@ -109,7 +111,7 @@ class GameWriter implements Runnable {
                     List<Player> players = gameLogic.nextFrame();
                     for (Player player : players) {
                         for (Player player1 : players) {
-                            space.put("Player moved", player.getPosition(), player1.getToken());
+                            space.put("Player moved", player.getPosition(), player1.getToken(), player.getRemember());
                         }
                     }
                     time = System.currentTimeMillis() - time;
@@ -125,6 +127,31 @@ class GameWriter implements Runnable {
     }
 }
 
+class SetHoles implements Runnable {
+	private GameLogic logic;
+	SetHoles(GameLogic logic) {
+		this.logic = logic;
+	}
+	@Override
+	public void run() {
+		while(true) {
+			int randomNum = ThreadLocalRandom.current().nextInt(1000, 5000);
+			
+			try {
+				Thread.sleep((long) (randomNum));
+			} catch (InterruptedException e) {}
+			logic.setRemember(false);
+			
+			try {
+				Thread.sleep((long) (500));
+			} catch (InterruptedException e) {}
+			logic.setRemember(true);
+			
+		}
+		
+	}
+
+}
 class GameReader implements Runnable {
     private Space space;
     private GameLogic gameLogic;

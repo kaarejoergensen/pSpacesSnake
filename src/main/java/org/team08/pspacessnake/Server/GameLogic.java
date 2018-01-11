@@ -2,7 +2,6 @@ package org.team08.pspacessnake.Server;
 
 import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Point;
-import java.awt.geom.Point2D; // Skal overgå til at bruge Point
 import org.team08.pspacessnake.Model.Token;
 import org.team08.pspacessnake.Model.GameSettings;
 
@@ -13,7 +12,7 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Iterator;
 import java.util.Map;
-
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GameLogic {
     private List<Player> players;
@@ -103,6 +102,8 @@ public class GameLogic {
         this.players.add(player);
         if (this.players.size() > 0) {
             this.isStarted = true;
+        } else {
+        	System.out.print("Waiting for more players");
         }
     }
 
@@ -147,5 +148,9 @@ public class GameLogic {
             addPoint(player.move());
         }
         return players;
+    }
+    
+    public void setRemember(Boolean holes) {
+    	players.get(0).setRemember(holes);
     }
 }

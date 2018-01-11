@@ -11,6 +11,7 @@ public class Player {
     private Color color;
     private String direction;	//change of angle
     private boolean isDead = false;
+	private Boolean remember = true;
 
     public Player(Token token) {
         this.token = token;
@@ -104,4 +105,10 @@ public class Player {
 	private void kill() {
 		this.isDead = true;
 	}
+    public void setRemember(Boolean holes) {
+    	this.remember  = holes;
+    }
+    public Boolean getRemember() {
+    	return remember;
+    }
 }
