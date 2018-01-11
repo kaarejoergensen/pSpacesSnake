@@ -16,11 +16,11 @@ public class floatTests {
     static int numRow = (int)Math.floor(B_HEIGHT / (double) BIN_SIZE) + 1;
     static int numCol = (int)Math.floor(B_WIDTH / (double) BIN_SIZE) + 1;
     static LinkedList<Point2D.Double>[][] boardCells = (LinkedList<Point2D.Double>[][]) new LinkedList<?>[numRow][numCol];
-    static ListIterator<Point2D.Double>[][] boardCellsIterators = (ListIterator<Point2D.Double>[][]) new ListIterator<?>[numRow][numCol]; 
+    static ListIterator<Point2D.Double>[][] boardCellsIterators = (ListIterator<Point2D.Double>[][]) new ListIterator<?>[numRow][numCol];
     
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
-		    
+		
 	    // Initialiste 2D arrays
 	    for (int row = 0; row < numRow; row++) {
 	    	for (int col = 0; col < numCol; col++) {
@@ -31,11 +31,12 @@ public class floatTests {
 	    
 	      
 	    // Random points for testing
-	    Point2D.Double somePos = new Point2D.Double(0.0, 0.0);
-	    Point2D.Double someOtherPos = new Point2D.Double(3.0, 3.0);
+	    Point2D.Double somePos = new Point2D.Double(15, 15.0);
+	    Point2D.Double someOtherPos = new Point2D.Double(14.9, 14.9);
 	    addPoint(somePos);
 	    //addPoint(someOtherPos);
 	    
+	    System.out.println(somePos.distance(someOtherPos));
 	    System.out.println(checkCollision(someOtherPos));
 	    
 	    /*// test 
@@ -58,8 +59,8 @@ public class floatTests {
 	}
 	
 	public static boolean checkCollision(Point2D.Double point) {
-		int pointCellX = (int) point.getX(); //the x coordinate of the bin the point belongs to.
-		int pointCellY = (int) point.getY(); //the y coordinate of the bin the point belongs to.
+		int pointCellX = getCellX(point); //the x coordinate of the bin the point belongs to.
+		int pointCellY = getCellY(point); //the y coordinate of the bin the point belongs to.
 		
 		Iterator tempIterator;
 		for (int dx = -1; dx <= 1; dx++) {
@@ -79,10 +80,16 @@ public class floatTests {
 		return false;
 	}
 	
+	public static int getCellX(Point2D.Double point) {
+		return (int) point.getX() / BIN_SIZE;
+	}
+	
+	public static int getCellY(Point2D.Double point) {
+		return (int) point.getY() / BIN_SIZE;
+	}
+	
     public static void addPoint(Point2D.Double point) {
-    	int i = (int) point.getX() / BIN_SIZE;
-    	int j = (int) point.getY() / BIN_SIZE;
-    	boardCellsIterators[i][j].add(point);
+    	boardCellsIterators[getCellY(point)][getCellX(point)].add(point);
     }
     
 }
