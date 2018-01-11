@@ -72,7 +72,7 @@ class CreateRooms implements Runnable {
 
                 Room room = new Room(UID, (String) create[1]);
                 space.put("room", UID, room);
-                GameControl gameLogic = new GameControl();
+                GameLogic gameLogic = new GameControl();
                 new Thread(new EnterRoom(space, new RemoteSpace(Server.URI + UID + "?keep"), UID)).start();
                 new Thread(new Chat(new RemoteSpace(Server.URI + UID + "?keep"))).start();
                 new Thread(new GameReader(new RemoteSpace(Server.URI + UID + "?keep"),gameLogic)).start();
@@ -88,9 +88,9 @@ class CreateRooms implements Runnable {
 
 class GameWriter implements Runnable {
     private Space space;
-    private GameControl gameLogic;
+    private GameLogic gameLogic;
 
-    GameWriter(Space space, GameControl gameLogic) {
+    GameWriter(Space space, GameLogic gameLogic) {
         this.space = space;
         this.gameLogic = gameLogic;
     }
@@ -120,9 +120,9 @@ class GameWriter implements Runnable {
 
 class GameReader implements Runnable {
     private Space space;
-    private GameControl gameLogic;
+    private GameLogic gameLogic;
 
-    GameReader(Space space, GameControl gamelogic) {
+    GameReader(Space space, GameLogic gamelogic) {
         this.space = space;
         this.gameLogic = gamelogic;
     }
