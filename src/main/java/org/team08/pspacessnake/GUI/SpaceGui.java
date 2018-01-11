@@ -23,9 +23,7 @@ import javafx.stage.Stage;
 
 @SuppressWarnings("restriction")
 public class SpaceGui {
-    private Space space;
     private final static int SIZE = 5;
-    private final static String REMOTE_URI = "tcp://127.0.0.1:9001/";
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 1000;
     private boolean leftKeyPressed = false;
@@ -34,7 +32,6 @@ public class SpaceGui {
     private static GraphicsContext context;
 
     public SpaceGui(Space space, Token token, Stage primaryStage) {
-        this.space = space;
         points = new LinkedList<>();
         StackPane root = new StackPane();
         Canvas canvas = new Canvas(WIDTH, HEIGHT);

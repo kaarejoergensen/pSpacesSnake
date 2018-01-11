@@ -13,7 +13,7 @@ public class Server {
     final static String URI = "tcp://127.0.0.1:9001/";
     private final static String GATE_URI = URI + "?keep";
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         SpaceRepository repository = new SpaceRepository();
         repository.addGate(GATE_URI);
         repository.add("space", new SequentialSpace());
@@ -71,18 +71,16 @@ class CreateRooms implements Runnable {
 
                 Room room = new Room(UID, (String) create[1]);
                 space.put("room", UID, room);
-                new Thread(new EnterRoom(space, new RemoteSpace(Server.URI + UID + "?keep"), UID)).start();
                 new Thread(new Chat(new RemoteSpace(Server.URI + UID + "?keep"))).start();
 
                 space.put("createRoomResult", UID, create[1], create[2]);
                 System.out.println("New room with name " + create[1] + " and UID " + UID + " created!");
 
                 GameLogic gameLogic = new GameLogic();
-                Player player = new Player((Token) create[2]);
-                gameLogic.addPlayer(player);
-                gameLogic.startGame();
                 new Thread(new GameReader(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
                 new Thread(new GameWriter(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
+
+                new Thread(new EnterRoom(space, new RemoteSpace(Server.URI + UID + "?keep"), UID, gameLogic)).start();
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
             }
@@ -102,19 +100,22 @@ class GameWriter implements Runnable {
     @Override
     public void run() {
         while (true) {
-            if (gameLogic.isStarted()) {
-                try {
+            try {
+                if (gameLogic.isStarted()) {
                     float time = System.currentTimeMillis();
                     List<Player> players = gameLogic.nextFrame();
                     for (Player player : players) {
-                        space.put("Player moved", player.getPosition(), player.getToken());
+                        for (Player player1 : players) {
+                            space.put("Player moved", player.getPosition(), player1.getToken());
+                        }
                     }
                     time = System.currentTimeMillis() - time;
                     if (time < 1000.0f / 24) {
                         Thread.sleep((long) (1000.0f / 24 - time));
                     }
-                } catch (InterruptedException ignored) {
                 }
+                Thread.sleep(100);
+            } catch (InterruptedException ignored) {
             }
         }
     }
@@ -136,7 +137,7 @@ class GameReader implements Runnable {
                 Object[] direction = space.get(new ActualField("Changed direction"), new FormalField(String.class),
                         new FormalField(Token.class));
                 gameLogic.changeDirection((Token) direction[2], (String) direction[1]);
-                System.out.println(((Token)direction[2]).getName() + " changed direction to " + direction[1]);
+                System.out.println(((Token) direction[2]).getName() + " changed direction to " + direction[1]);
             } catch (InterruptedException e) {
             }
         }
@@ -148,11 +149,13 @@ class EnterRoom implements Runnable {
     private Space space;
     private Space roomSpace;
     private String UID;
+    private GameLogic gameLogic;
 
-    EnterRoom(Space space, Space remoteSpace, String UID) throws InterruptedException {
+    EnterRoom(Space space, Space remoteSpace, String UID, GameLogic gameLogic) {
         this.space = space;
         this.roomSpace = remoteSpace;
         this.UID = UID;
+        this.gameLogic = gameLogic;
     }
 
     @Override
@@ -175,6 +178,9 @@ class EnterRoom implements Runnable {
                 roomSpace.put("message", "User '" + token.getName() + "' entered room!", new Token("0", "System"));
                 roomSpace.put("player", token, new Player(token));
                 System.out.println("Added user " + token.getName() + " to room " + UID);
+
+                Player player = new Player(token);
+                gameLogic.addPlayer(player);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
