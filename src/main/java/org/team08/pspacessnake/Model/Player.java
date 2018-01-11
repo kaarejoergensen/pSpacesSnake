@@ -4,14 +4,17 @@ import java.awt.*;
 
 public class Player {
     private Token token;
-    private Double x;
-    private Double y;
+    private Point position;
     private Double speed;
     private Double angle;
     private Color color;
+    private String direction;
 
     public Player(Token token) {
         this.token = token;
+        this.position = new Point(1, 1);
+        this.angle = 0d;
+        this.direction = "none";
     }
 
     public Token getToken() {
@@ -22,20 +25,12 @@ public class Player {
         this.token = token;
     }
 
-    public Double getX() {
-        return x;
+    public Point getPosition() {
+        return position;
     }
 
-    public void setX(Double x) {
-        this.x = x;
-    }
-
-    public Double getY() {
-        return y;
-    }
-
-    public void setY(Double y) {
-        this.y = y;
+    public void setPosition(Point position) {
+        this.position = position;
     }
 
     public Double getSpeed() {
@@ -60,5 +55,13 @@ public class Player {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
     }
 }

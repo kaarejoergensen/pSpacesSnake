@@ -1,7 +1,6 @@
 package org.team08.pspacessnake.Server;
 
 import org.jspace.*;
-import org.team08.pspacessnake.GUI.logic.Point;
 import org.team08.pspacessnake.Helpers.Utils;
 import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Room;
@@ -72,13 +71,18 @@ class CreateRooms implements Runnable {
 
                 Room room = new Room(UID, (String) create[1]);
                 space.put("room", UID, room);
-                GameLogic gameLogic = new GameControl();
                 new Thread(new EnterRoom(space, new RemoteSpace(Server.URI + UID + "?keep"), UID)).start();
                 new Thread(new Chat(new RemoteSpace(Server.URI + UID + "?keep"))).start();
-                new Thread(new GameReader(new RemoteSpace(Server.URI + UID + "?keep"),gameLogic)).start();
-                new Thread(new GameWriter(new RemoteSpace(Server.URI + UID + "?keep"),gameLogic));
+
                 space.put("createRoomResult", UID, create[1], create[2]);
                 System.out.println("New room with name " + create[1] + " and UID " + UID + " created!");
+
+                GameLogic gameLogic = new GameLogic();
+                Player player = new Player((Token) create[2]);
+                gameLogic.addPlayer(player);
+                gameLogic.startGame();
+                new Thread(new GameReader(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
+                new Thread(new GameWriter(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
             }
@@ -95,28 +99,26 @@ class GameWriter implements Runnable {
         this.gameLogic = gameLogic;
     }
 
-
     @Override
     public void run() {
         while (true) {
             if (gameLogic.isStarted()) {
                 try {
-                space.put(gameLogic.coordinates());
-                } catch (InterruptedException e) {}
+                    float time = System.currentTimeMillis();
+                    List<Player> players = gameLogic.nextFrame();
+                    for (Player player : players) {
+                        space.put("Player moved", player.getPosition(), player.getToken());
+                    }
+                    time = System.currentTimeMillis() - time;
+                    if (time < 1000.0f / 24) {
+                        Thread.sleep((long) (1000.0f / 24 - time));
+                    }
+                } catch (InterruptedException ignored) {
+                }
             }
-            try {
-                Thread.sleep((long) (16));
-            } catch (InterruptedException ignore) {
-            }
-
-
         }
-
-
-
     }
 }
-
 
 class GameReader implements Runnable {
     private Space space;
@@ -130,13 +132,13 @@ class GameReader implements Runnable {
     @Override
     public void run() {
         while (true) {
-
-                try {
-                    Object[] direction = space.get(new ActualField("Changed direction"), new FormalField(Token.class),
-                            new FormalField(String.class));
-                    gameLogic.changeDirection((Token) direction[1], (String) direction[2]);
-
-                } catch (InterruptedException e) {}
+            try {
+                Object[] direction = space.get(new ActualField("Changed direction"), new FormalField(String.class),
+                        new FormalField(Token.class));
+                gameLogic.changeDirection((Token) direction[2], (String) direction[1]);
+                System.out.println(((Token)direction[2]).getName() + " changed direction to " + direction[1]);
+            } catch (InterruptedException e) {
+            }
         }
 
     }
@@ -199,7 +201,7 @@ class Chat implements Runnable {
                         .size() - 1) + " users.");
                 users.stream().filter(u -> !u[1].equals(message[2])).forEach(u -> {
                     try {
-                        space.put("message" + ((Token)u[1]).getID(), message[1], ((Token)message[2]).getName());
+                        space.put("message" + ((Token) u[1]).getID(), message[1], ((Token) message[2]).getName());
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

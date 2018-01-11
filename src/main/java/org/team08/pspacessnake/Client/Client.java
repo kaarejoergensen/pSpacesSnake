@@ -77,7 +77,7 @@ public class Client extends Application {
 
     public void start(Stage primaryStage) throws Exception {
     	System.out.print("Hey");
-		SpaceGui gui = new SpaceGui(token, primaryStage);
+		SpaceGui gui = new SpaceGui(new RemoteSpace(REMOTE_URI + UID + "?keep"), token, primaryStage);
 		new Thread(new GameReader(new RemoteSpace(REMOTE_URI + UID + "?keep"), gui, token)).start();
     }
 }
@@ -99,9 +99,7 @@ class GameReader implements Runnable {
 			try {
 				Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(Point.class),
                         new ActualField(this.token));
-
-				gui.updateGui((Point) newPoint[2]); 
-
+				gui.updateGui((Point) newPoint[1]);
 			} catch (InterruptedException e) {}
 		}
 	}
