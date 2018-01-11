@@ -18,13 +18,19 @@ public class GameLogic {
     private List<Player> players;
     private boolean isStarted = false;
     private static GameSettings gameSettings;
+    private static int numRows;
+    private static int numCols;
+    private static LinkedList<Point>[][] boardCells;
+    private static ListIterator<Point>[][] boardCellsIterators;
     
+    /*
     // Cells of (cellSize x cellSize) pixels
     private static int numRows = (int)Math.floor(gameSettings.getHeight() / (double) gameSettings.getCellSize()) + 1;
     private static int numCols = (int)Math.floor(gameSettings.getWidth() / (double) gameSettings.getCellSize()) + 1;
     private static LinkedList<Point>[][] boardCells = (LinkedList<Point>[][]) new LinkedList<?>[numRows][numCols];
     private static ListIterator<Point>[][] boardCellsIterators = (ListIterator<Point>[][]) new ListIterator<?>[numRows][numCols];
-
+     */
+    
     public GameLogic() {
         this.players = new ArrayList<>();
         initiateCellLists();
@@ -38,6 +44,12 @@ public class GameLogic {
     
  // Initialiste 2D arrays
     private void initiateCellLists() {
+    	
+    	numRows = (int)Math.floor(gameSettings.getHeight() / (double) gameSettings.getCellSize()) + 1;
+    	numCols = (int)Math.floor(gameSettings.getWidth() / (double) gameSettings.getCellSize()) + 1;
+    	boardCells = (LinkedList<Point>[][]) new LinkedList<?>[numRows][numCols];
+    	boardCellsIterators = (ListIterator<Point>[][]) new ListIterator<?>[numRows][numCols];
+    	
 	    for (int row = 0; row < numRows; row++) {
 	    	for (int col = 0; col < numCols; col++) {
 	    		boardCells[row][col] = new LinkedList<Point>();
