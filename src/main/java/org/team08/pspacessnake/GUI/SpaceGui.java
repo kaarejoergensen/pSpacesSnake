@@ -31,7 +31,7 @@ public class SpaceGui {
     private static final int CELL_SIZE = 5;
     private boolean leftKeyPressed = false;
     private boolean rightKeyPressed = false;
-    private List<Circle> points; 
+    private List<Point> points;
     private static GraphicsContext context;
 
     public SpaceGui(Space space, Token token, Stage primaryStage, GameSettings settings) {
@@ -110,42 +110,32 @@ public class SpaceGui {
         primaryStage.show();
     }
 
-	public void holes(Circle circle, Player player) {
+	public void holes(Point point) {
 		context.setFill(new Color(0.1, 0.1, 0.1, 1));
 		context.fillRect(0, 0, WIDTH, HEIGHT);
-        context.setFill(player.getColor());
-		context.fillOval(circle.getCenterX() - SIZE / 2, circle.getCenterY() - SIZE / 2, SIZE, SIZE);
+        context.setFill(point.getColor());
+        context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
 		
-		for (Circle circle1 : points) {
-			context.fillOval(circle1.getCenterX() - SIZE / 2, circle1.getCenterY() - SIZE / 2, SIZE, SIZE);
+		for (Point point1 : points) {
+            context.setFill(point1.getColor());
+            context.fillOval(point1.getX(), point1.getY(), SIZE, SIZE);
 		}
 	}
 
     public void updateGui(Player player) {
-        Circle circle = new Circle(player.getPosition().getX() * SIZE * 2, player.getPosition().getY() * SIZE * 2, SIZE / 2);
+        Point point = new Point(player.getPosition().getX() * SIZE * 2, player.getPosition().getY() * SIZE * 2);
         context.setFill(player.getColor());
+        point.setColor(player.getColor());
 		if(player.getRemember()) {
-        	context.fillOval(circle.getCenterX() - SIZE / 2, circle.getCenterY() - SIZE / 2, SIZE, SIZE);
-        	if (this.collisionDetected(circle)) {
-            	System.out.println("COLLISION");
-        	}
-        	points.add(circle);
+        	context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
+        	points.add(point);
     	}
     	else {
-    		holes(circle, player);
+    		holes(point);
     	}
     }
 
-    private boolean collisionDetected(Shape block) {
-        for (Shape shape : points) {
-            if (block.getBoundsInParent().intersects(shape.getBoundsInParent())) {
-                System.out.println(((Circle) block).getCenterX() + " " + ((Circle) block).getCenterY());
-                System.out.println(((Circle) shape).getCenterX() + " " + ((Circle) shape).getCenterY());
-                return true;
-            }
-        }
-        return false;
-    }
+
 }
 
 

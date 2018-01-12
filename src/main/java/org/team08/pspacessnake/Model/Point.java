@@ -1,8 +1,19 @@
 package org.team08.pspacessnake.Model;
+import javafx.scene.paint.Color;
 
 public class Point {
     private final double x;    // The X coordinate
     private final double y;    // The Y coordinate
+
+    public static Color getColor() {
+        return color;
+    }
+
+    public static void setColor(Color color) {
+        Point.color = color;
+    }
+
+    private static Color color;
 
     public Point(final double x, final double y) {
         this.x = x;
@@ -57,4 +68,5 @@ public class Point {
                 ", y=" + y +
                 '}';
     }
+
 }
