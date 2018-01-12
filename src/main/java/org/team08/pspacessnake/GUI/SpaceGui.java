@@ -117,7 +117,7 @@ public class SpaceGui {
         context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
 		
 		for (Point point1 : points) {
-            context.setFill(point1.getColor());
+            context.setFill(point.getColor());
             context.fillOval(point1.getX(), point1.getY(), SIZE, SIZE);
 		}
 	}
