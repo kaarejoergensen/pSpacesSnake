@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Server {
-    final static String URI = "tcp://127.0.0.1:9001/";
+    final static String URI = "tcp://10.16.170.253:9001/";
     private final static String GATE_URI = URI + "?keep";
 
     public static void main(String[] args) {
@@ -111,7 +111,7 @@ class GameWriter implements Runnable {
                     List<Player> players = gameLogic.nextFrame();
                     for (Player player : players) {
                         for (Player player1 : players) {
-                            space.put("Player moved", player.getPosition(), player1.getToken(), player.getRemember());
+                            space.put("Player moved", player, player1.getToken());
                         }
                     }
                     time = System.currentTimeMillis() - time;

@@ -1,6 +1,6 @@
 package org.team08.pspacessnake.Model;
 
-import java.awt.*;
+import javafx.scene.paint.Color;
 
 public class Player {
     private Token token;

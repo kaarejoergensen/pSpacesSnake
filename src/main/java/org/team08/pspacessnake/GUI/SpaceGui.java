@@ -110,10 +110,10 @@ public class SpaceGui {
         primaryStage.show();
     }
 
-	public void holes(Circle circle) {
+	public void holes(Circle circle, Player player) {
 		context.setFill(new Color(0.1, 0.1, 0.1, 1));
 		context.fillRect(0, 0, WIDTH, HEIGHT);
-		context.setFill(Color.CORNSILK);
+        context.setFill(player.getColor());
 		context.fillOval(circle.getCenterX() - SIZE / 2, circle.getCenterY() - SIZE / 2, SIZE, SIZE);
 		
 		for (Circle circle1 : points) {
@@ -121,9 +121,10 @@ public class SpaceGui {
 		}
 	}
 
-    public void updateGui(Point point, Boolean remember) {
-        Circle circle = new Circle(point.getX() * SIZE * 2, point.getY() * SIZE * 2, SIZE / 2);
-		if(remember) {
+    public void updateGui(Player player) {
+        Circle circle = new Circle(player.getPosition().getX() * SIZE * 2, player.getPosition().getY() * SIZE * 2, SIZE / 2);
+        context.setFill(player.getColor());
+		if(player.getRemember()) {
         	context.fillOval(circle.getCenterX() - SIZE / 2, circle.getCenterY() - SIZE / 2, SIZE, SIZE);
         	if (this.collisionDetected(circle)) {
             	System.out.println("COLLISION");
@@ -131,7 +132,7 @@ public class SpaceGui {
         	points.add(circle);
     	}
     	else {
-    		holes(circle);
+    		holes(circle, player);
     	}
     }
 

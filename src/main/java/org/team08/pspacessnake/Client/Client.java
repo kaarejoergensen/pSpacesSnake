@@ -4,15 +4,12 @@ import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
 import org.jspace.Space;
-import org.team08.pspacessnake.Model.Room;
-import org.team08.pspacessnake.Model.Token;
-import org.team08.pspacessnake.Model.GameSettings;
+import org.team08.pspacessnake.Model.*;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 import org.team08.pspacessnake.GUI.*;
-import org.team08.pspacessnake.Model.Point;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,7 +17,7 @@ import java.util.Scanner;
 
 @SuppressWarnings("restriction")
 public class Client extends Application {
-    private final static String REMOTE_URI = "tcp://127.0.0.1:9001/";
+    private final static String REMOTE_URI = "tcp://10.16.170.253:9001/";
     private static Token token;
     private static String UID;
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -96,9 +93,9 @@ class GameReader implements Runnable {
 	public void run() {
 		while (true) {
 			try {
-				Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(Point.class),
-                        new ActualField(token), new FormalField(Boolean.class));
-                gui.updateGui((Point) newPoint[1], (Boolean) newPoint[3]);
+				Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(Player.class),
+                        new ActualField(token));
+                gui.updateGui((Player) newPoint[1]);
 			} catch (InterruptedException e) {
 			    e.printStackTrace();
             }

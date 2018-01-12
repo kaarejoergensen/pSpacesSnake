@@ -5,6 +5,8 @@ import org.team08.pspacessnake.Model.Point;
 import org.team08.pspacessnake.Model.Token;
 import org.team08.pspacessnake.Model.GameSettings;
 
+
+import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,10 +24,13 @@ public class GameLogic {
 	private static int numCols;
 	private static LinkedList<Point>[][] boardCells;
 	private static ListIterator<Point>[][] boardCellsIterators;
+	private static Color[] colorList = {new Color(1,0,0,1),new Color(1,1,1, 1),new Color(0,0,1, 1)};
+	private static int i = 0;
     
 	public GameLogic() {
         this.players = new ArrayList<>();
         initiateCellLists();
+
     }
     
     public GameLogic(GameSettings gameSettings) {
@@ -104,11 +109,13 @@ public class GameLogic {
             this.players = new ArrayList<>();
         }
 		this.players.add(player);
+        player.setColor(colorList[i]);
         if (this.players.size() > 0) {
 			this.isStarted = true;
         } else {
         	System.out.print("Waiting for more players");
         }
+        i++;
 	}
 
  	public boolean isStarted() {
