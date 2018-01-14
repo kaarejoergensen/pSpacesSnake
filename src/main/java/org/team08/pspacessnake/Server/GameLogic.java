@@ -1,57 +1,55 @@
 package org.team08.pspacessnake.Server;
 
+import javafx.scene.paint.Color;
+import org.team08.pspacessnake.Model.GameSettings;
 import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Point;
 import org.team08.pspacessnake.Model.Token;
-import org.team08.pspacessnake.Model.GameSettings;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.ListIterator;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GameLogic {
-	private List<Player> players;
-	private boolean isStarted = false;
-	private static GameSettings gameSettings;
-	private static int numRows;
-	private static int numCols;
-	private static LinkedList<Point>[][] boardCells;
-	private static ListIterator<Point>[][] boardCellsIterators;
-    
-	public GameLogic() {
+    private List<Player> players;
+    private boolean isStarted = false;
+    private static GameSettings gameSettings;
+    private static int numRows;
+    private static int numCols;
+    private static LinkedList<Point>[][] boardCells;
+    private static ListIterator<Point>[][] boardCellsIterators;
+    private static Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE};
+    private static int i = 0;
+
+    public GameLogic() {
         this.players = new ArrayList<>();
         initiateCellLists();
+
     }
-    
+
     public GameLogic(GameSettings gameSettings) {
-    	this.players = new ArrayList<>();
-    	this.gameSettings = gameSettings;
-    	initiateCellLists();
+        this.players = new ArrayList<>();
+        this.gameSettings = gameSettings;
+        initiateCellLists();
     }
-    
- // Initialiste 2D arrays
+
+    // Initialiste 2D arrays
     private void initiateCellLists() {
-    	
-    	numRows = (int)Math.floor(gameSettings.getHeight() / (double) gameSettings.getCellSize()) + 1;
-    	numCols = (int)Math.floor(gameSettings.getWidth() / (double) gameSettings.getCellSize()) + 1;
-    	boardCells = (LinkedList<Point>[][]) new LinkedList<?>[numRows][numCols];
-    	boardCellsIterators = (ListIterator<Point>[][]) new ListIterator<?>[numRows][numCols];
-    	
-	    for (int row = 0; row < numRows; row++) {
-	    	for (int col = 0; col < numCols; col++) {
-	    		boardCells[row][col] = new LinkedList<Point>();
-	    		boardCellsIterators[row][col] = boardCells[row][col].listIterator();
-	    	}
-	    }
+
+        numRows = (int) Math.floor(gameSettings.getHeight() / (double) gameSettings.getCellSize()) + 1;
+        numCols = (int) Math.floor(gameSettings.getWidth() / (double) gameSettings.getCellSize()) + 1;
+        boardCells = (LinkedList<Point>[][]) new LinkedList<?>[numRows][numCols];
+        boardCellsIterators = (ListIterator<Point>[][]) new ListIterator<?>[numRows][numCols];
+
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                boardCells[row][col] = new LinkedList<Point>();
+                boardCellsIterators[row][col] = boardCells[row][col].listIterator();
+            }
+        }
     }
 
     public List<Player> getPlayers() {
-        return players;
+        return this.players;
     }
     
 	public static boolean playerIsOnBoard(Point point) {
@@ -93,37 +91,33 @@ public class GameLogic {
 	/*
 	 * Adds new player position point to appropriate cell.
 	 */
-    public static void addPoint(Point point) {
-    	boardCellsIterators[getCellY(point)][getCellX(point)].add(point);
+    public void addPoint(Point point) {
+        boardCellsIterators[getCellY(point)][getCellX(point)].add(point);
     }
-    
+
     public GameSettings getGameSettings() {
-    	return this.gameSettings;
+        return this.gameSettings;
     }
 
     public void addPlayer(Player player) {
         if (this.players == null) {
             this.players = new ArrayList<>();
         }
-		this.players.add(player);
-        if (this.players.size() > 0) {
-			this.isStarted = true;
-        } else {
-        	System.out.print("Waiting for more players");
-        }
-	}
+        this.players.add(player);
+        i++;
+    }
 
- 	public boolean isStarted() {
-    	return isStarted;
-	}
+    public boolean isStarted() {
+        return isStarted;
+    }
 
-	public void setStarted(boolean started) {
-    	isStarted = started;
-	}
+    public void setStarted(boolean started) {
+        isStarted = started;
+    }
 
-	public void startGame() {
-    	this.isStarted = true;
-	}
+    public void startGame() {
+        this.isStarted = true;
+    }
 
     public void changeDirection(Token token, String direction) {
         for (Player player : players) {
@@ -151,7 +145,17 @@ public class GameLogic {
 		return players;
 	}
 	
-	public void setRemember(Boolean holes) {
-		players.get(0).setRemember(holes);
-	}
+    public void setRemember(Boolean holes) {
+        players.get(0).setRemember(holes);
+    }
+
+    public Player makePlayer(Token token) {
+        Player newPlayer = new Player(token);
+        Point newPoint = new Point(ThreadLocalRandom.current().nextInt(0, 80), ThreadLocalRandom.current().nextInt(0, 100), colorList[i]);
+        newPlayer.setColor(colorList[i]);
+        newPlayer.setPosition(newPoint);
+        i++;
+        return newPlayer;
+
+    }
 }

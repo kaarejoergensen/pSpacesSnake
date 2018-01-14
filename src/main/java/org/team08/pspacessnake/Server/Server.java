@@ -1,16 +1,16 @@
 package org.team08.pspacessnake.Server;
 
 import org.jspace.*;
-import org.team08.pspacessnake.GUI.SpaceGui;
 import org.team08.pspacessnake.Helpers.Utils;
+import org.team08.pspacessnake.Model.GameSettings;
 import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
-import org.team08.pspacessnake.Model.GameSettings;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public class Server {
     final static String URI = "tcp://127.0.0.1:9001/";
@@ -85,6 +85,7 @@ class CreateRooms implements Runnable {
                 new Thread(new GameWriter(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
         		new Thread(new SetHoles(gameLogic)).start();
                 new Thread(new EnterRoom(space, new RemoteSpace(Server.URI + UID + "?keep"), UID, gameLogic)).start();
+                new Thread(new StartGame(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
             }
@@ -104,9 +105,11 @@ class GameWriter implements Runnable {
     @Override
     public void run() {
     	int frameRate = gameLogic.getGameSettings().getFrameRate();
-        while (true) {
+        boolean firstRun = true;
+    	while (true) {
             try {
                 if (gameLogic.isStarted()) {
+
                     float time = System.currentTimeMillis();
                     List<Player> players = gameLogic.nextFrame();
                     for (Player player : players) {
@@ -115,12 +118,16 @@ class GameWriter implements Runnable {
                     		//continue;	// don't send new coordinates for dead players.
                     	}
                         for (Player player1 : players) {
-                            space.put("Player moved", player.getPosition(), player1.getToken(), player.getRemember());
+                            space.put("Player moved", player, player1.getToken());
                         }
                     }
                     time = System.currentTimeMillis() - time;
                     if (time < 1000.0f / frameRate) {
                         Thread.sleep((long) (1000.0f / frameRate - time));
+                    }
+                    if (firstRun) {
+                        Thread.sleep(2000);
+                        firstRun = false;
                     }
                 } else {
                     Thread.sleep(100);
@@ -151,12 +158,35 @@ class SetHoles implements Runnable {
 				Thread.sleep((long) (500));
 			} catch (InterruptedException e) {}
 			logic.setRemember(true);
-			
 		}
-		
 	}
-
 }
+
+class StartGame implements Runnable {
+    private Space space;
+    private GameLogic gameLogic;
+
+    public StartGame(Space space, GameLogic gameLogic) {
+        this.space = space;
+        this.gameLogic = gameLogic;
+    }
+
+    @Override
+    public void run() {
+        while (!gameLogic.isStarted()) {
+            try {
+                Thread.sleep(300);
+                List<Object[]> ready = space.queryAll(new ActualField("player"), new FormalField(Token.class),
+                        new FormalField(Player.class));
+                List<Player> players = ready.stream().map(o -> (Player) o[2]).collect(Collectors.toList());
+                gameLogic.setStarted(players.stream().allMatch(Player::isReady) && players.size() == gameLogic.getPlayers().size());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
 class GameReader implements Runnable {
     private Space space;
     private GameLogic gameLogic;
@@ -175,6 +205,7 @@ class GameReader implements Runnable {
                 gameLogic.changeDirection((Token) direction[2], (String) direction[1]);
                 System.out.println(((Token) direction[2]).getName() + " changed direction to " + direction[1]);
             } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
 
@@ -211,12 +242,12 @@ class EnterRoom implements Runnable {
                 room.addToken(token);
                 space.put("room", UID, room);
                 space.put("enterResult", Boolean.TRUE, token);
+                Player newPlayer = gameLogic.makePlayer(token);
+                roomSpace.put("player", token, newPlayer);
                 roomSpace.put("message", "User '" + token.getName() + "' entered room!", new Token("0", "System"));
-                roomSpace.put("player", token, new Player(token));
                 System.out.println("Added user " + token.getName() + " to room " + UID);
 
-                Player player = new Player(token);
-                gameLogic.addPlayer(player);
+                gameLogic.addPlayer(newPlayer);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -239,9 +270,9 @@ class Chat implements Runnable {
                         FormalField(Token.class));
                 List<Object[]> users = space.queryAll(new ActualField("player"), new FormalField(Token.class), new
                         FormalField(Player.class));
-                System.out.println("Got message " + message[1] + " from " + message[2] + ". Sending to " + (users
-                        .size() - 1) + " users.");
-                users.stream().filter(u -> !u[1].equals(message[2])).forEach(u -> {
+                System.out.println("Got message " + message[1] + " from " + message[2] + ". Sending to " + users
+                        .size() + " users.");
+                users.forEach(u -> {
                     try {
                         space.put("message" + ((Token) u[1]).getID(), message[1], ((Token) message[2]).getName());
                     } catch (InterruptedException e) {
