@@ -1,12 +1,25 @@
 package org.team08.pspacessnake.Model;
 
+import javafx.scene.paint.Color;
+
 public class Point {
     private final double x;    // The X coordinate
     private final double y;    // The Y coordinate
+    private final double radius;
+    private final Color color;
 
     public Point(final double x, final double y) {
         this.x = x;
         this.y = y;
+        this.radius = 2.5d;		//default value
+        this.color = new Color(1d, 0d, 0d, 1d);
+    }
+    
+    public Point(final double x, final double y, final double radius) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = new Color(1d, 0d, 0d, 1d);
     }
 
     public double getX() {
@@ -16,9 +29,24 @@ public class Point {
     public double getY() {
         return y;
     }
+    
+    public Color getColor() {
+    	return this.color;
+    }
+    
+	/**
+	 * @return the radius
+	 */
+	public double getRadius() {
+		return radius;
+	}
 
     public Point translate(double dx, double dy) {
         return new Point(x + dx, y + dy);
+    }
+    
+    public Point translate(double dx, double dy, double radius) {
+        return new Point(x + dx, y + dy, radius);
     }
 
     public double distance(Point point) {
@@ -52,9 +80,10 @@ public class Point {
 
     @Override
     public String toString() {
-        return "Point{" +
-                "x=" + x +
+    	return "Point{" +                "x=" + x +
                 ", y=" + y +
-                '}';
+                ", radius=" + radius +
+                ", color=" + color.toString() + 
+                "}";
     }
 }

@@ -62,6 +62,8 @@ public class GameLogic {
 		int pointCellX = getCellX(point); //the x coordinate of the bin the point belongs to.
 		int pointCellY = getCellY(point); //the y coordinate of the bin the point belongs to.
 		
+		
+		Point occupiedPoint;
 		Iterator<Point> tempIterator;
 		for (int dx = -1; dx <= 1; dx++) {
 			if (!(pointCellX + dx >= 0 && pointCellX + dx <= numRows))
@@ -71,8 +73,8 @@ public class GameLogic {
 					continue;
 				tempIterator = boardCells[pointCellY + dy][pointCellX + dx].listIterator();
 				while (tempIterator.hasNext()) {
-					if (point.distance((Point)tempIterator.next()) < 5d)
-						return true;
+					occupiedPoint = (Point)tempIterator.next();
+					if (point.distance(occupiedPoint) < point.getRadius() + occupiedPoint.getRadius()) return true;
 				}
 					
 			}
@@ -134,8 +136,17 @@ public class GameLogic {
 
 	public List<Player> nextFrame() {
 		for (Player player : players) {
+			//if (player.isDead()) continue;	// We might just remove dead player from players ???
 			player.turn();
-			addPoint(player.move());
+			player.move();
+			Point newPoint = player.move();
+			if (!playerIsOnBoard(newPoint)) {
+				player.kill();
+				continue;
+			}
+			addPoint(newPoint);
+			if (checkCollision(newPoint)) player.kill();
+			
 		}
 		return players;
 	}

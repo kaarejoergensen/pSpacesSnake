@@ -28,13 +28,12 @@ public class SpaceGui {
     private final static int SIZE = 5;
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 1000;
-    private static final int CELL_SIZE = 5;
     private boolean leftKeyPressed = false;
     private boolean rightKeyPressed = false;
-    private List<Circle> points; 
+    private List<Point> points; 
     private static GraphicsContext context;
 
-    public SpaceGui(Space space, Token token, Stage primaryStage, GameSettings settings) {
+	public SpaceGui(Space space, Token token, Stage primaryStage, GameSettings settings) {
         points = new LinkedList<>();
         StackPane root = new StackPane();
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
@@ -95,7 +94,6 @@ public class SpaceGui {
             }
         });
 
-
         root.getChildren().add(canvas);
 
         Scene scene = new Scene(root);
@@ -104,42 +102,50 @@ public class SpaceGui {
         context.setFill(Color.CORNSILK);
 
         primaryStage.setResizable(false);
+        primaryStage.setX(0);
+        primaryStage.setY(0);
+        primaryStage.setAlwaysOnTop(true);
         primaryStage.setTitle("Snake");
         primaryStage.setOnCloseRequest(e -> System.exit(0));
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-	public void holes(Circle circle) {
+	public void holes(Point point) {
 		context.setFill(new Color(0.1, 0.1, 0.1, 1));
 		context.fillRect(0, 0, WIDTH, HEIGHT);
 		context.setFill(Color.CORNSILK);
-		context.fillOval(circle.getCenterX() - SIZE / 2, circle.getCenterY() - SIZE / 2, SIZE, SIZE);
+		context.fillOval(point.getX() - SIZE / 2, point.getY() - SIZE / 2, SIZE, SIZE);
 		
-		for (Circle circle1 : points) {
-			context.fillOval(circle1.getCenterX() - SIZE / 2, circle1.getCenterY() - SIZE / 2, SIZE, SIZE);
+		for (Point thisPoint : points) {
+			context.fillOval(thisPoint.getX() - SIZE / 2, thisPoint.getY() - SIZE / 2, SIZE, SIZE);
 		}
 	}
 
     public void updateGui(Point point, Boolean remember) {
-        Circle circle = new Circle(point.getX() * SIZE * 2, point.getY() * SIZE * 2, SIZE / 2);
 		if(remember) {
-        	context.fillOval(circle.getCenterX() - SIZE / 2, circle.getCenterY() - SIZE / 2, SIZE, SIZE);
-        	if (this.collisionDetected(circle)) {
-            	System.out.println("COLLISION");
-        	}
-        	points.add(circle);
+        	drawPoint(point);
+        	detectCollision(point);
+        	points.add(point);
+        	System.out.println(point);
     	}
     	else {
-    		holes(circle);
+    		holes(point);
     	}
     }
+    
+    private void drawPoint(Point point) {
+    	//System.out.printf("SIZE = %d\t RADIUS = %f\t DrawPointX = %f / %f \n", SIZE, point.getRadius(), point.getX() - point.getRadius(), point.getX() - SIZE / 2.0);
+    	context.fillOval(point.getX() - point.getRadius(), point.getY() - point.getRadius(), 2*point.getRadius(), 2*point.getRadius());
+    	//context.fillOval(point.getX() - SIZE / 2, point.getY() - SIZE / 2, SIZE, SIZE);
+    }
 
-    private boolean collisionDetected(Shape block) {
-        for (Shape shape : points) {
-            if (block.getBoundsInParent().intersects(shape.getBoundsInParent())) {
-                System.out.println(((Circle) block).getCenterX() + " " + ((Circle) block).getCenterY());
-                System.out.println(((Circle) shape).getCenterX() + " " + ((Circle) shape).getCenterY());
+    private boolean detectCollision(Point newPoint) {
+        for (Point oldPoint : points) {
+            if (newPoint.distance(oldPoint) < newPoint.getRadius() + oldPoint.getRadius()) {
+            	System.out.printf("COLLISION: (%f, %f, R: %f) <-> (%f, %f, R:%f)\n", newPoint.getX(), newPoint.getY(), newPoint.getRadius(), oldPoint.getX(), newPoint.getY(), newPoint.getRadius());
+                //System.out.println((newPoint.getX() + " " + (newPoint.getY());
+                //System.out.println((oldPoint.getX() + " " + (oldPoint.getY());
                 return true;
             }
         }

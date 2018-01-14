@@ -7,9 +7,12 @@ import org.jspace.Space;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
 import org.team08.pspacessnake.Model.GameSettings;
+import org.team08.pspacessnake.GUI.*;
+import org.team08.pspacessnake.Model.Point;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.scene.paint.Color;
 
 import org.team08.pspacessnake.GUI.*;
 import org.team08.pspacessnake.Model.Point;

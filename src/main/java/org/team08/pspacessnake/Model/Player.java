@@ -6,6 +6,7 @@ public class Player {
     private Token token;
     private Point position;
     private Double speed;
+    private double size;		// diameter of snake head. 
     private Double angle;		//current angler of movement
     private double dAngle;		//the change of angle per frame.
     private Color color;
@@ -16,14 +17,15 @@ public class Player {
     public Player(Token token) {
         this.token = token;
         this.position = new Point(1, 1);
-        this.speed = 0.5;
+        this.speed = 6d;
+        this.size = 5d;
         this.angle = 0d;
-        this.dAngle = .1;
+        this.dAngle = .4;
         this.direction = "none";
     }
     
     public Point move() {
-    	this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle));
+    	this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.size/2.0);
     	return this.position;
     }
     
@@ -98,11 +100,11 @@ public class Player {
 	/**
 	 * @return the isDead
 	 */
-	private boolean isDead() {
+	public boolean isDead() {
 		return isDead;
 	}
 
-	private void kill() {
+	public void kill() {
 		this.isDead = true;
 	}
     public void setRemember(Boolean holes) {

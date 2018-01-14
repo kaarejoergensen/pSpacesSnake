@@ -110,6 +110,10 @@ class GameWriter implements Runnable {
                     float time = System.currentTimeMillis();
                     List<Player> players = gameLogic.nextFrame();
                     for (Player player : players) {
+                    	if (player.isDead()) {
+                    		//System.out.printf("Player: %s is dead\n", player.getToken().getName());
+                    		//continue;	// don't send new coordinates for dead players.
+                    	}
                         for (Player player1 : players) {
                             space.put("Player moved", player.getPosition(), player1.getToken(), player.getRemember());
                         }
@@ -135,7 +139,8 @@ class SetHoles implements Runnable {
 	@Override
 	public void run() {
 		while(true) {
-			int randomNum = ThreadLocalRandom.current().nextInt(1000, 5000);
+			//int randomNum = ThreadLocalRandom.current().nextInt(1000, 5000);
+			int randomNum = 100000;
 			
 			try {
 				Thread.sleep((long) (randomNum));
