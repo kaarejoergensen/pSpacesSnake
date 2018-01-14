@@ -1,26 +1,17 @@
 package org.team08.pspacessnake.Server;
 
+import javafx.scene.paint.Color;
+import org.team08.pspacessnake.Model.GameSettings;
 import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Point;
 import org.team08.pspacessnake.Model.Token;
-import org.team08.pspacessnake.Model.GameSettings;
 
-
-import javafx.scene.paint.Color;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.ListIterator;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.*;
 
 public class GameLogic {
 	private List<Player> players;
 	private boolean isStarted = false;
-	private static GameSettings gameSettings;
+	private GameSettings gameSettings;
 	private static int numRows;
 	private static int numCols;
 	private static LinkedList<Point>[][] boardCells;
@@ -60,11 +51,11 @@ public class GameLogic {
         return this.players;
     }
     
-	public static boolean playerIsOnBoard(Point point) {
+	public boolean playerIsOnBoard(Point point) {
 		return (point.getX() < 0d && point.getY() > (double) gameSettings.getWidth() && point.getY() < 0d && point.getY() > gameSettings.getHeight());
 	}
 	
-	public static boolean checkCollision(Point point) {
+	public boolean checkCollision(Point point) {
 		int pointCellX = getCellX(point); //the x coordinate of the bin the point belongs to.
 		int pointCellY = getCellY(point); //the y coordinate of the bin the point belongs to.
 		
@@ -86,18 +77,18 @@ public class GameLogic {
 		return false;
 	}
 	
-	public static int getCellX(Point point) {
+	public int getCellX(Point point) {
 		return (int) point.getX() / gameSettings.getCellSize();
 	}
 	
-	public static int getCellY(Point point) {
+	public int getCellY(Point point) {
 		return (int) point.getY() / gameSettings.getCellSize();
 	}
 	
 	/*
 	 * Adds new player position point to appropriate cell.
 	 */
-    public static void addPoint(Point point) {
+    public void addPoint(Point point) {
     	boardCellsIterators[getCellY(point)][getCellX(point)].add(point);
     }
     
@@ -110,11 +101,6 @@ public class GameLogic {
             this.players = new ArrayList<>();
         }
 		this.players.add(player);
-        if (this.players.size() > 1) {
-			this.isStarted = true;
-        } else {
-        	System.out.print("Waiting for more players");
-        }
         i++;
 	}
 

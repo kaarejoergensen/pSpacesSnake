@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -15,7 +16,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import org.team08.pspacessnake.Client.Client;
 import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Point;
@@ -34,7 +36,7 @@ import java.util.stream.Collectors;
 public class SpaceGui {
     private final static int SIZE = 5;
     private static final int WIDTH = 1000;
-    private static final int HEIGHT = 1000;
+    private static final int HEIGHT = 800;
     private static final int CELL_SIZE = 5;
 
     private Client client;
@@ -72,6 +74,9 @@ public class SpaceGui {
 
     @FXML
     private TextField chatTextField;
+
+    @FXML
+    private Button readyButton;
 
     public SpaceGui() {
     }
@@ -125,6 +130,16 @@ public class SpaceGui {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @FXML
+    private void onClickReady() {
+        try {
+            client.setReady(token);
+            readyButton.setVisible(false);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -233,7 +248,9 @@ public class SpaceGui {
         context.setFill(new Color(0.1, 0.1, 0.1, 1));
         context.fillRect(0, 0, WIDTH, HEIGHT);
         context.setFill(Color.CORNSILK);
-
+        context.setFont(new Font("Verdana", 18));
+        context.setTextAlign(TextAlignment.CENTER);
+        context.setTextBaseline(VPos.CENTER);
 
         messages = FXCollections.observableArrayList(new ArrayList<>());
 
@@ -246,9 +263,23 @@ public class SpaceGui {
         Platform.runLater(() -> messages.add(message));
     }
 
-	public void holes(Point point) {
-		context.setFill(new Color(0.1, 0.1, 0.1, 1));
-		context.fillRect(0, 0, WIDTH, HEIGHT);
+    public void drawPlayers(List<Player> players) {
+        clear();
+        int i = 100;
+        for (Player player : players) {
+            context.setFill(player.getColor());
+            context.fillText(player.getToken().getName() + "\t\t\t" + (player.isReady() ? "Ready!" : "Not ready"), WIDTH/2, i);
+            i += 50;
+        }
+    }
+
+    public void clear() {
+        context.setFill(new Color(0.1, 0.1, 0.1, 1));
+        context.fillRect(0, 0, WIDTH, HEIGHT);
+    }
+
+	private void holes(Point point) {
+		clear();
         context.setFill(point.getColor());
         context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
 		

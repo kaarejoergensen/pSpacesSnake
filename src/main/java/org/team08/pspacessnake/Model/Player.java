@@ -6,12 +6,13 @@ public class Player {
     private Token token;
     private Point position;
     private Double speed;
-    private Double angle;		//current angler of movement
-    private double dAngle;		//the change of angle per frame.
+    private Double angle;        //current angler of movement
+    private double dAngle;        //the change of angle per frame.
     private Color color;
-    private String direction;	//change of angle
+    private String direction;    //change of angle
     private boolean isDead = false;
-	private Boolean remember = true;
+    private boolean remember = true;
+    private boolean ready;
 
     public Player(Token token) {
         this.token = token;
@@ -20,21 +21,21 @@ public class Player {
         this.dAngle = .1;
         this.direction = "none";
     }
-    
+
     public Point move() {
-    	this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle));
-    	return this.position;
+        this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle));
+        return this.position;
     }
-    
+
     public double turn() {
-    	if (!this.direction.equals("none")) {
+        if (!this.direction.equals("none")) {
             if (this.direction.equals("left")) {
                 this.angle += this.dAngle;
             } else if (direction.equals("right")) {
                 this.angle -= this.dAngle;
             }
         }
-    	return this.angle;
+        return this.angle;
     }
 
     public Token getToken() {
@@ -66,10 +67,10 @@ public class Player {
     }
 
     public void setAngle(Double angle) {
-    	
+
         this.angle = angle;
     }
-    
+
     public double getDAngle() {
         return dAngle;
     }
@@ -94,20 +95,27 @@ public class Player {
         this.direction = direction;
     }
 
-	/**
-	 * @return the isDead
-	 */
-	private boolean isDead() {
-		return isDead;
-	}
-
-	private void kill() {
-		this.isDead = true;
-	}
-    public void setRemember(Boolean holes) {
-    	this.remember  = holes;
+    private boolean isDead() {
+        return isDead;
     }
-    public Boolean getRemember() {
-    	return remember;
+
+    private void kill() {
+        this.isDead = true;
+    }
+
+    public void setRemember(boolean holes) {
+        this.remember = holes;
+    }
+
+    public boolean getRemember() {
+        return remember;
+    }
+
+    public boolean isReady() {
+        return ready;
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
     }
 }

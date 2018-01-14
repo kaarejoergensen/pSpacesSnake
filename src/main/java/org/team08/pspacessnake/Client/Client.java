@@ -15,6 +15,7 @@ import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,10 +82,52 @@ public class Client extends Application {
     public void startGame(SpaceGui gui, Token token, String RoomUID) throws IOException {
         new Thread(new GameReader(new RemoteSpace(REMOTE_URI + RoomUID+ "?keep"), gui, token)).start();
         new Thread(new ChatReader(new RemoteSpace(REMOTE_URI + RoomUID+ "?keep"), gui, token)).start();
+        new Thread(new PlayersReader(new RemoteSpace(REMOTE_URI + RoomUID+ "?keep"), gui)).start();
     }
 
     public void sendMessage(String text, Token token) throws InterruptedException {
         roomSpace.put("message", text, token);
+    }
+
+    public void setReady(Token token) throws InterruptedException {
+        Object[] playerGet = roomSpace.getp(new ActualField("player"), new ActualField(token), new FormalField(Player.class));
+        if (playerGet != null) {
+            Player player = (Player) playerGet[2];
+            player.setReady(true);
+            roomSpace.put("player", token, player);
+        }
+    }
+}
+
+class PlayersReader implements Runnable {
+    private Space space;
+    private SpaceGui spaceGui;
+
+    public PlayersReader(Space space, SpaceGui spaceGui) {
+        this.space = space;
+        this.spaceGui = spaceGui;
+    }
+
+    @Override
+    public void run() {
+        boolean gameStarted = false;
+        while (!gameStarted) {
+            try {
+                List<Object[]> playersQuery = space.queryAll(new ActualField("player"), new FormalField(Token.class),
+                        new FormalField(Player.class));
+                List<Player> players = playersQuery.stream().map(o -> (Player) o[2]).
+                        sorted(Comparator.comparing(player -> player.getToken().getName())).collect(Collectors.toList());
+                spaceGui.drawPlayers(players);
+                gameStarted = players.stream().allMatch(Player::isReady);
+                if (!gameStarted) {
+                    Thread.sleep(1000);
+                } else {
+                    spaceGui.clear();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
 
