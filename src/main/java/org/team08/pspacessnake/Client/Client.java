@@ -10,7 +10,7 @@ import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
 import org.jspace.Space;
 import org.team08.pspacessnake.GUI.SpaceGui;
-import org.team08.pspacessnake.Model.Point;
+import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
 
@@ -76,7 +76,6 @@ public class Client extends Application {
 
     public void turn(String direction, Token token) throws InterruptedException {
         roomSpace.put("Changed direction", direction, token);
-        System.out.println("Sent direction " + direction);
     }
 
     public void startGame(SpaceGui gui, Token token, String RoomUID) throws IOException {
@@ -101,14 +100,14 @@ class GameReader implements Runnable {
     }
 
     @Override
-    public void run() {
-        while (true) {
-            try {
-                Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(Point.class),
-                        new ActualField(token), new FormalField(Boolean.class));
-                gui.updateGui((Point) newPoint[1], (Boolean) newPoint[3]);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+	public void run() {
+		while (true) {
+			try {
+				Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(Player.class),
+                        new ActualField(token));
+                gui.updateGui((Player) newPoint[1]);
+			} catch (InterruptedException e) {
+			    e.printStackTrace();
             }
         }
     }

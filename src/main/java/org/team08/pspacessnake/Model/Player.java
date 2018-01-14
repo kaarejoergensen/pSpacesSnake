@@ -1,6 +1,6 @@
 package org.team08.pspacessnake.Model;
 
-import java.awt.*;
+import javafx.scene.paint.Color;
 
 public class Player {
     private Token token;
@@ -15,7 +15,6 @@ public class Player {
 
     public Player(Token token) {
         this.token = token;
-        this.position = new Point(1, 1);
         this.speed = 0.5;
         this.angle = 0d;
         this.dAngle = .1;

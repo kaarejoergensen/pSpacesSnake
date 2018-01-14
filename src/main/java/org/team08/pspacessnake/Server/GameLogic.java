@@ -5,6 +5,8 @@ import org.team08.pspacessnake.Model.Point;
 import org.team08.pspacessnake.Model.Token;
 import org.team08.pspacessnake.Model.GameSettings;
 
+
+import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GameLogic {
@@ -22,10 +25,13 @@ public class GameLogic {
 	private static int numCols;
 	private static LinkedList<Point>[][] boardCells;
 	private static ListIterator<Point>[][] boardCellsIterators;
+	private static Color[] colorList = {new Color(1,0,0,1),new Color(1,1,1, 1),new Color(0,0,1, 1)};
+	private static int i = 0;
     
 	public GameLogic() {
         this.players = new ArrayList<>();
         initiateCellLists();
+
     }
     
     public GameLogic(GameSettings gameSettings) {
@@ -51,7 +57,7 @@ public class GameLogic {
     }
 
     public List<Player> getPlayers() {
-        return players;
+        return this.players;
     }
     
 	public static boolean playerIsOnBoard(Point point) {
@@ -104,11 +110,12 @@ public class GameLogic {
             this.players = new ArrayList<>();
         }
 		this.players.add(player);
-        if (this.players.size() > 0) {
+        if (this.players.size() > 1) {
 			this.isStarted = true;
         } else {
         	System.out.print("Waiting for more players");
         }
+        i++;
 	}
 
  	public boolean isStarted() {
@@ -142,5 +149,14 @@ public class GameLogic {
 	
 	public void setRemember(Boolean holes) {
 		players.get(0).setRemember(holes);
+	}
+	public Player makePlayer(Token token) {
+        Player newPlayer = new Player(token);
+        Point newPoint = new Point(1,1,colorList[i]);
+        newPlayer.setColor(colorList[i]);
+        newPlayer.setPosition(newPoint);
+        i++;
+		return newPlayer;
+		
 	}
 }

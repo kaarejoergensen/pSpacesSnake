@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.team08.pspacessnake.Client.Client;
+import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Point;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
@@ -40,7 +41,7 @@ public class SpaceGui {
     private Token token;
     private boolean leftKeyPressed = false;
     private boolean rightKeyPressed = false;
-    private List<Circle> points;
+    private List<Point> points;
     private static GraphicsContext context;
     private List<Room> rooms;
     private Room selectedRoom;
@@ -205,7 +206,6 @@ public class SpaceGui {
             }
         });
         gameContainerLayout.setOnKeyReleased(e -> {
-            System.out.println("Key Released " + e);
             switch (e.getCode()) {
                 case LEFT:
                     leftKeyPressed = false;
@@ -246,27 +246,32 @@ public class SpaceGui {
         Platform.runLater(() -> messages.add(message));
     }
 
-    public void holes(Circle circle) {
+	public void holes(Point point) {
 		context.setFill(new Color(0.1, 0.1, 0.1, 1));
 		context.fillRect(0, 0, WIDTH, HEIGHT);
-		context.setFill(Color.CORNSILK);
-		context.fillOval(circle.getCenterX() - SIZE / 2, circle.getCenterY() - SIZE / 2, SIZE, SIZE);
+        context.setFill(point.getColor());
+        context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
 		
-		for (Circle circle1 : points) {
-			context.fillOval(circle1.getCenterX() - SIZE / 2, circle1.getCenterY() - SIZE / 2, SIZE, SIZE);
+		for (Point point1 : points) {
+            context.setFill(point1.getColor());
+
+            context.fillOval(point1.getX(), point1.getY(), SIZE, SIZE);
 		}
 	}
 
-    public void updateGui(Point point, Boolean remember) {
-        Circle circle = new Circle(point.getX() * SIZE * 2, point.getY() * SIZE * 2, SIZE / 2);
-		if(remember) {
-        	context.fillOval(circle.getCenterX() - SIZE / 2, circle.getCenterY() - SIZE / 2, SIZE, SIZE);
-        	points.add(circle);
+    public void updateGui(Player player) {
+    	Point point = new Point(player.getPosition().getX() * SIZE * 2, player.getPosition().getY() * SIZE * 2, player.getColor());
+        context.setFill(point.getColor());
+		if(player.getRemember()) {
+        	context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
+        	points.add(point);
     	}
     	else {
-    		holes(circle);
+    		holes(point);
     	}
     }
+
+
 }
 
 

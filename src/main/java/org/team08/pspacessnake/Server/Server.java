@@ -110,7 +110,7 @@ class GameWriter implements Runnable {
                     List<Player> players = gameLogic.nextFrame();
                     for (Player player : players) {
                         for (Player player1 : players) {
-                            space.put("Player moved", player.getPosition(), player1.getToken(), player.getRemember());
+                            space.put("Player moved", player, player1.getToken());
                         }
                     }
                     time = System.currentTimeMillis() - time;
@@ -205,12 +205,12 @@ class EnterRoom implements Runnable {
                 room.addToken(token);
                 space.put("room", UID, room);
                 space.put("enterResult", Boolean.TRUE, token);
+                Player newPlayer = gameLogic.makePlayer(token);
+                roomSpace.put("player", token, newPlayer);
                 roomSpace.put("message", "User '" + token.getName() + "' entered room!", new Token("0", "System"));
-                roomSpace.put("player", token, new Player(token));
                 System.out.println("Added user " + token.getName() + " to room " + UID);
 
-                Player player = new Player(token);
-                gameLogic.addPlayer(player);
+                gameLogic.addPlayer(newPlayer);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
