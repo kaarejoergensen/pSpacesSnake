@@ -1,25 +1,32 @@
 package org.team08.pspacessnake.GUI;
 
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.team08.pspacessnake.Client.Client;
 import org.team08.pspacessnake.Model.Point;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
 
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @SuppressWarnings("restriction")
@@ -37,6 +44,7 @@ public class SpaceGui {
     private static GraphicsContext context;
     private List<Room> rooms;
     private Room selectedRoom;
+    private ObservableList<String> messages;
 
     @FXML
     private VBox enterNameLayout;
@@ -53,10 +61,24 @@ public class SpaceGui {
     private Button joinGameButton;
 
     @FXML
+    private GridPane gameContainerLayout;
+
+    @FXML
+    private Canvas gameLayout;
+
+    @FXML
+    private ListView<String> chatListView;
+
+    @FXML
+    private TextField chatTextField;
+
+    public SpaceGui() {
+    }
+
+    @FXML
     public void onEnterName(ActionEvent ae){
         onClickEnterNameButton();
     }
-
 
     @FXML
     private void onClickEnterNameButton() {
@@ -88,10 +110,28 @@ public class SpaceGui {
     }
 
     @FXML
+    public void onEnterChat(ActionEvent ae) {
+        onClickChatMessage();
+    }
+
+    @FXML
+    private void onClickChatMessage() {
+        String message = chatTextField.getText();
+        if (message != null && !message.equals("")) {
+            try {
+                client.sendMessage(message, token);
+                chatTextField.setText("");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
     private void onClickEnterGameButton() {
         try {
             enterGame(selectedRoom);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -114,24 +154,96 @@ public class SpaceGui {
             try {
                 String UID = client.createRoom(s, token);
                 enterGame(new Room(UID, s));
-            } catch (InterruptedException e) {
+            } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
             }
         });
 
     }
 
-    private void enterGame(Room room) throws InterruptedException {
+    private void enterGame(Room room) throws InterruptedException, IOException {
         if (client.enterRoom(room.getID(), token)) {
-            System.out.println("JOINED");
+            roomsLayout.setVisible(false);
+            gameContainerLayout.setVisible(true);
+            initGame(room.getID());
         }
-    }
-
-    public SpaceGui() {
     }
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    private void initGame(String UID) throws IOException {
+        points = new LinkedList<>();
+        context = gameLayout.getGraphicsContext2D();
+        gameLayout.setFocusTraversable(true);
+        gameLayout.addEventFilter(MouseEvent.ANY, event -> gameLayout.requestFocus());
+        gameContainerLayout.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
+                case LEFT:
+                    if (leftKeyPressed) {
+                        return;
+                    }
+                    try {
+                        client.turn("left", token);
+                        leftKeyPressed = true;
+                    } catch (InterruptedException ignored) {
+                    }
+                    break;
+                case RIGHT:
+                    if (rightKeyPressed) {
+                        return;
+                    }
+                    try {
+                        client.turn("right", token);
+                        rightKeyPressed = true;
+                    } catch (InterruptedException ignored) {
+                    }
+                    break;
+                default:
+                    break;
+            }
+        });
+        gameContainerLayout.setOnKeyReleased(e -> {
+            System.out.println("Key Released " + e);
+            switch (e.getCode()) {
+                case LEFT:
+                    leftKeyPressed = false;
+                    break;
+                case RIGHT:
+                    rightKeyPressed = false;
+                    break;
+                default:
+                    break;
+            }
+            if (e.getCode().equals(KeyCode.LEFT) || e.getCode().equals(KeyCode.RIGHT)) {
+                try {
+                    if (!leftKeyPressed && !rightKeyPressed) {
+                        client.turn("none", token);
+                    } else if (rightKeyPressed) {
+                        client.turn("right", token);
+                    } else {
+                        client.turn("left", token);
+                    }
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        context.setFill(new Color(0.1, 0.1, 0.1, 1));
+        context.fillRect(0, 0, WIDTH, HEIGHT);
+        context.setFill(Color.CORNSILK);
+
+
+        messages = FXCollections.observableArrayList(new ArrayList<>());
+
+        chatListView.setItems(messages);
+
+        client.startGame(this, token, UID);
+    }
+
+    public void addMessage(String message) {
+        Platform.runLater(() -> messages.add(message));
     }
 
     public void holes(Circle circle) {
