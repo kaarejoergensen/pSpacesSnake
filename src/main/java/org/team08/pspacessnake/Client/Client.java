@@ -17,7 +17,7 @@ import java.util.Scanner;
 
 @SuppressWarnings("restriction")
 public class Client extends Application {
-    private final static String REMOTE_URI = "tcp://10.16.170.253:9001/";
+    private final static String REMOTE_URI = "tcp://192.168.1.246:9001/";
     private static Token token;
     private static String UID;
     public static void main(String[] args) throws IOException, InterruptedException {

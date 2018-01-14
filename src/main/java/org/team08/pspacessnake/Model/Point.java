@@ -4,20 +4,17 @@ import javafx.scene.paint.Color;
 public class Point {
     private final double x;    // The X coordinate
     private final double y;    // The Y coordinate
-
-    public static Color getColor() {
-        return color;
-    }
-
-    public static void setColor(Color color) {
-        Point.color = color;
-    }
-
     private static Color color;
+    private Color finalColor;
 
-    public Point(final double x, final double y) {
+    public Color getColor() {
+        return finalColor;
+    }
+
+    public Point(final double x, final double y, final Color color) {
         this.x = x;
         this.y = y;
+        finalColor = color;
     }
 
     public double getX() {
@@ -29,7 +26,7 @@ public class Point {
     }
 
     public Point translate(double dx, double dy) {
-        return new Point(x + dx, y + dy);
+        return new Point(x + dx, y + dy, finalColor);
     }
 
     public double distance(Point point) {

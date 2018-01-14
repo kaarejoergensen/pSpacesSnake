@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GameLogic {
@@ -56,7 +57,7 @@ public class GameLogic {
     }
 
     public List<Player> getPlayers() {
-        return players;
+        return this.players;
     }
     
 	public static boolean playerIsOnBoard(Point point) {
@@ -109,8 +110,7 @@ public class GameLogic {
             this.players = new ArrayList<>();
         }
 		this.players.add(player);
-        player.setColor(colorList[i]);
-        if (this.players.size() > 0) {
+        if (this.players.size() > 1) {
 			this.isStarted = true;
         } else {
         	System.out.print("Waiting for more players");
@@ -149,5 +149,14 @@ public class GameLogic {
 	
 	public void setRemember(Boolean holes) {
 		players.get(0).setRemember(holes);
+	}
+	public Player makePlayer(Token token) {
+        Player newPlayer = new Player(token);
+        Point newPoint = new Point(1,1,colorList[i]);
+        newPlayer.setColor(colorList[i]);
+        newPlayer.setPosition(newPoint);
+        i++;
+		return newPlayer;
+		
 	}
 }

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Server {
-    final static String URI = "tcp://10.16.170.253:9001/";
+    final static String URI = "tcp://192.168.1.246:9001/";
     private final static String GATE_URI = URI + "?keep";
 
     public static void main(String[] args) {
@@ -207,11 +207,11 @@ class EnterRoom implements Runnable {
                 space.put("room", UID, room);
                 space.put("enterResult", Boolean.TRUE, token);
                 roomSpace.put("message", "User '" + token.getName() + "' entered room!", new Token("0", "System"));
-                roomSpace.put("player", token, new Player(token));
+                Player newPlayer = gameLogic.makePlayer(token);
+                roomSpace.put("player", token, newPlayer);
                 System.out.println("Added user " + token.getName() + " to room " + UID);
 
-                Player player = new Player(token);
-                gameLogic.addPlayer(player);
+                gameLogic.addPlayer(newPlayer);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

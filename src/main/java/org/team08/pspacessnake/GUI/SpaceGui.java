@@ -117,15 +117,15 @@ public class SpaceGui {
         context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
 		
 		for (Point point1 : points) {
-            context.setFill(point.getColor());
+            context.setFill(point1.getColor());
+
             context.fillOval(point1.getX(), point1.getY(), SIZE, SIZE);
 		}
 	}
 
     public void updateGui(Player player) {
-        Point point = new Point(player.getPosition().getX() * SIZE * 2, player.getPosition().getY() * SIZE * 2);
-        context.setFill(player.getColor());
-        point.setColor(player.getColor());
+    	Point point = new Point(player.getPosition().getX() * SIZE * 2, player.getPosition().getY() * SIZE * 2, player.getColor());
+        context.setFill(point.getColor());
 		if(player.getRemember()) {
         	context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
         	points.add(point);
