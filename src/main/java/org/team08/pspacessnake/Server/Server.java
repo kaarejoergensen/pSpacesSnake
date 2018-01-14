@@ -1,19 +1,18 @@
 package org.team08.pspacessnake.Server;
 
 import org.jspace.*;
-import org.team08.pspacessnake.GUI.SpaceGui;
 import org.team08.pspacessnake.Helpers.Utils;
+import org.team08.pspacessnake.Model.GameSettings;
 import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
-import org.team08.pspacessnake.Model.GameSettings;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Server {
-    final static String URI = "tcp://192.168.1.246:9001/";
+    final static String URI = "tcp://127.0.0.1:9001/";
     private final static String GATE_URI = URI + "?keep";
 
     public static void main(String[] args) {
@@ -206,9 +205,9 @@ class EnterRoom implements Runnable {
                 room.addToken(token);
                 space.put("room", UID, room);
                 space.put("enterResult", Boolean.TRUE, token);
-                roomSpace.put("message", "User '" + token.getName() + "' entered room!", new Token("0", "System"));
                 Player newPlayer = gameLogic.makePlayer(token);
                 roomSpace.put("player", token, newPlayer);
+                roomSpace.put("message", "User '" + token.getName() + "' entered room!", new Token("0", "System"));
                 System.out.println("Added user " + token.getName() + " to room " + UID);
 
                 gameLogic.addPlayer(newPlayer);
@@ -234,9 +233,9 @@ class Chat implements Runnable {
                         FormalField(Token.class));
                 List<Object[]> users = space.queryAll(new ActualField("player"), new FormalField(Token.class), new
                         FormalField(Player.class));
-                System.out.println("Got message " + message[1] + " from " + message[2] + ". Sending to " + (users
-                        .size() - 1) + " users.");
-                users.stream().filter(u -> !u[1].equals(message[2])).forEach(u -> {
+                System.out.println("Got message " + message[1] + " from " + message[2] + ". Sending to " + users
+                        .size() + " users.");
+                users.forEach(u -> {
                     try {
                         space.put("message" + ((Token) u[1]).getID(), message[1], ((Token) message[2]).getName());
                     } catch (InterruptedException e) {
