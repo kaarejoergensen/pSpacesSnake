@@ -193,7 +193,7 @@ public class SpaceGui {
         points = new LinkedList<>();
         context = gameLayout.getGraphicsContext2D();
         gameLayout.setFocusTraversable(true);
-        gameLayout.addEventFilter(MouseEvent.ANY, event -> gameLayout.requestFocus());
+        gameLayout.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> gameLayout.requestFocus());
         gameContainerLayout.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case LEFT:
@@ -291,7 +291,7 @@ public class SpaceGui {
 	}
 
     public void updateGui(Player player) {
-    	Point point = new Point(player.getPosition().getX() * SIZE * 2, player.getPosition().getY() * SIZE * 2, player.getColor());
+    	Point point = new Point(player.getPosition().getX() * SIZE, player.getPosition().getY() * SIZE, player.getColor());
         context.setFill(point.getColor());
 		if(player.getRemember()) {
         	context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
