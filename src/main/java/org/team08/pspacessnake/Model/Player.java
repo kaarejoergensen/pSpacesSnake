@@ -18,7 +18,7 @@ public class Player {
     public Player(Token token) {
         this.token = token;
         this.position = new Point(1, 1, 2.5d);
-        this.speed = 6d;
+        this.speed = .6d;
         this.size = 5d;
         this.angle = 0d;
         this.dAngle = .4;
