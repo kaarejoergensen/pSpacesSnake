@@ -3,8 +3,8 @@ package org.team08.pspacessnake.Model;
 public class GameSettings {
 	
     private int size = 5;
-    private int width = 1000;
-    private int height = 1000;
+    private int width = 1400;
+    private int height = 800;
     private int cellSize = 5;
     private int frameRate = 24; // [fps]
     
