@@ -79,7 +79,7 @@ class CreateRooms implements Runnable {
                 space.put("createRoomResult", UID, create[1], create[2]);
                 System.out.println("New room with name " + create[1] + " and UID " + UID + " created!");
 
-                GameSettings gameSettings = new GameSettings(1000, 1000);
+                GameSettings gameSettings = new GameSettings(1000, 800);
                 GameLogic gameLogic = new GameLogic(gameSettings);
                 new Thread(new GameReader(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
                 new Thread(new GameWriter(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();

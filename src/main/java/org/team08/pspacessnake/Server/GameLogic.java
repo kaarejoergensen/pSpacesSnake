@@ -23,11 +23,11 @@ public class GameLogic {
     private int i = 0;
 */
 
-	private static int numRows;
-	private static int numCols;
-	private static LinkedList<Point>[][] boardCells;
-	private static ListIterator<Point>[][] boardCellsIterators;
-	private static Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE};
+	private int numRows;
+	private int numCols;
+	private LinkedList<Point>[][] boardCells;
+	private ListIterator<Point>[][] boardCellsIterators;
+	private Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE};
 	private static int i = 0;
 
 	public GameLogic() {
@@ -190,18 +190,19 @@ public class GameLogic {
 
 	}
 
-/*    public Player makePlayer(Token token) {
+	public Player makePlayer(Token token) {
         Player newPlayer = new Player(token);
-        // Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5), ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), colorList[i]);
-        Point newPoint = new Point(ThreadLocalRandom.current().nextInt(0, 80), ThreadLocalRandom.current().nextInt(0, 100), colorList[i]);
+        Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5), ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), colorList[i]);
+        // Point newPoint = new Point(ThreadLocalRandom.current().nextInt(0, 80), ThreadLocalRandom.current().nextInt(0, 100), colorList[i]);
         newPlayer.setColor(colorList[i]);
         newPlayer.setPosition(newPoint);
-        // newPlayer.setAngle(newPoint.getAngleToPoint(gameSettings.getWidth() / 2d, gameSettings.getHeight() / 2d));
+        newPlayer.setAngle(newPlayer.getPosition().getAngleToPoint(gameSettings.getWidth() / 2d, gameSettings.getHeight() / 2d));
+        System.out.printf("START: [%f, %f]\tAngle: %f rad\t MIDT: [%f, %f] ", newPoint.getX(), newPoint.getY(), newPlayer.getAngle(), gameSettings.getWidth() / 2d, gameSettings.getHeight() / 2d);
         // i++;
         return newPlayer;
     }
-*/
 
+/*
 	public Player makePlayer(Token token) {
 		Player newPlayer = new Player(token);
 		Point newPoint = new Point(ThreadLocalRandom.current().nextInt(0, 80), ThreadLocalRandom.current().nextInt(0, 100), colorList[i]);
@@ -210,5 +211,5 @@ public class GameLogic {
 		i++;
 		return newPlayer;
 
-	}
+	}*/
 }

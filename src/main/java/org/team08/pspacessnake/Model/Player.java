@@ -30,7 +30,7 @@ public class Player {
 
     public Player(Token token) {
         this.token = token;
-        this.speed = 0.5;
+        this.speed = 2d;
         this.angle = 0d;
         this.dAngle = .1;
         this.direction = "none";
@@ -106,7 +106,6 @@ public class Player {
     }
 
     public void setAngle(Double angle) {
-
         this.angle = angle;
     }
 

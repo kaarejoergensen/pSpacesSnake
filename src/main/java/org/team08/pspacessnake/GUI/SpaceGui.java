@@ -282,12 +282,15 @@ public class SpaceGui {
 		clear();
 		// drawPoint(point);
 		context.setFill(point.getColor());
-        context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
+        
+		//context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
+		drawPoint(point);
 		
 		for (Point point1 : points) {
             context.setFill(point1.getColor());
 
-            context.fillOval(point1.getX(), point1.getY(), SIZE, SIZE);
+            //context.fillOval(point1.getX(), point1.getY(), SIZE, SIZE);
+            drawPoint(point1);
 		}
 	}
 
@@ -299,7 +302,8 @@ public class SpaceGui {
         context.setFill(point.getColor()); // is set for each point in drawPoint()
 		if(player.getRemember()) {
         	// drawPoint(point);
-			context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
+			//context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
+			drawPoint(point);
         	points.add(point);
     	}
     	else {
@@ -308,9 +312,9 @@ public class SpaceGui {
     }
     
     private void drawPoint(Point point) {
-    	context.setFill(point.getColor());
     	//System.out.printf("SIZE = %d\t RADIUS = %f\t DrawPointX = %f / %f \n", SIZE, point.getRadius(), point.getX() - point.getRadius(), point.getX() - SIZE / 2.0);
     	// context.fillOval(point.getX() - point.getRadius(), point.getY() - point.getRadius(), 2*point.getRadius(), 2*point.getRadius());
+    	
     	context.fillOval(point.getX() - 2.5, point.getY() - 2.5, 5, 5);
     }
 }
