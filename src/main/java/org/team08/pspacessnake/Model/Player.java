@@ -84,14 +84,14 @@ public class Player {
 /*    /**
 	 * @return the size
 	 */
-	public double getSize() {
+/*	public double getSize() {
 		return size;
-	}
+	}*/
 
 	/**
 	 * @param size the size to set
 	 */
-	public void setSize(double size) {
+/*	public void setSize(double size) {
 		this.size = size;
 	}*/
 

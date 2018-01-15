@@ -172,8 +172,9 @@ public class GameLogic {
 			/*if (!playerIsOnBoard(newPoint)) {
 				player.kill();
 				continue;
-			}*/
-			addPoint(newPoint);
+			}
+			addPoint(newPoint);*/
+			addPoint(player.move());
 			// if (checkCollision(newPoint)) player.kill();
 			
 		}
