@@ -180,3 +180,4 @@ class ChatReader implements Runnable {
         }
     }
 }
+

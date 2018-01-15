@@ -283,17 +283,18 @@ public class SpaceGui {
 		// drawPoint(point);
 		context.setFill(point.getColor());
         context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
-		for (Point thisPoint : points) {
-			// drawPoint(thisPoint);
-			context.setFill(thisPoint.getColor());
-            context.fillOval(thisPoint.getX(), thisPoint.getY(), SIZE, SIZE);
+		
+		for (Point point1 : points) {
+            context.setFill(point1.getColor());
 
+            context.fillOval(point1.getX(), point1.getY(), SIZE, SIZE);
 		}
 	}
 
 
     public void updateGui(Player player) {
     	// Point point = new Point(player.getPosition().getX() * SIZE, player.getPosition().getY() * SIZE, player.getColor()); 
+
 		Point point = new Point(player.getPosition().getX(), player.getPosition().getY(), player.getColor());
         context.setFill(point.getColor()); // is set for each point in drawPoint()
 		if(player.getRemember()) {
