@@ -9,16 +9,17 @@ import org.team08.pspacessnake.Model.Token;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+@SuppressWarnings("restriction")
 public class GameLogic {
     private List<Player> players;
     private boolean isStarted = false;
-    private static GameSettings gameSettings;
-    private static int numRows;
-    private static int numCols;
-    private static LinkedList<Point>[][] boardCells;
-    private static ListIterator<Point>[][] boardCellsIterators;
+    private GameSettings gameSettings;
+    private int numRows;
+    private int numCols;
+    private LinkedList<Point>[][] boardCells;
+    private ListIterator<Point>[][] boardCellsIterators;
     private static Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE};
-    private static int i = 0;
+    private int i = 0;
 
     public GameLogic() {
         this.players = new ArrayList<>();
@@ -51,11 +52,11 @@ public class GameLogic {
         return this.players;
     }
     
-	public static boolean playerIsOnBoard(Point point) {
+	public boolean playerIsOnBoard(Point point) {
 		return (point.getX() < 0d && point.getY() > (double) gameSettings.getWidth() && point.getY() < 0d && point.getY() > gameSettings.getHeight());
 	}
 	
-	public static boolean checkCollision(Point point) {
+	public boolean checkCollision(Point point) {
 		int pointCellX = getCellX(point); //the x coordinate of the bin the point belongs to.
 		int pointCellY = getCellY(point); //the y coordinate of the bin the point belongs to.
 		
@@ -71,7 +72,8 @@ public class GameLogic {
 				tempIterator = boardCells[pointCellY + dy][pointCellX + dx].listIterator();
 				while (tempIterator.hasNext()) {
 					occupiedPoint = (Point)tempIterator.next();
-					if (point.distance(occupiedPoint) < point.getRadius() + occupiedPoint.getRadius()) return true;
+					// if (point.distance(occupiedPoint) < point.getRadius() + occupiedPoint.getRadius()) return true;
+					if (point.distance(occupiedPoint) < 2.5 + 2.5) return true;
 				}
 					
 			}
@@ -79,11 +81,11 @@ public class GameLogic {
 		return false;
 	}
 	
-	public static int getCellX(Point point) {
+	public int getCellX(Point point) {
 		return (int) point.getX() / gameSettings.getCellSize();
 	}
 	
-	public static int getCellY(Point point) {
+	public int getCellY(Point point) {
 		return (int) point.getY() / gameSettings.getCellSize();
 	}
 	
@@ -154,12 +156,12 @@ public class GameLogic {
 
     public Player makePlayer(Token token) {
         Player newPlayer = new Player(token);
-        Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5), ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), colorList[i]);
+        // Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5), ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), colorList[i]);
+        Point newPoint = new Point(ThreadLocalRandom.current().nextInt(0, 80), ThreadLocalRandom.current().nextInt(0, 100), colorList[i]);
         newPlayer.setColor(colorList[i]);
         newPlayer.setPosition(newPoint);
-        newPlayer.setAngle(newPoint.getAngleToPoint(gameSettings.getWidth() / 2d, gameSettings.getHeight() / 2d));
-        i++;
+        // newPlayer.setAngle(newPoint.getAngleToPoint(gameSettings.getWidth() / 2d, gameSettings.getHeight() / 2d));
+        // i++;
         return newPlayer;
-
     }
 }

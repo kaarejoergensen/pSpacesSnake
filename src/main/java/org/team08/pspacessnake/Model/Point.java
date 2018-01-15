@@ -49,9 +49,11 @@ public class Point {
 		return radius;
 	}
     
+ 	/*
     public Point translate(double dx, double dy) {
         return new Point(x + dx, y + dy, getColor());
     }
+	*/
 	
     public Point translate(double dx, double dy, double radius) {
         return new Point(x + dx, y + dy, radius);

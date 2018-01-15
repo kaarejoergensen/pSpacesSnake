@@ -18,11 +18,11 @@ public class Player {
 
     public Player(Token token) {
         this.setToken(token);
-        this.setPosition(new Point(1, 1, 2.5d));
-        this.setSpeed(.6d);
+        //this.setPosition(new Point(1, 1, 2.5d));
+        this.setSpeed(5d);
         this.setSize(5d);
         this.setAngle(0d);
-        this.setDAngle(.4);
+        this.setDAngle(.1);
         this.setDirection("none");
         this.setEdgeJumper(true);
     }

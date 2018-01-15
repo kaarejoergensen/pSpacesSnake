@@ -43,7 +43,7 @@ public class SpaceGui {
     private Token token;
     private boolean leftKeyPressed = false;
     private boolean rightKeyPressed = false;
-    private List<Point> points; 
+    private List<Point> points;
     private static GraphicsContext context;
     private List<Room> rooms;
     private Room selectedRoom;
@@ -293,8 +293,8 @@ public class SpaceGui {
 
 
     public void updateGui(Player player) {
-    	 Point point = new Point(player.getPosition().getX() * SIZE, player.getPosition().getY() * SIZE, player.getColor()); 
-		// Point point = new Point(player.getPosition().getX(), player.getPosition().getY(), player.getColor());
+    	// Point point = new Point(player.getPosition().getX() * SIZE, player.getPosition().getY() * SIZE, player.getColor()); 
+		Point point = new Point(player.getPosition().getX(), player.getPosition().getY(), player.getColor());
         context.setFill(point.getColor()); // is set for each point in drawPoint()
 		if(player.getRemember()) {
         	// drawPoint(point);
@@ -309,7 +309,8 @@ public class SpaceGui {
     private void drawPoint(Point point) {
     	context.setFill(point.getColor());
     	//System.out.printf("SIZE = %d\t RADIUS = %f\t DrawPointX = %f / %f \n", SIZE, point.getRadius(), point.getX() - point.getRadius(), point.getX() - SIZE / 2.0);
-    	context.fillOval(point.getX() - point.getRadius(), point.getY() - point.getRadius(), 2*point.getRadius(), 2*point.getRadius());
+    	// context.fillOval(point.getX() - point.getRadius(), point.getY() - point.getRadius(), 2*point.getRadius(), 2*point.getRadius());
+    	context.fillOval(point.getX() - 2.5, point.getY() - 2.5, 5, 5);
     }
 }
 
