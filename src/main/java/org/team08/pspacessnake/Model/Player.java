@@ -158,11 +158,11 @@ public class Player {
         this.ready = ready;
     }
 
-	public boolean isEdgeJumper() {
+/*	public boolean isEdgeJumper() {
 		return edgeJumper;
 	}
 
 	public void setEdgeJumper(boolean edgeJumper) {
 		this.edgeJumper = edgeJumper;
-	}
+	}*/
 }
