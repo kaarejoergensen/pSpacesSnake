@@ -117,12 +117,10 @@ class PlayersReader implements Runnable {
                         new FormalField(Player.class));
                 List<Player> players = playersQuery.stream().map(o -> (Player) o[2]).
                         sorted(Comparator.comparing(player -> player.getToken().getName())).collect(Collectors.toList());
-                spaceGui.drawPlayers(players);
                 gameStarted = players.stream().allMatch(Player::isReady);
                 if (!gameStarted) {
+                    spaceGui.drawPlayers(players);
                     Thread.sleep(1000);
-                } else {
-                    spaceGui.clear();
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -144,10 +142,15 @@ class GameReader implements Runnable {
 
     @Override
 	public void run() {
-		while (true) {
+		boolean firstRun = true;
+        while (true) {
 			try {
 				Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(Player.class),
                         new ActualField(token));
+				if (firstRun) {
+				    gui.clear();
+				    firstRun = false;
+                }
                 gui.updateGui((Player) newPoint[1]);
 			} catch (InterruptedException e) {
 			    e.printStackTrace();

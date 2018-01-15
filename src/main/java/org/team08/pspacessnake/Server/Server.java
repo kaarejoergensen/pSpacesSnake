@@ -79,7 +79,7 @@ class CreateRooms implements Runnable {
                 space.put("createRoomResult", UID, create[1], create[2]);
                 System.out.println("New room with name " + create[1] + " and UID " + UID + " created!");
 
-                GameSettings gameSettings = new GameSettings(1000, 1000);
+                GameSettings gameSettings = new GameSettings(1000, 800);
                 GameLogic gameLogic = new GameLogic(gameSettings);
                 new Thread(new GameReader(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
                 new Thread(new GameWriter(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
@@ -112,6 +112,10 @@ class GameWriter implements Runnable {
                     float time = System.currentTimeMillis();
                     List<Player> players = gameLogic.nextFrame();
                     for (Player player : players) {
+                    	/*if (player.isDead()) {
+                    		//System.out.printf("Player: %s is dead\n", player.getToken().getName());
+                    		//continue;	// don't send new coordinates for dead players.
+                    	}*/
                         for (Player player1 : players) {
                             space.put("Player moved", player, player1.getToken());
                         }
@@ -144,6 +148,7 @@ class SetHoles implements Runnable {
 	public void run() {
 		while(true) {
 			int randomNum = ThreadLocalRandom.current().nextInt(1000, 5000);
+			// int randomNum = 100000;
 			
 			try {
 				Thread.sleep((long) (randomNum));

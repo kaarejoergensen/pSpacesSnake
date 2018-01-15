@@ -9,15 +9,25 @@ import org.team08.pspacessnake.Model.Token;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+//@SuppressWarnings("restriction")
 public class GameLogic {
-	private List<Player> players;
-	private boolean isStarted = false;
-	private GameSettings gameSettings;
-	private static int numRows;
-	private static int numCols;
-	private static LinkedList<Point>[][] boardCells;
-	private static ListIterator<Point>[][] boardCellsIterators;
-	private static Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE};
+    private List<Player> players;
+    private boolean isStarted = false;
+    private GameSettings gameSettings;
+/*
+    private int numRows;
+    private int numCols;
+    private LinkedList<Point>[][] boardCells;
+    private ListIterator<Point>[][] boardCellsIterators;
+    private static Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE};
+    private int i = 0;
+*/
+
+	private int numRows;
+	private int numCols;
+	private LinkedList<Point>[][] boardCells;
+	private ListIterator<Point>[][] boardCellsIterators;
+	private Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE};
 	private static int i = 0;
 
 	public GameLogic() {
@@ -56,6 +66,33 @@ public class GameLogic {
 		return (point.getX() < 0d && point.getY() > (double) gameSettings.getWidth() && point.getY() < 0d && point.getY() > gameSettings.getHeight());
 	}
 
+/*
+	public boolean checkCollision(Point point) {
+		int pointCellX = getCellX(point); //the x coordinate of the bin the point belongs to.
+		int pointCellY = getCellY(point); //the y coordinate of the bin the point belongs to.
+		
+		
+		Point occupiedPoint;
+		Iterator<Point> tempIterator;
+		for (int dx = -1; dx <= 1; dx++) {
+			if (!(pointCellX + dx >= 0 && pointCellX + dx <= numRows))
+				continue;
+			for (int dy = -1; dy <= 1; dy++) {
+				if (!(pointCellY + dy >= 0 && pointCellY + dy <= numCols))
+					continue;
+				tempIterator = boardCells[pointCellY + dy][pointCellX + dx].listIterator();
+				while (tempIterator.hasNext()) {
+					occupiedPoint = (Point)tempIterator.next();
+					// if (point.distance(occupiedPoint) < point.getRadius() + occupiedPoint.getRadius()) return true;
+					if (point.distance(occupiedPoint) < 2.5 + 2.5) return true;
+				}
+					
+			}
+		}
+		return false;
+	}
+*/
+
 	public boolean checkCollision(Point point) {
 		int pointCellX = getCellX(point); //the x coordinate of the bin the point belongs to.
 		int pointCellY = getCellY(point); //the y coordinate of the bin the point belongs to.
@@ -77,7 +114,7 @@ public class GameLogic {
 		}
 		return false;
 	}
-
+	
 	public int getCellX(Point point) {
 		return (int) point.getX() / gameSettings.getCellSize();
 	}
@@ -127,8 +164,18 @@ public class GameLogic {
 
 	public List<Player> nextFrame() {
 		for (Player player : players) {
+			//if (player.isDead()) continue;	// We might just remove dead player from players ???
 			player.turn();
+			// player.move(gameSettings.getWidth(), gameSettings.getHeight());
+			//Point newPoint = player.move(gameSettings.getWidth(), gameSettings.getHeight());
+			/*if (!playerIsOnBoard(newPoint)) {
+				player.kill();
+				continue;
+			}
+			addPoint(newPoint);*/
 			addPoint(player.move());
+			// if (checkCollision(newPoint)) player.kill();
+			
 		}
 		return players;
 	}
@@ -143,6 +190,19 @@ public class GameLogic {
 	}
 
 	public Player makePlayer(Token token) {
+        Player newPlayer = new Player(token);
+        Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5), ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), colorList[i]);
+        // Point newPoint = new Point(ThreadLocalRandom.current().nextInt(0, 80), ThreadLocalRandom.current().nextInt(0, 100), colorList[i]);
+        newPlayer.setColor(colorList[i]);
+        newPlayer.setPosition(newPoint);
+        newPlayer.setAngle(newPlayer.getPosition().getAngleToPoint(gameSettings.getWidth() / 2d, gameSettings.getHeight() / 2d));
+        System.out.printf("START: [%f, %f]\tAngle: %f rad\t MIDT: [%f, %f] ", newPoint.getX(), newPoint.getY(), newPlayer.getAngle(), gameSettings.getWidth() / 2d, gameSettings.getHeight() / 2d);
+        // i++;
+        return newPlayer;
+    }
+
+/*
+	public Player makePlayer(Token token) {
 		Player newPlayer = new Player(token);
 		Point newPoint = new Point(ThreadLocalRandom.current().nextInt(0, 80), ThreadLocalRandom.current().nextInt(0, 100), colorList[i]);
 		newPlayer.setColor(colorList[i]);
@@ -150,5 +210,5 @@ public class GameLogic {
 		i++;
 		return newPlayer;
 
-	}
+	}*/
 }

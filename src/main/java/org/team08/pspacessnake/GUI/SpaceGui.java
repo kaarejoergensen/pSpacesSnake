@@ -43,7 +43,7 @@ public class SpaceGui {
     private final static int SIZE = 5;
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 800;
-    private static final int CELL_SIZE = 5;
+    // private static final int CELL_SIZE = 5; // only used serverside.
 
     private Client client;
     private Token token;
@@ -284,32 +284,48 @@ public class SpaceGui {
 
 	private void holes(Point point) {
 		clear();
-//		Image img = new Image("SpaceLightning.png");
-//    	context.drawImage(img, 500, 500, 20, 20);
-        context.setFill(point.getColor());
-        context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
+
+		// drawPoint(point);
+		context.setFill(point.getColor());
+        
+		//context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
+		drawPoint(point);
+
 		
 		for (Point point1 : points) {
             context.setFill(point1.getColor());
-            context.fillOval(point1.getX(), point1.getY(), SIZE, SIZE);
+
+            //context.fillOval(point1.getX(), point1.getY(), SIZE, SIZE);
+            drawPoint(point1);
+
 		}
 	}
 	
 
+
     public void updateGui(Player player) {
+
 
     	Point point = player.getPosition();
     	context.setFill(point.getColor());
+
 		if(player.getRemember()) {
-        	context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
+        	// drawPoint(point);
+			//context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
+			drawPoint(point);
         	points.add(point);
     	}
     	else {
     		holes(point);
     	}
     }
-
-
+    
+    private void drawPoint(Point point) {
+    	//System.out.printf("SIZE = %d\t RADIUS = %f\t DrawPointX = %f / %f \n", SIZE, point.getRadius(), point.getX() - point.getRadius(), point.getX() - SIZE / 2.0);
+    	// context.fillOval(point.getX() - point.getRadius(), point.getY() - point.getRadius(), 2*point.getRadius(), 2*point.getRadius());
+    	
+    	context.fillOval(point.getX() - 2.5, point.getY() - 2.5, 5, 5);
+    }
 }
 
 

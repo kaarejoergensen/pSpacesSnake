@@ -6,22 +6,49 @@ public class Player {
     private Token token;
     private Point position;
     private Double speed;
-    private Double angle;        //current angler of movement
-    private double dAngle;        //the change of angle per frame.
+//    private double size;		// diameter of snake head. 
+    private Double angle;		//current angler of movement
+    private double dAngle;		//the change of angle per frame.
     private Color color;
     private String direction;    //change of angle
     private boolean isDead = false;
     private boolean remember = true;
     private boolean ready;
+
     private Powerups power;
+
+//    private boolean edgeJumper;
+
+	/*
+    public Player(Token token) {
+        this.setToken(token);
+        //this.setPosition(new Point(1, 1, 2.5d));
+        this.setSpeed(5d);
+        this.setSize(5d);
+        this.setAngle(0d);
+        this.setDAngle(.1);
+        this.setDirection("none");
+        this.setEdgeJumper(true);
+    }*/
+
 
     public Player(Token token) {
         this.token = token;
-        this.speed = 3.0;
+        this.speed = 2d;
+
         this.angle = 0d;
         this.dAngle = .1;
         this.direction = "none";
     }
+
+/*
+    public Point move(int boardWidth, int boardHeight) {
+    	if (this.isEdgeJumper())
+    		return this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getSize()/2.0, this.getColor());
+    	else
+    		return this.position.translate(speed * Math.cos(angle) % boardWidth, -speed * Math.sin(angle) % boardHeight, this.getSize()/2.0, this.getColor());
+    }
+*/
 
     public Point move() {
         this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle));
@@ -59,16 +86,31 @@ public class Player {
         return speed;
     }
 
-    public void setSpeed(Double speed) {
+/*    /**
+	 * @return the size
+	 */
+/*	public double getSize() {
+		return size;
+	}*/
+
+	/**
+	 * @param size the size to set
+	 */
+/*	public void setSize(double size) {
+		this.size = size;
+	}*/
+
+	public void setSpeed(Double speed) {
         this.speed = speed;
     }
 
+    
+    
     public Double getAngle() {
         return angle;
     }
 
     public void setAngle(Double angle) {
-
         this.angle = angle;
     }
 
@@ -96,11 +138,11 @@ public class Player {
         this.direction = direction;
     }
 
-    private boolean isDead() {
+    public boolean isDead() {
         return isDead;
     }
 
-    private void kill() {
+    public void kill() {
         this.isDead = true;
     }
 
@@ -120,6 +162,7 @@ public class Player {
         this.ready = ready;
     }
 
+
 	public Powerups getPower() {
 		return power;
 	}
@@ -127,4 +170,13 @@ public class Player {
 	public void setPower(Powerups power) {
 		this.power = power;
 	}
+
+/*	public boolean isEdgeJumper() {
+		return edgeJumper;
+	}
+
+	public void setEdgeJumper(boolean edgeJumper) {
+		this.edgeJumper = edgeJumper;
+	}*/
+
 }
