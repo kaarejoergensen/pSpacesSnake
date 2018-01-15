@@ -37,7 +37,7 @@ public class SpaceGui {
     private final static int SIZE = 5;
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 800;
-    private static final int CELL_SIZE = 5;
+    // private static final int CELL_SIZE = 5; // only used serverside.
 
     private Client client;
     private Token token;
@@ -293,9 +293,8 @@ public class SpaceGui {
 
 
     public void updateGui(Player player) {
-		// Vi skal da stadig ikke skalere positionen med SIZE, vel? /Simon
     	 Point point = new Point(player.getPosition().getX() * SIZE, player.getPosition().getY() * SIZE, player.getColor()); 
-		//Point point = new Point(player.getPosition().getX(), player.getPosition().getY(), player.getColor());
+		// Point point = new Point(player.getPosition().getX(), player.getPosition().getY(), player.getColor());
         context.setFill(point.getColor()); // is set for each point in drawPoint()
 		if(player.getRemember()) {
         	// drawPoint(point);

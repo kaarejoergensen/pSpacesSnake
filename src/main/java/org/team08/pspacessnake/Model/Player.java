@@ -14,20 +14,24 @@ public class Player {
     private boolean isDead = false;
     private boolean remember = true;
     private boolean ready;
+    private boolean edgeJumper;
 
     public Player(Token token) {
-        this.token = token;
-        this.position = new Point(1, 1, 2.5d);
-        this.speed = .6d;
+        this.setToken(token);
+        this.setPosition(new Point(1, 1, 2.5d));
+        this.setSpeed(.6d);
         this.setSize(5d);
-        this.angle = 0d;
-        this.dAngle = .4;
-        this.direction = "none";
+        this.setAngle(0d);
+        this.setDAngle(.4);
+        this.setDirection("none");
+        this.setEdgeJumper(true);
     }
 
-    public Point move() {
-    	this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getSize()/2.0);
-    	return this.position;
+    public Point move(int boardWidth, int boardHeight) {
+    	if (this.isEdgeJumper())
+    		return this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getSize()/2.0, this.getColor());
+    	else
+    		return this.position.translate(speed * Math.cos(angle) % boardWidth, -speed * Math.sin(angle) % boardHeight, this.getSize()/2.0, this.getColor());
     }
 
     public double turn() {
@@ -137,4 +141,12 @@ public class Player {
     public void setReady(boolean ready) {
         this.ready = ready;
     }
+
+	public boolean isEdgeJumper() {
+		return edgeJumper;
+	}
+
+	public void setEdgeJumper(boolean edgeJumper) {
+		this.edgeJumper = edgeJumper;
+	}
 }

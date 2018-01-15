@@ -23,7 +23,6 @@ public class GameLogic {
     public GameLogic() {
         this.players = new ArrayList<>();
         initiateCellLists();
-
     }
 
     public GameLogic(GameSettings gameSettings) {
@@ -132,8 +131,8 @@ public class GameLogic {
 		for (Player player : players) {
 			//if (player.isDead()) continue;	// We might just remove dead player from players ???
 			player.turn();
-			player.move();
-			Point newPoint = player.move();
+			player.move(gameSettings.getWidth(), gameSettings.getHeight());
+			Point newPoint = player.move(gameSettings.getWidth(), gameSettings.getHeight());
 			if (!playerIsOnBoard(newPoint)) {
 				player.kill();
 				continue;
@@ -151,9 +150,10 @@ public class GameLogic {
 
     public Player makePlayer(Token token) {
         Player newPlayer = new Player(token);
-        Point newPoint = new Point(ThreadLocalRandom.current().nextInt(0, 80), ThreadLocalRandom.current().nextInt(0, 100), colorList[i]);
+        Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5), ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), colorList[i]);
         newPlayer.setColor(colorList[i]);
         newPlayer.setPosition(newPoint);
+        newPlayer.setAngle(newPoint.getAngleToPoint(gameSettings.getWidth() / 2d, gameSettings.getHeight() / 2d));
         i++;
         return newPlayer;
 

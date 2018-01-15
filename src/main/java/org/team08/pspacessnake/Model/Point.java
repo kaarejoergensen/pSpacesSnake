@@ -1,35 +1,43 @@
 package org.team08.pspacessnake.Model;
 import javafx.scene.paint.Color;
 
-import javafx.scene.paint.Color;
-
+@SuppressWarnings("restriction")
 public class Point {
     private final double x;    // The X coordinate
     private final double y;    // The Y coordinate
     private final double radius;
-    private static Color color;
-    private Color finalColor;
+    private Color color;
 
-    public Point(final double x, final double y, final Color color) {
+    public Point(final double x, final double y, Color color) {
         this.x = x;
         this.y = y;
         this.radius = 2.5d;		//default value
-        this.color = new Color(1d, 0d, 0d, 1d);
+        this.setColor(color);
     }
     
     public Point(final double x, final double y, final double radius) {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.color = new Color(1d, 0d, 0d, 1d);
-        finalColor = color;
+        this.setColor(color);
+    }
+    
+    public Point(final double x, final double y, final double radius, Color color) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.setColor(color);
     }
 
     public Color getColor() {
-        return finalColor;
+        return this.color;
     }
     
-    public double getX() {
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
+	public double getX() {
         return x;
     }
 
@@ -37,32 +45,37 @@ public class Point {
         return y;
     }
     
-    /*
-    public Color getColor() {
-    	return this.color;
-    }
-    */
-    
-	public double getRadius() {
+ 	public double getRadius() {
 		return radius;
 	}
     
     public Point translate(double dx, double dy) {
-        return new Point(x + dx, y + dy, finalColor);
+        return new Point(x + dx, y + dy, getColor());
     }
 	
     public Point translate(double dx, double dy, double radius) {
         return new Point(x + dx, y + dy, radius);
     }
 
-    public Point translate(double dx, double dy, Color finalColor) {
-        return new Point(x + dx, y + dy, finalColor);
+    public Point translate(double dx, double dy, Color color) {
+        return new Point(x + dx, y + dy, color);
+    }
+    
+    public Point translate(double dx, double dy, double radius, Color color) {
+        return new Point(x + dx, y + dy, radius, color);
     }
 
     public double distance(Point point) {
     	double xDist = Math.abs(this.getX() - point.getX());
     	double yDist = Math.abs(this.getY() - point.getY());
     	return Math.sqrt(xDist*xDist + yDist*yDist);
+    }
+    
+    public Double getAngleToPoint(double targetX, double targetY) {
+    	Double angle = Math.acos(targetX - this.getX());
+    	if (Math.signum(targetY - this.getY()) < 0.0)
+    		angle = 2 * Math.PI - angle;
+    	return angle;
     }
     
     @Override
@@ -93,7 +106,7 @@ public class Point {
     	return "Point{" +                "x=" + x +
                 ", y=" + y +
                 ", radius=" + radius +
-                ", color=" + color.toString() + 
+                ", color=" + getColor().toString() + 
                 "}";
     }
 
