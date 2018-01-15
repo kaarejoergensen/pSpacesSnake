@@ -131,22 +131,26 @@ public class GameLogic {
 		for (Player player : players) {
 			//if (player.isDead()) continue;	// We might just remove dead player from players ???
 			player.turn();
-			player.move(gameSettings.getWidth(), gameSettings.getHeight());
+			// player.move(gameSettings.getWidth(), gameSettings.getHeight());
 			Point newPoint = player.move(gameSettings.getWidth(), gameSettings.getHeight());
-			if (!playerIsOnBoard(newPoint)) {
+			/*if (!playerIsOnBoard(newPoint)) {
 				player.kill();
 				continue;
-			}
+			}*/
 			addPoint(newPoint);
-			if (checkCollision(newPoint)) player.kill();
+			// if (checkCollision(newPoint)) player.kill();
 			
 		}
 		return players;
 	}
 	
-    public void setRemember(Boolean holes) {
-        players.get(0).setRemember(holes);
-    }
+	public void setRemember(Boolean holes, Player player) {
+		for(Player thisPlayer : players) {
+			if(player == thisPlayer) {
+				player.setRemember(holes);	
+			}
+		}
+	}
 
     public Player makePlayer(Token token) {
         Player newPlayer = new Player(token);

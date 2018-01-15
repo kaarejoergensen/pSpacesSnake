@@ -83,7 +83,6 @@ class CreateRooms implements Runnable {
                 GameLogic gameLogic = new GameLogic(gameSettings);
                 new Thread(new GameReader(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
                 new Thread(new GameWriter(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
-        		new Thread(new SetHoles(gameLogic)).start();
                 new Thread(new EnterRoom(space, new RemoteSpace(Server.URI + UID + "?keep"), UID, gameLogic)).start();
                 new Thread(new StartGame(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
             } catch (InterruptedException | IOException e) {
@@ -140,8 +139,10 @@ class GameWriter implements Runnable {
 
 class SetHoles implements Runnable {
 	private GameLogic logic;
-	SetHoles(GameLogic logic) {
+	private Player player;
+	SetHoles(GameLogic logic, Player player) {
 		this.logic = logic;
+		this.player = player;
 	}
 	@Override
 	public void run() {
@@ -152,12 +153,12 @@ class SetHoles implements Runnable {
 			try {
 				Thread.sleep((long) (randomNum));
 			} catch (InterruptedException e) {}
-			logic.setRemember(false);
+			logic.setRemember(false, player);
 			
 			try {
 				Thread.sleep((long) (500));
 			} catch (InterruptedException e) {}
-			logic.setRemember(true);
+			logic.setRemember(true, player);
 		}
 	}
 }
@@ -248,6 +249,7 @@ class EnterRoom implements Runnable {
                 System.out.println("Added user " + token.getName() + " to room " + UID);
 
                 gameLogic.addPlayer(newPlayer);
+                new Thread(new SetHoles(gameLogic, newPlayer)).start();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
