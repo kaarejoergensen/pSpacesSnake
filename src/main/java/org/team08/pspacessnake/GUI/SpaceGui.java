@@ -245,7 +245,6 @@ public class SpaceGui {
                 }
             }
         });
-
         context.setFill(new Color(0.1, 0.1, 0.1, 1));
         context.fillRect(0, 0, WIDTH, HEIGHT);
         context.setFill(Color.CORNSILK);
@@ -281,9 +280,15 @@ public class SpaceGui {
 
 	private void holes(Point point) {
 		clear();
-		drawPoint(point);
+		// drawPoint(point);
+		context.setFill(point.getColor());
+        context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
 		for (Point thisPoint : points) {
-			drawPoint(thisPoint);		}
+			// drawPoint(thisPoint);
+			context.setFill(thisPoint.getColor());
+            context.fillOval(thisPoint.getX(), thisPoint.getY(), SIZE, SIZE);
+
+		}
 	}
 
 
@@ -291,9 +296,10 @@ public class SpaceGui {
 		// Vi skal da stadig ikke skalere positionen med SIZE, vel? /Simon
     	 Point point = new Point(player.getPosition().getX() * SIZE, player.getPosition().getY() * SIZE, player.getColor()); 
 		//Point point = new Point(player.getPosition().getX(), player.getPosition().getY(), player.getColor());
-        // context.setFill(point.getColor()); // is set for each point in drawPoint()
+        context.setFill(point.getColor()); // is set for each point in drawPoint()
 		if(player.getRemember()) {
-        	drawPoint(point);
+        	// drawPoint(point);
+			context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
         	points.add(point);
     	}
     	else {

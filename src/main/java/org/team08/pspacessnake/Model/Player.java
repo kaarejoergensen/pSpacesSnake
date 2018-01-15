@@ -19,14 +19,14 @@ public class Player {
         this.token = token;
         this.position = new Point(1, 1, 2.5d);
         this.speed = .6d;
-        this.size = 5d;
+        this.setSize(5d);
         this.angle = 0d;
         this.dAngle = .4;
         this.direction = "none";
     }
 
     public Point move() {
-    	this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.size/2.0);
+    	this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getSize()/2.0);
     	return this.position;
     }
 
@@ -61,10 +61,26 @@ public class Player {
         return speed;
     }
 
-    public void setSpeed(Double speed) {
+    /**
+	 * @return the size
+	 */
+	public double getSize() {
+		return size;
+	}
+
+	/**
+	 * @param size the size to set
+	 */
+	public void setSize(double size) {
+		this.size = size;
+	}
+
+	public void setSpeed(Double speed) {
         this.speed = speed;
     }
 
+    
+    
     public Double getAngle() {
         return angle;
     }

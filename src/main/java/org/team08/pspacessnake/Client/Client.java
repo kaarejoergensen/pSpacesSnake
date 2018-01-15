@@ -13,6 +13,7 @@ import org.team08.pspacessnake.GUI.SpaceGui;
 import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
+
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
@@ -179,4 +180,3 @@ class ChatReader implements Runnable {
         }
     }
 }
-
