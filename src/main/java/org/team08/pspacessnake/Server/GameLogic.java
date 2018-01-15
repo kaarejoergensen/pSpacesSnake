@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 import org.team08.pspacessnake.Model.GameSettings;
 import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Point;
+import org.team08.pspacessnake.Model.Powerups;
 import org.team08.pspacessnake.Model.Token;
 
 import java.util.*;
@@ -29,6 +30,7 @@ public class GameLogic {
 	private ListIterator<Point>[][] boardCellsIterators;
 	private Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE};
 	private static int i = 0;
+	private ArrayList<Powerups> powerups = new ArrayList<Powerups>();
 
 	public GameLogic() {
 		this.players = new ArrayList<>();
@@ -60,6 +62,14 @@ public class GameLogic {
 
 	public List<Player> getPlayers() {
 		return this.players;
+	}
+	
+	public ArrayList<Powerups> getPowerups() {
+		return powerups;
+	}
+	
+	public void addPowerup(Powerups powerup) {
+		powerups.add(powerup);
 	}
 
 	public boolean playerIsOnBoard(Point point) {
