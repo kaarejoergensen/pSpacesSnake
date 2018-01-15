@@ -151,7 +151,7 @@ class SetHoles implements Runnable {
 			logic.setRemember(false, player);
 			
 			try {
-				Thread.sleep((long) (500));
+				Thread.sleep((long) (300));
 			} catch (InterruptedException e) {}
 			logic.setRemember(true, player);
 		}
@@ -199,7 +199,7 @@ class GameReader implements Runnable {
                 Object[] direction = space.get(new ActualField("Changed direction"), new FormalField(String.class),
                         new FormalField(Token.class));
                 gameLogic.changeDirection((Token) direction[2], (String) direction[1]);
-                System.out.println(((Token) direction[2]).getName() + " changed direction to " + direction[1]);
+                //System.out.println(((Token) direction[2]).getName() + " changed direction to " + direction[1]);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

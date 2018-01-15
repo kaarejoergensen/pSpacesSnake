@@ -102,7 +102,6 @@ public class GameLogic {
 			this.players = new ArrayList<>();
 		}
 		this.players.add(player);
-		i++;
 	}
 
 	public boolean isStarted() {

@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 public class Point {
     private final double x;    // The X coordinate
     private final double y;    // The Y coordinate
-    private static Color color;
+
     private Color finalColor;
 
     public Color getColor() {

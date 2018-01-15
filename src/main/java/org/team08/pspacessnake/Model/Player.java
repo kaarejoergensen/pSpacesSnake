@@ -13,10 +13,11 @@ public class Player {
     private boolean isDead = false;
     private boolean remember = true;
     private boolean ready;
+    private Powerups power;
 
     public Player(Token token) {
         this.token = token;
-        this.speed = 0.5;
+        this.speed = 3.0;
         this.angle = 0d;
         this.dAngle = .1;
         this.direction = "none";
@@ -118,4 +119,12 @@ public class Player {
     public void setReady(boolean ready) {
         this.ready = ready;
     }
+
+	public Powerups getPower() {
+		return power;
+	}
+
+	public void setPower(Powerups power) {
+		this.power = power;
+	}
 }
