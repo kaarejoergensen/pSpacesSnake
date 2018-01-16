@@ -18,17 +18,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.Image;
-
 import org.team08.pspacessnake.Client.Client;
 import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Point;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
 
-
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -41,7 +36,7 @@ import java.util.stream.Collectors;
 public class SpaceGui {
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 800;
-    
+
     private Client client;
     private Token token;
     private boolean leftKeyPressed = false;

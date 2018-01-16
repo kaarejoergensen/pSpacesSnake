@@ -80,9 +80,9 @@ public class Client extends Application {
     }
 
     public void startGame(SpaceGui gui, Token token, String RoomUID) throws IOException {
-        new Thread(new GameReader(new RemoteSpace(REMOTE_URI + RoomUID+ "?keep"), gui, token)).start();
-        new Thread(new ChatReader(new RemoteSpace(REMOTE_URI + RoomUID+ "?keep"), gui, token)).start();
-        new Thread(new PlayersReader(new RemoteSpace(REMOTE_URI + RoomUID+ "?keep"), gui)).start();
+        new Thread(new GameReader(new RemoteSpace(REMOTE_URI + RoomUID + "?keep"), gui, token)).start();
+        new Thread(new ChatReader(new RemoteSpace(REMOTE_URI + RoomUID + "?keep"), gui, token)).start();
+        new Thread(new PlayersReader(new RemoteSpace(REMOTE_URI + RoomUID + "?keep"), gui)).start();
     }
 
     public void sendMessage(String text, Token token) throws InterruptedException {
@@ -110,21 +110,17 @@ class PlayersReader implements Runnable {
 
     @Override
     public void run() {
-        boolean gameStarted = false;
-        while (!gameStarted) {
-            try {
+        try {
+            while (!(boolean) space.query(new ActualField("Game started"), new FormalField(Boolean.class))[1]) {
                 List<Object[]> playersQuery = space.queryAll(new ActualField("player"), new FormalField(Token.class),
                         new FormalField(Player.class));
                 List<Player> players = playersQuery.stream().map(o -> (Player) o[2]).
                         sorted(Comparator.comparing(player -> player.getToken().getName())).collect(Collectors.toList());
-                gameStarted = players.stream().allMatch(Player::isReady);
-                if (!gameStarted) {
-                    spaceGui.drawPlayers(players);
-                    Thread.sleep(1000);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                spaceGui.drawPlayers(players);
+                Thread.sleep(1000);
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
@@ -141,20 +137,18 @@ class GameReader implements Runnable {
     }
 
     @Override
-	public void run() {
-		boolean firstRun = true;
-        while (true) {
-			try {
-				Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(Player.class),
+    public void run() {
+        try {
+            space.query(new ActualField("Game started"), new ActualField(true));
+            gui.clear();
+            while (true) {
+                Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(Player.class),
                         new ActualField(token));
-				if (firstRun) {
-				    gui.clear();
-				    firstRun = false;
-                }
                 gui.updateGui((Player) newPoint[1]);
-			} catch (InterruptedException e) {
-			    e.printStackTrace();
+
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
