@@ -183,8 +183,8 @@ public class GameLogic {
 			player.turn();
 			//player.move(gameSettings.getWidth(), gameSettings.getHeight());
 			//player.move();
-			// Point newPoint = player.move(gameSettings.getWidth(), gameSettings.getHeight());
-			Point newPoint = player.move();
+			Point newPoint = player.move(gameSettings.getWidth(), gameSettings.getHeight());
+			// Point newPoint = player.move();
 			if (!playerIsOnBoard(newPoint)) {
 				player.kill();
 				continue;

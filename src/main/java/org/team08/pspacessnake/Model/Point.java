@@ -69,9 +69,13 @@ public class Point {
     public Point translate(double dx, double dy, Color color) {
         return new Point(x + dx, y + dy, this.getRadius(), color);
     }
-
+    
     public Point translate(double dx, double dy, double radius, Color color) {
         return new Point(x + dx, y + dy, radius, color);
+    }
+
+    public Point translate(double dx, double dy, double radius, Color color, int boardWidth, int boardHeight) {
+        return new Point((x + dx + boardWidth) % boardWidth, (y + dy + boardHeight) % boardHeight, radius, color);
     }
 
     public double distance(Point point) {
@@ -115,6 +119,8 @@ public class Point {
         return "Point{" +
                 "x=" + x +
                 ", y=" + y +
+                ", r=" + radius +
+                ", color=" + color +
                 '}';
     }
 

@@ -26,7 +26,6 @@ public class Player {
 
     public Player(Token token) {
         this.setToken(token);
-        //this.setPosition(new Point(1, 1, 2.5d));
         this.setSpeed(5d);
         this.setSize(5d);
         this.setAngle(0d);
@@ -35,24 +34,13 @@ public class Player {
         this.setEdgeJumper(true);
     }
 
-/*    public Player(Token token) {
-        this.token = token;
-        this.speed = 2d;
-        this.angle = 0d;
-        this.dAngle = .1;
-        this.direction = "none";
-    }*/
-
     public Point move(int boardWidth, int boardHeight) {
     	if (this.isEdgeJumper())
-    		return this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getSize()/2.0, this.getColor());
+    		this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getPosition().getRadius(), this.getPosition().getColor(), boardWidth, boardHeight);
     	else
-    		return this.position.translate(speed * Math.cos(angle) % boardWidth, -speed * Math.sin(angle) % boardHeight, this.getSize()/2.0, this.getColor());
-    }
-
-    public Point move() {
-        this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle));
-        return this.position;
+    		this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getPosition().getRadius(), this.getPosition().getColor()); 
+    	System.out.println(this.position);
+    	return this.position;
     }
 
     public double turn() {
