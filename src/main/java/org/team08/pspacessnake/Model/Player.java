@@ -2,11 +2,15 @@ package org.team08.pspacessnake.Model;
 
 import javafx.scene.paint.Color;
 
+import java.util.LinkedList;
+import java.util.ListIterator;
+
 public class Player {
     private Token token;
     private Point position;
+    private LinkedList<Point> pointBuffer = new LinkedList<Point>();
     private Double speed;
-//    private double size;		// diameter of snake head. 
+    private double size;		// diameter of snake head. 
     private Double angle;		//current angler of movement
     private double dAngle;		//the change of angle per frame.
     private Color color;
@@ -14,9 +18,9 @@ public class Player {
     private boolean isDead = false;
     private boolean remember = true;
     private boolean ready;
-//    private boolean edgeJumper;
+    private boolean edgeJumper;
 
-	/*
+
     public Player(Token token) {
         this.setToken(token);
         //this.setPosition(new Point(1, 1, 2.5d));
@@ -26,24 +30,22 @@ public class Player {
         this.setDAngle(.1);
         this.setDirection("none");
         this.setEdgeJumper(true);
-    }*/
+    }
 
-    public Player(Token token) {
+/*    public Player(Token token) {
         this.token = token;
         this.speed = 2d;
         this.angle = 0d;
         this.dAngle = .1;
         this.direction = "none";
-    }
+    }*/
 
-/*
     public Point move(int boardWidth, int boardHeight) {
     	if (this.isEdgeJumper())
     		return this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getSize()/2.0, this.getColor());
     	else
     		return this.position.translate(speed * Math.cos(angle) % boardWidth, -speed * Math.sin(angle) % boardHeight, this.getSize()/2.0, this.getColor());
     }
-*/
 
     public Point move() {
         this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle));
@@ -77,29 +79,31 @@ public class Player {
         this.position = position;
     }
 
-    public Double getSpeed() {
+    public LinkedList<Point> getPointBuffer() {
+		return pointBuffer;
+	}
+
+	public Double getSpeed() {
         return speed;
     }
 
-/*    /**
+    /**
 	 * @return the size
 	 */
-/*	public double getSize() {
+	public double getSize() {
 		return size;
-	}*/
+	}
 
 	/**
 	 * @param size the size to set
 	 */
-/*	public void setSize(double size) {
+	public void setSize(double size) {
 		this.size = size;
-	}*/
+	}
 
 	public void setSpeed(Double speed) {
         this.speed = speed;
-    }
-
-    
+	}
     
     public Double getAngle() {
         return angle;
@@ -139,6 +143,7 @@ public class Player {
 
     public void kill() {
         this.isDead = true;
+        System.out.printf("Spiller: %s er død\n", this.getToken().getName());
     }
 
     public void setRemember(boolean holes) {
@@ -157,11 +162,11 @@ public class Player {
         this.ready = ready;
     }
 
-/*	public boolean isEdgeJumper() {
+	public boolean isEdgeJumper() {
 		return edgeJumper;
 	}
 
 	public void setEdgeJumper(boolean edgeJumper) {
 		this.edgeJumper = edgeJumper;
-	}*/
+	}
 }
