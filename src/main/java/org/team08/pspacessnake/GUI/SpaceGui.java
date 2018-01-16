@@ -10,6 +10,7 @@ import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -19,10 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import org.team08.pspacessnake.Client.Client;
-import org.team08.pspacessnake.Model.Player;
-import org.team08.pspacessnake.Model.Point;
-import org.team08.pspacessnake.Model.Room;
-import org.team08.pspacessnake.Model.Token;
+import org.team08.pspacessnake.Model.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,6 +40,7 @@ public class SpaceGui {
     private boolean leftKeyPressed = false;
     private boolean rightKeyPressed = false;
     private List<Point> points;
+    private List<Powerups> powers = new ArrayList<>();
     private GraphicsContext context;
     private List<Room> rooms;
     private Room selectedRoom;
@@ -306,6 +305,9 @@ public class SpaceGui {
             context.setFill(point1.getColor());
             drawPoint(point1);
         }
+        for (Powerups power1 : powers) {
+            drawImage(power1);
+        }
         points.add(point);
     }
 
@@ -319,11 +321,27 @@ public class SpaceGui {
             //holes(point);
         }
     }
+    
+    private void drawImage(Powerups power) {
+
+    	switch (power.getPower()) {
+    	case "Fast":
+    		Image image = new Image("SpaceLightning.png");
+    		context.drawImage(image, power.getPosition().getX(), power.getPosition().getY(), 20.0, 20.0);
+    		
+    	}
+    }
 
     private void drawPoint(Point point) {
     	context.setFill(point.getColor());
         context.fillOval(point.getX() - point.getRadius(), point.getY() - point.getRadius(), 2*point.getRadius(), 2*point.getRadius());
     }
+
+	public void addPowerup(Powerups power) {
+		powers.add(power);
+		System.out.println(power.getPower());
+		drawImage(power);
+	}
 }
 
 

@@ -6,6 +6,7 @@ import org.team08.pspacessnake.Model.*;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -64,29 +65,27 @@ class PowerUp implements Runnable {
 
     }
 
-    @Override
-    public void run() {
-        while (true) {
-            if (gameLogic.isStarted()) {
-                try {
-                    Thread.sleep((long) (7000));
-                } catch (InterruptedException e) {
-                }
-                Powerups newPowerup = new Powerups();
-                gameLogic.addPowerup(newPowerup);
-                for (Player player : gameLogic.getPlayers()) {
-                    try {
-                        space.put("New Powerup", newPowerup, player.getToken());
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+	@Override
+	public void run() {
+		while (true) {
+			try {
+				System.out.println(gameLogic.isStarted());
+				if (gameLogic.isStarted()) {
+					Thread.sleep((long) (3000));
+					Powerups newPowerup = gameLogic.makePowerup();
+					for (Player player : gameLogic.getPlayers()) {
+
+						space.put("New Powerup", newPowerup, player.getToken());
 
 
-            }
-        }
+					}
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 
-    }
+	}
 }
 
 class GameWriter implements Runnable {
@@ -109,10 +108,11 @@ class GameWriter implements Runnable {
                     float time = System.currentTimeMillis();
                     List<Player> players = gameLogic.nextFrame();
                     for (Player startedPlayer : gameLogic.getStartedPlayers()) {
-                        for (Player activePlayer : players) {
+                        for (Iterator<Player> it = players.iterator(); it.hasNext();) {
+                        	Player activePlayer = it.next();
                             if (activePlayer.isDead()) {
                                 space.put("message", "Player '" + activePlayer.getToken().getName() + "' died!", new Token("0", "System"));
-                                gameLogic.getPlayers().remove(activePlayer);
+								it.remove();
                             }
                             space.put("Player moved", activePlayer, startedPlayer.getToken());
                         }
@@ -284,29 +284,24 @@ class Chat implements Runnable {
 }
 
 class HeartbeatClient implements Runnable {
-    private Space space;
-    private String roomURL;
+	private Space space;
+	private String roomURL;
 
-    public HeartbeatClient(Space space, String roomURL) {
-        this.space = space;
-        this.roomURL = roomURL;
-    }
+	public HeartbeatClient(Space space, String roomURL) {
+		this.space = space;
+		this.roomURL = roomURL;
+	}
 
-    @Override
-    public void run() {
-        while (true) {
-            try {
-                space.get(new ActualField("roomLock"));
-                Object[] roomGet = space.get(new ActualField("room"), new ActualField(roomURL), new FormalField(Room.class));
-                Room room = (Room) roomGet[2];
-                space.put("room", roomURL, room);
-                space.put("roomLock");
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+	@Override
+	public void run() {
+		while (true) {
+			try {
+				space.put("heartbeat", roomURL);
+				Thread.sleep(25000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 
-
-        }
-    }
+		}
+	}
 }

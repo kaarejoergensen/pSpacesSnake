@@ -26,7 +26,7 @@ public class GameLogic {
 		initiateCellLists();
 	}
 
-	GameLogic(GameSettings gameSettings) {
+	public GameLogic(GameSettings gameSettings) {
 		this.players = new ArrayList<>();
 		this.gameSettings = gameSettings;
 		initiateCellLists();
@@ -56,8 +56,14 @@ public class GameLogic {
 		return powerups;
 	}
 	
-	public void addPowerup(Powerups powerup) {
-		powerups.add(powerup);
+	public Powerups makePowerup() {
+		Powerups newPowerup = new Powerups();
+		Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5),
+                ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), null);
+		newPowerup.setPosition(newPoint);
+		powerups.add(newPowerup);
+		
+		return newPowerup;
 	}
 
 	private boolean playerIsOnBoard(Point point) {
