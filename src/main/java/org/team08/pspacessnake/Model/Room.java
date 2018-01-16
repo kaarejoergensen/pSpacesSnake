@@ -7,19 +7,16 @@ public class Room {
     private String URL;
     private String name;
     private List<Token> tokens = new ArrayList<>();
-    private long heartbet;
 
     public Room(String URL, String name) {
         this.URL = URL;
         this.name = name;
-        this.heartbet = System.currentTimeMillis();
     }
 
     public Room(String URL, String name, Token token) {
         this.URL = URL;
         this.name = name;
         this.tokens.add(token);
-        this.heartbet = System.currentTimeMillis();
     }
 
     public String getURL() {
@@ -51,13 +48,5 @@ public class Room {
             this.tokens = new ArrayList<>();
         }
         this.tokens.add(token);
-    }
-
-    public long getHeartbet() {
-        return heartbet;
-    }
-
-    public void setHeartbet(long heartbet) {
-        this.heartbet = heartbet;
     }
 }

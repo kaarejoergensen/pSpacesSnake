@@ -116,7 +116,6 @@ class GameWriter implements Runnable {
                             } else {
                                 space.put("Player moved", player, player1.getToken());
                             }
-
                         }
                     }
                     time = System.currentTimeMillis() - time;
@@ -150,16 +149,14 @@ class SetHoles implements Runnable {
         while (true) {
             int randomNum = ThreadLocalRandom.current().nextInt(1000, 5000);
             try {
+                int randomNum = ThreadLocalRandom.current().nextInt(1000, 5000);
                 Thread.sleep((long) (randomNum));
-            } catch (InterruptedException e) {
-            }
-            logic.setRemember(false, player);
-
-            try {
+                logic.setRemember(false, player);
                 Thread.sleep((long) (300));
+                logic.setRemember(true, player);
             } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            logic.setRemember(true, player);
         }
     }
 }
@@ -235,14 +232,12 @@ class EnterRoom implements Runnable {
             try {
                 Object[] enter = space.get(new ActualField("enter"), new ActualField(UID),
                         new FormalField(Token.class));
-                space.get(new ActualField("roomLock"));
                 Object[] roomGet = space.get(new ActualField("room"), new ActualField(UID), new FormalField(Object
                         .class));
                 Room room = (Room) roomGet[2];
                 Token token = (Token) enter[2];
                 room.addToken(token);
                 space.put("room", UID, room);
-                space.put("roomLock");
                 space.put("enterResult", Boolean.TRUE, token);
                 Player newPlayer = gameLogic.makePlayer(token);
                 roomSpace.put("player", token, newPlayer);
