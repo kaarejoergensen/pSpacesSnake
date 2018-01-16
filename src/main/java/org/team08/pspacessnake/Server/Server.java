@@ -147,7 +147,6 @@ class SetHoles implements Runnable {
     @Override
     public void run() {
         while (true) {
-            int randomNum = ThreadLocalRandom.current().nextInt(1000, 5000);
             try {
                 int randomNum = ThreadLocalRandom.current().nextInt(1000, 5000);
                 Thread.sleep((long) (randomNum));
