@@ -15,7 +15,7 @@ public class Supervisor {
     private static final String PORT = "9001";
     private static final String TYPE = "?keep";
 
-    public static void main(String[] args) throws UnknownHostException {
+    public static void main(String[] args) throws UnknownHostException, InterruptedException {
         InetAddress address = InetAddress.getLocalHost();
         String host = PROTOCOL + address.getHostAddress() + ":" + PORT + "/" + TYPE;
 
@@ -24,6 +24,7 @@ public class Supervisor {
         repository.add("space", new SequentialSpace());
 
         Space space = repository.get("space");
+        space.put("roomLock");
         System.out.println("Supervisor started!");
 
         new Thread(new CreateClients(space)).start();
@@ -64,14 +65,17 @@ class HeartbeatServer implements Runnable {
     public void run() {
         while (true) {
             try {
+                space.get(new ActualField("roomLock"));
                 List<Object[]> roomsGet = space.getAll(new ActualField("room"), new FormalField(String.class),
                         new FormalField(Room.class));
                 List<Room> rooms = roomsGet.stream().map(o -> (Room) o[2]).collect(Collectors.toList());
                 for (Room room : rooms) {
-                    if (System.currentTimeMillis() - room.getHeartbet() <= 45000) {
+                    if (System.currentTimeMillis() - room.getHeartbet() <= 10000) {
                         space.put("room", room.getURL(), room);
                     }
                 }
+                space.put("roomLock");
+                Thread.sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

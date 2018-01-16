@@ -102,6 +102,7 @@ public class SpaceGui {
             roomsListView.setOnMouseClicked(event -> {
                 String roomName = roomsListView.getSelectionModel().getSelectedItem();
                 if (roomName != null) {
+                    roomName = roomName.substring(0, roomName.length() - 4);
                     joinGameButton.setDisable(false);
                     for (Room room : rooms) {
                         if (room.getName().equals(roomName)) {

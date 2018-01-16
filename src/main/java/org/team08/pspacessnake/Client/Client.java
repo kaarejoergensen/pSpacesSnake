@@ -57,8 +57,10 @@ public class Client extends Application {
     }
 
     public List<Room> getRooms(Token token) throws InterruptedException {
+        space.get(new ActualField("roomLock"));
         List<Object[]> rooms = space.queryAll(new ActualField("room"), new FormalField(String.class),
                 new FormalField(Room.class));
+        space.put("roomLock");
         return rooms.stream().map(objects -> (Room) objects[2]).collect(Collectors.toList());
     }
 

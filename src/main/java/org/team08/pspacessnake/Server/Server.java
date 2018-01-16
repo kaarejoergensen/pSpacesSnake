@@ -247,16 +247,14 @@ class EnterRoom implements Runnable {
             try {
                 Object[] enter = space.get(new ActualField("enter"), new ActualField(UID),
                         new FormalField(Token.class));
-                Object[] roomGet = space.getp(new ActualField("room"), new ActualField(UID), new FormalField(Object
+                space.get(new ActualField("roomLock"));
+                Object[] roomGet = space.get(new ActualField("room"), new ActualField(UID), new FormalField(Object
                         .class));
-                if (roomGet == null) {
-                    space.put("enterResult", Boolean.FALSE, enter[3]);
-                    continue;
-                }
                 Room room = (Room) roomGet[2];
                 Token token = (Token) enter[2];
                 room.addToken(token);
                 space.put("room", UID, room);
+                space.put("roomLock");
                 space.put("enterResult", Boolean.TRUE, token);
                 Player newPlayer = gameLogic.makePlayer(token);
                 roomSpace.put("player", token, newPlayer);
@@ -316,11 +314,13 @@ class HeartbeatClient implements Runnable {
     public void run() {
         while (true) {
             try {
+                space.get(new ActualField("roomLock"));
                 Object[] roomGet = space.get(new ActualField("room"), new ActualField(roomURL), new FormalField(Room.class));
                 Room room = (Room) roomGet[2];
                 room.setHeartbet(System.currentTimeMillis());
                 space.put("room", roomURL, room);
-                Thread.sleep(30000);
+                space.put("roomLock");
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
