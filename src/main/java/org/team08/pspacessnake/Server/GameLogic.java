@@ -24,10 +24,9 @@ public class GameLogic {
 	public GameLogic() {
 		this.players = new ArrayList<>();
 		initiateCellLists();
-
 	}
 
-	public GameLogic(GameSettings gameSettings) {
+	GameLogic(GameSettings gameSettings) {
 		this.players = new ArrayList<>();
 		this.gameSettings = gameSettings;
 		initiateCellLists();
@@ -61,11 +60,11 @@ public class GameLogic {
 		powerups.add(powerup);
 	}
 
-	public boolean playerIsOnBoard(Point point) {
+	private boolean playerIsOnBoard(Point point) {
 		return (0d <= point.getX() && point.getX() <= gameSettings.getWidth() && 0d <= point.getY() && point.getY() <= gameSettings.getHeight());
 	}
 
-	public boolean checkCollision(Point point) {
+	private boolean checkCollision(Point point) {
 		int pointCellX = getCellX(point); //the x coordinate of the bin the point belongs to.
 		int pointCellY = getCellY(point); //the y coordinate of the bin the point belongs to.
 
@@ -87,7 +86,7 @@ public class GameLogic {
 		return false;
 	}
 	
-	public boolean checkBufferedPointsCollision(Player currentPlayer) {
+	private boolean checkBufferedPointsCollision(Player currentPlayer) {
 		for (Player thisPlayer : players) {
 			if (thisPlayer == currentPlayer) continue;
 			for (Point bufferPoint : thisPlayer.getPointBuffer())
@@ -98,18 +97,18 @@ public class GameLogic {
 		return false;
 	}
 	
-	public int getCellX(Point point) {
+	private int getCellX(Point point) {
 		return (int) point.getX() / gameSettings.getCellSize();
 	}
 
-	public int getCellY(Point point) {
+	private int getCellY(Point point) {
 		return (int) point.getY() / gameSettings.getCellSize();
 	}
 
 	/*
 	 * Adds new player position to buffer and releases non-overlapping buffered points to appropriate cell.  
 	 */
-	public void addPoint(Player currentPlayer) {
+	private void addPoint(Player currentPlayer) {
 		Point playerPos = currentPlayer.getPosition();
 		for (Point bufferPoint : currentPlayer.getPointBuffer()) {
 			if (playerPos.distance(bufferPoint) > playerPos.getRadius() + bufferPoint.getRadius()) {
@@ -163,22 +162,15 @@ public class GameLogic {
 			if (player.getRemember()) {
 				addPoint(player);
 				player.getPosition().setRadius(2.5d);
+				// player.getPosition().setColor(Color.DARKORANGE);
+				
 
 			}
-			else player.getPosition().setRadius(0.0d);
+			// else player.getPosition().setColor(Color.BLACK);
+			else player.getPosition().setRadius(0d);;
 			if (checkCollision(player.getPosition()) || checkBufferedPointsCollision(player)) player.kill();
 		}
 		return players;
-	}
-
-	public void setRemember(Boolean holes, Player player) {
-		/*for(Player player1 : players) {
-			if(player == player1) {
-				player.setRemember(holes);	
-			}
-		}*/
-		player.setRemember(holes);
- 
 	}
 
 	public Player makePlayer(Token token) {
@@ -197,6 +189,6 @@ public class GameLogic {
 	}
 	
 	public void setStartedPlayers() {
-		startedPlayers = players.stream().collect(Collectors.toList());
+		startedPlayers = new ArrayList<>(players);
 	}
 }

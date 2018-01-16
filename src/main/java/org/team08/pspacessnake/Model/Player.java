@@ -18,27 +18,25 @@ public class Player {
     private boolean isDead = false;
     private boolean remember = true;
     private boolean ready;
-
     private Powerups power;
-
     private boolean edgeJumper;
 
 
     public Player(Token token) {
         this.setToken(token);
-        this.setSpeed(5d);
+        this.setSpeed(3d);
         this.setSize(5d);
         this.setAngle(0d);
-        this.setDAngle(.1);
+        this.setDAngle(.17);
         this.setDirection("none");
-        this.setEdgeJumper(true);
+        this.setEdgeJumper(false);
     }
 
     public Point move(int boardWidth, int boardHeight) {
     	if (this.isEdgeJumper())
-    		this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getPosition().getRadius(), this.getPosition().getColor(), boardWidth, boardHeight);
+    		this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getPosition().getRadius(), this.getColor(), boardWidth, boardHeight);
     	else
-    		this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getPosition().getRadius(), this.getPosition().getColor()); 
+    		this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getPosition().getRadius(), this.getColor()); 
     	System.out.println(this.position);
     	return this.position;
     }

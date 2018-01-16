@@ -8,7 +8,7 @@ public class GameSettings {
     private int setHoleIntervalMin = 1000;
     private int setHoleIntervalMax = 5000;
     private int cellSize = 5;
-    private int frameRate = 24; // [fps]
+    private int frameRate = 30; // [fps]
     
     public GameSettings() {	
     }

@@ -311,8 +311,6 @@ public class SpaceGui {
 
     public void updateGui(Player player) {
         Point point = player.getPosition();
-        context.setFill(point.getColor());
-
         if (player.getRemember()) {
             drawPoint(point);
             points.add(point);
@@ -323,6 +321,7 @@ public class SpaceGui {
     }
 
     private void drawPoint(Point point) {
+    	context.setFill(point.getColor());
         context.fillOval(point.getX() - point.getRadius(), point.getY() - point.getRadius(), 2*point.getRadius(), 2*point.getRadius());
     }
 }

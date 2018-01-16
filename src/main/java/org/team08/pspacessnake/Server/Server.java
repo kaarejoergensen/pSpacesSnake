@@ -111,12 +111,10 @@ class GameWriter implements Runnable {
                     for (Player startedPlayer : gameLogic.getStartedPlayers()) {
                         for (Player activePlayer : players) {
                             if (activePlayer.isDead()) {
-                                space.put("message", "Player '" + activePlayer.getToken().getName() + "' died!",
-                                        new Token("0", "System"));
+                                space.put("message", "Player '" + activePlayer.getToken().getName() + "' died!", new Token("0", "System"));
                                 gameLogic.getPlayers().remove(activePlayer);
-                            } else {
-                                space.put("Player moved", activePlayer, startedPlayer.getToken());
                             }
+                            space.put("Player moved", activePlayer, startedPlayer.getToken());
                         }
                     }
                     time = System.currentTimeMillis() - time;
@@ -151,9 +149,9 @@ class SetHoles implements Runnable {
             try {
                 int randomNum = ThreadLocalRandom.current().nextInt(logic.getGameSettings().getSetHoleIntervalMin(), logic.getGameSettings().getSetHoleIntervalMax());
                 Thread.sleep((long) (randomNum));
-                logic.setRemember(false, player);
+                player.setRemember(false);
                 Thread.sleep((long) (300));
-                logic.setRemember(true, player);
+                player.setRemember(true);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
