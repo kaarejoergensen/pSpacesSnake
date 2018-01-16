@@ -317,12 +317,13 @@ public class SpaceGui {
             drawPoint(point);
             points.add(point);
         } else {
-            holes(point);
+        	drawPoint(point);
+            //holes(point);
         }
     }
 
     private void drawPoint(Point point) {
-        context.fillOval(point.getX() - 2.5, point.getY() - 2.5, 5, 5);
+        context.fillOval(point.getX() - point.getRadius(), point.getY() - point.getRadius(), 2*point.getRadius(), 2*point.getRadius());
     }
 }
 

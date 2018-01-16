@@ -160,19 +160,25 @@ public class GameLogic {
 				player.kill();
 				continue;
 			}
-			addPoint(player);
+			if (player.getRemember()) {
+				addPoint(player);
+				player.getPosition().setRadius(2.5d);
+
+			}
+			else player.getPosition().setRadius(0.0d);
 			if (checkCollision(player.getPosition()) || checkBufferedPointsCollision(player)) player.kill();
 		}
 		return players;
 	}
 
 	public void setRemember(Boolean holes, Player player) {
-		for(Player player1 : players) {
+		/*for(Player player1 : players) {
 			if(player == player1) {
 				player.setRemember(holes);	
 			}
-		}
-
+		}*/
+		player.setRemember(holes);
+ 
 	}
 
 	public Player makePlayer(Token token) {

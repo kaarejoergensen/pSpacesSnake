@@ -5,36 +5,35 @@ import javafx.scene.paint.Color;
 public class Point {
     private final double x;    // The X coordinate
     private final double y;    // The Y coordinate
-
-    private final double radius;
+    private double radius;
     private Color color;
 
 
     public Point(final double x, final double y) {
     	this.x = x;
         this.y = y;
-        this.radius = 2.5d; // default value
+        this.setRadius(2.5d); // default value
         this.color = new Color(0.5, 0.5, 1.0, 1.0); // default value
     }
 
     public Point(final double x, final double y, final Color color) {
         this.x = x;
         this.y = y;
-        this.radius = 2.5d; // default value
+        this.setRadius(2.5d); // default value
         this.color = color;
     }
 
     public Point(final double x, final double y, final double radius) {
         this.x = x;
         this.y = y;
-        this.radius = radius;
+        this.setRadius(radius);
         this.color = new Color(1.0, 0.5, 0.5, 1.0); // default value
     }
 
     public Point(final double x, final double y, final double radius, Color color) {
         this.x = x;
         this.y = y;
-        this.radius = radius;
+        this.setRadius(radius);
         this.setColor(color);
     }
 
@@ -56,6 +55,10 @@ public class Point {
 
  	public double getRadius() {
 		return radius;
+	}
+ 	
+	public void setRadius(double radius) {
+		this.radius = radius;
 	}
  	
     public Point translate(double dx, double dy) {
@@ -119,9 +122,8 @@ public class Point {
         return "Point{" +
                 "x=" + x +
                 ", y=" + y +
-                ", r=" + radius +
+                ", r=" + getRadius() +
                 ", color=" + color +
                 '}';
     }
-
 }
