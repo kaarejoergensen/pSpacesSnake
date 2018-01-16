@@ -171,7 +171,7 @@ public class SpaceGui {
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(s -> {
             try {
-                selectedRoom = client.createRoom(s);
+                selectedRoom = client.createRoom(s, token);
                 enterGame(selectedRoom);
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
