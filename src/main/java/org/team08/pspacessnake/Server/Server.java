@@ -74,11 +74,6 @@ class PowerUp implements Runnable {
                 }
                 Powerups newPowerup = new Powerups();
                 gameLogic.addPowerup(newPowerup);
-
-                	/*if (player.isDead()) {
-                		//System.out.printf("Player: %s is dead\n", player.getToken().getName());
-                		//continue;	// don't send new coordinates for dead players.
-                	}*/
                 for (Player player : gameLogic.getPlayers()) {
                     try {
                         space.put("New Powerup", newPowerup, player.getToken());
@@ -114,10 +109,6 @@ class GameWriter implements Runnable {
                     float time = System.currentTimeMillis();
                     List<Player> players = gameLogic.nextFrame();
                     for (Player player : players) {
-                    	/*if (player.isDead()) {
-                    		//System.out.printf("Player: %s is dead\n", player.getToken().getName());
-                    		//continue;	// don't send new coordinates for dead players.
-                    	}*/
                         for (Player player1 : players) {
                             if (player1.isDead()) {
                                 space.put("message", "Player '" + player.getToken().getName() + "' died!",
@@ -213,7 +204,6 @@ class GameReader implements Runnable {
                 Object[] direction = space.get(new ActualField("Changed direction"), new FormalField(String.class),
                         new FormalField(Token.class));
                 gameLogic.changeDirection((Token) direction[2], (String) direction[1]);
-                //System.out.println(((Token) direction[2]).getName() + " changed direction to " + direction[1]);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -306,11 +296,17 @@ class HeartbeatClient implements Runnable {
     public void run() {
         while (true) {
             try {
-                space.put("heartbeat", roomURL);
-                Thread.sleep(25000);
+                space.get(new ActualField("roomLock"));
+                Object[] roomGet = space.get(new ActualField("room"), new ActualField(roomURL), new FormalField(Room.class));
+                Room room = (Room) roomGet[2];
+                space.put("room", roomURL, room);
+                space.put("roomLock");
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+
         }
     }
 }

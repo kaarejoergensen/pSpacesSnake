@@ -179,20 +179,14 @@ public class GameLogic {
 
 	public List<Player> nextFrame() {
 		for (Player player : players) {
-			//if (player.isDead()) continue;	// We might just remove dead player from players ???
 			player.turn();
-			//player.move(gameSettings.getWidth(), gameSettings.getHeight());
-			//player.move();
-			Point newPoint = player.move(gameSettings.getWidth(), gameSettings.getHeight());
-			// Point newPoint = player.move();
-			if (!playerIsOnBoard(newPoint)) {
+			player.move(gameSettings.getWidth(), gameSettings.getHeight());
+			if (!playerIsOnBoard(player.getPosition())) {
 				player.kill();
 				continue;
 			}
 			addPoint(player);
-			//addPoint(player.getPosition());
-			// if (checkCollision(newPoint)) player.kill();
-			
+			if (checkCollision(player.getPosition()) || checkBufferedPointsCollision(player)) player.kill();
 		}
 		return players;
 	}
