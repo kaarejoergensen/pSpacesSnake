@@ -125,7 +125,6 @@ class GameWriter implements Runnable {
                             } else {
                                 space.put("Player moved", player, player1.getToken());
                             }
-
                         }
                     }
                     time = System.currentTimeMillis() - time;
@@ -157,20 +156,15 @@ class SetHoles implements Runnable {
     @Override
     public void run() {
         while (true) {
-            int randomNum = ThreadLocalRandom.current().nextInt(1000, 5000);
-            // int randomNum = 100000;
-
             try {
+                int randomNum = ThreadLocalRandom.current().nextInt(1000, 5000);
                 Thread.sleep((long) (randomNum));
-            } catch (InterruptedException e) {
-            }
-            logic.setRemember(false, player);
-
-            try {
+                logic.setRemember(false, player);
                 Thread.sleep((long) (300));
+                logic.setRemember(true, player);
             } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            logic.setRemember(true, player);
         }
     }
 }
@@ -320,12 +314,10 @@ class HeartbeatClient implements Runnable {
                 room.setHeartbet(System.currentTimeMillis());
                 space.put("room", roomURL, room);
                 space.put("roomLock");
-                Thread.sleep(5000);
+                Thread.sleep(20000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-
         }
     }
 }

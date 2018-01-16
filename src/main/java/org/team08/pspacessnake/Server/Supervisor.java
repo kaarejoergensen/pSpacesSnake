@@ -70,12 +70,14 @@ class HeartbeatServer implements Runnable {
                         new FormalField(Room.class));
                 List<Room> rooms = roomsGet.stream().map(o -> (Room) o[2]).collect(Collectors.toList());
                 for (Room room : rooms) {
-                    if (System.currentTimeMillis() - room.getHeartbet() <= 10000) {
+                    if (System.currentTimeMillis() - room.getHeartbet() <= 30000) {
                         space.put("room", room.getURL(), room);
+                    } else {
+                        System.out.println("HEARBEAT: Dropping room " + room.getName() + " " + room.getURL());
                     }
                 }
                 space.put("roomLock");
-                Thread.sleep(10000);
+                Thread.sleep(30000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
