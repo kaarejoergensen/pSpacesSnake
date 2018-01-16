@@ -148,7 +148,6 @@ class SetHoles implements Runnable {
     @Override
     public void run() {
         while (true) {
-
             try {
                 int randomNum = ThreadLocalRandom.current().nextInt(1000, 5000);
                 Thread.sleep((long) (randomNum));
@@ -301,7 +300,6 @@ class HeartbeatClient implements Runnable {
                 space.get(new ActualField("roomLock"));
                 Object[] roomGet = space.get(new ActualField("room"), new ActualField(roomURL), new FormalField(Room.class));
                 Room room = (Room) roomGet[2];
-                room.setHeartbet(System.currentTimeMillis());
                 space.put("room", roomURL, room);
                 space.put("roomLock");
                 Thread.sleep(5000);
