@@ -4,6 +4,7 @@ import org.jspace.*;
 import org.team08.pspacessnake.Helpers.Utils;
 import org.team08.pspacessnake.Model.GameSettings;
 import org.team08.pspacessnake.Model.Player;
+import org.team08.pspacessnake.Model.Powerups;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
 
@@ -85,11 +86,52 @@ class CreateRooms implements Runnable {
                 new Thread(new GameWriter(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
                 new Thread(new EnterRoom(space, new RemoteSpace(Server.URI + UID + "?keep"), UID, gameLogic)).start();
                 new Thread(new StartGame(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
+                new Thread(new PowerUp(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
             }
         }
     }
+}
+
+class PowerUp implements Runnable {
+	private Space space;
+	private GameLogic gameLogic;
+	
+	PowerUp(Space space, GameLogic gameLogic) {
+		this.space = space;
+		this.gameLogic = gameLogic;
+		
+		
+	}
+
+	@Override
+	public void run() {
+		while (true) {
+			if (gameLogic.isStarted()) {
+				try {
+					Thread.sleep((long) (7000));
+				} catch (InterruptedException e) {}
+				Powerups newPowerup = new Powerups();
+				gameLogic.addPowerup(newPowerup);
+
+                	/*if (player.isDead()) {
+                		//System.out.printf("Player: %s is dead\n", player.getToken().getName());
+                		//continue;	// don't send new coordinates for dead players.
+                	}*/
+                    for (Player player : gameLogic.getPlayers()) {
+                        try {
+							space.put("New Powerup", newPowerup, player.getToken());
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+                    }
+                
+				
+			}
+		}
+		
+	}
 }
 
 class GameWriter implements Runnable {
@@ -156,7 +198,7 @@ class SetHoles implements Runnable {
 			logic.setRemember(false, player);
 			
 			try {
-				Thread.sleep((long) (500));
+				Thread.sleep((long) (300));
 			} catch (InterruptedException e) {}
 			logic.setRemember(true, player);
 		}
@@ -204,7 +246,7 @@ class GameReader implements Runnable {
                 Object[] direction = space.get(new ActualField("Changed direction"), new FormalField(String.class),
                         new FormalField(Token.class));
                 gameLogic.changeDirection((Token) direction[2], (String) direction[1]);
-                System.out.println(((Token) direction[2]).getName() + " changed direction to " + direction[1]);
+                //System.out.println(((Token) direction[2]).getName() + " changed direction to " + direction[1]);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

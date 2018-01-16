@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 import org.team08.pspacessnake.Model.GameSettings;
 import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Point;
+import org.team08.pspacessnake.Model.Powerups;
 import org.team08.pspacessnake.Model.Token;
 
 import java.util.*;
@@ -14,20 +15,12 @@ public class GameLogic {
     private List<Player> players;
     private boolean isStarted = false;
     private GameSettings gameSettings;
-/*
-    private int numRows;
-    private int numCols;
-    private LinkedList<Point>[][] boardCells;
-    private ListIterator<Point>[][] boardCellsIterators;
-    private static Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE};
-    private int i = 0;
-*/
-
 	private int numRows;
 	private int numCols;
 	private LinkedList<Point>[][] boardCells;
 	private ListIterator<Point>[][] boardCellsIterators;
 	private Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE};
+	private ArrayList<Powerups> powerups = new ArrayList<Powerups>();
 	private static int i = 0;
 
 	public GameLogic() {
@@ -60,6 +53,14 @@ public class GameLogic {
 
 	public List<Player> getPlayers() {
 		return this.players;
+	}
+	
+	public ArrayList<Powerups> getPowerups() {
+		return powerups;
+	}
+	
+	public void addPowerup(Powerups powerup) {
+		powerups.add(powerup);
 	}
 
 	public boolean playerIsOnBoard(Point point) {
@@ -179,8 +180,6 @@ public class GameLogic {
 			}
 		}
 	}
-	
-	
 
 	public List<Player> nextFrame() {
 		for (Player player : players) {
@@ -208,16 +207,17 @@ public class GameLogic {
 				player.setRemember(holes);	
 			}
 		}
+
 	}
 
 	public Player makePlayer(Token token) {
         Player newPlayer = new Player(token);
-        Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5), ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), colorList[i]);
-        newPlayer.setColor(colorList[i]);
+        newPlayer.setColor(colorList[ThreadLocalRandom.current().nextInt(0,5)]);
+        Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5),
+                ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), newPlayer.getColor());
         newPlayer.setPosition(newPoint);
         newPlayer.setAngle(newPlayer.getPosition().getAngleToPoint(gameSettings.getWidth() / 2d, gameSettings.getHeight() / 2d));
-        //System.out.printf("START: [%f, %f]\tAngle: %f rad\t MIDT: [%f, %f] ", newPoint.getX(), newPoint.getY(), newPlayer.getAngle(), gameSettings.getWidth() / 2d, gameSettings.getHeight() / 2d);
-        // i++;
+        System.out.printf("START: [%f, %f]\tAngle: %f rad\t MIDT: [%f, %f] ", newPoint.getX(), newPoint.getY(), newPlayer.getAngle(), gameSettings.getWidth() / 2d, gameSettings.getHeight() / 2d);
         return newPlayer;
     }
 }

@@ -18,12 +18,17 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
+
 import org.team08.pspacessnake.Client.Client;
 import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Point;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
 
+
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -34,17 +39,15 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("restriction")
 public class SpaceGui {
-    private final static int SIZE = 5;
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 800;
-    // private static final int CELL_SIZE = 5; // only used serverside.
-
+    
     private Client client;
     private Token token;
     private boolean leftKeyPressed = false;
     private boolean rightKeyPressed = false;
     private List<Point> points;
-    private static GraphicsContext context;
+    private GraphicsContext context;
     private List<Room> rooms;
     private Room selectedRoom;
     private ObservableList<String> messages;
@@ -82,7 +85,7 @@ public class SpaceGui {
     }
 
     @FXML
-    public void onEnterName(ActionEvent ae){
+    public void onEnterName(ActionEvent ae) {
         onClickEnterNameButton();
     }
 
@@ -103,7 +106,7 @@ public class SpaceGui {
             roomsLayout.setVisible(true);
             roomsListView.setOnMouseClicked(event -> {
                 String roomName = roomsListView.getSelectionModel().getSelectedItem();
-                if (roomName != null ) {
+                if (roomName != null) {
                     joinGameButton.setDisable(false);
                     for (Room room : rooms) {
                         if (room.getName().equals(roomName)) {
@@ -245,8 +248,7 @@ public class SpaceGui {
                 }
             }
         });
-        context.setFill(new Color(0.1, 0.1, 0.1, 1));
-        context.fillRect(0, 0, WIDTH, HEIGHT);
+        clear();
         context.setFill(Color.CORNSILK);
         context.setFont(new Font("Verdana", 18));
         context.setTextAlign(TextAlignment.CENTER);
@@ -255,7 +257,6 @@ public class SpaceGui {
         messages = FXCollections.observableArrayList(new ArrayList<>());
 
         chatListView.setItems(messages);
-
         client.startGame(this, token, UID);
     }
 
@@ -268,7 +269,7 @@ public class SpaceGui {
         int i = 100;
         for (Player player : players) {
             context.setFill(player.getColor());
-            context.fillText(player.getToken().getName() + "\t\t\t" + (player.isReady() ? "Ready!" : "Not ready"), WIDTH/2, i);
+            context.fillText(player.getToken().getName() + "\t\t\t" + (player.isReady() ? "Ready!" : "Not ready"), WIDTH / 2, i);
             i += 50;
         }
     }
@@ -278,44 +279,32 @@ public class SpaceGui {
         context.fillRect(0, 0, WIDTH, HEIGHT);
     }
 
-	private void holes(Point point) {
-		clear();
-		// drawPoint(point);
-		context.setFill(point.getColor());
-        
-		//context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
-		drawPoint(point);
-		
-		for (Point point1 : points) {
+    private void holes(Point point) {
+        clear();
+        context.setFill(point.getColor());
+        drawPoint(point);
+        points.remove(points.size() - 1);
+        for (Point point1 : points) {
             context.setFill(point1.getColor());
-
-            //context.fillOval(point1.getX(), point1.getY(), SIZE, SIZE);
             drawPoint(point1);
-		}
-	}
-
+        }
+        points.add(point);
+    }
 
     public void updateGui(Player player) {
-    	// Point point = new Point(player.getPosition().getX() * SIZE, player.getPosition().getY() * SIZE, player.getColor()); 
+        Point point = player.getPosition();
+        context.setFill(point.getColor());
 
-		Point point = new Point(player.getPosition().getX(), player.getPosition().getY(), player.getColor());
-        context.setFill(point.getColor()); // is set for each point in drawPoint()
-		if(player.getRemember()) {
-        	// drawPoint(point);
-			//context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
-			drawPoint(point);
-        	points.add(point);
-    	}
-    	else {
-    		holes(point);
-    	}
+        if (player.getRemember()) {
+            drawPoint(point);
+            points.add(point);
+        } else {
+            holes(point);
+        }
     }
-    
+
     private void drawPoint(Point point) {
-    	//System.out.printf("SIZE = %d\t RADIUS = %f\t DrawPointX = %f / %f \n", SIZE, point.getRadius(), point.getX() - point.getRadius(), point.getX() - SIZE / 2.0);
-    	// context.fillOval(point.getX() - point.getRadius(), point.getY() - point.getRadius(), 2*point.getRadius(), 2*point.getRadius());
-    	
-    	context.fillOval(point.getX() - 2.5, point.getY() - 2.5, 5, 5);
+        context.fillOval(point.getX() - 2.5, point.getY() - 2.5, 5, 5);
     }
 }
 

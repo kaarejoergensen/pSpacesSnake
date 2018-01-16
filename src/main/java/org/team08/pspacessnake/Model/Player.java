@@ -18,6 +18,9 @@ public class Player {
     private boolean isDead = false;
     private boolean remember = true;
     private boolean ready;
+
+    private Powerups power;
+
     private boolean edgeJumper;
 
 
@@ -161,6 +164,15 @@ public class Player {
     public void setReady(boolean ready) {
         this.ready = ready;
     }
+
+
+	public Powerups getPower() {
+		return power;
+	}
+
+	public void setPower(Powerups power) {
+		this.power = power;
+	}
 
 	public boolean isEdgeJumper() {
 		return edgeJumper;
