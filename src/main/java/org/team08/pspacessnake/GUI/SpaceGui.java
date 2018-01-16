@@ -18,9 +18,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.image.Image;
+
 import org.team08.pspacessnake.Client.Client;
 import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Point;
+import org.team08.pspacessnake.Model.Powerups;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
 
@@ -42,6 +45,7 @@ public class SpaceGui {
     private boolean leftKeyPressed = false;
     private boolean rightKeyPressed = false;
     private List<Point> points;
+    private List<Powerups> powers;
     private GraphicsContext context;
     private List<Room> rooms;
     private Room selectedRoom;
@@ -286,6 +290,9 @@ public class SpaceGui {
             context.setFill(point1.getColor());
             drawPoint(point1);
         }
+        for (Powerups power1 : powers) {
+            drawImage(power1);
+        }
         points.add(point);
     }
 
@@ -300,10 +307,24 @@ public class SpaceGui {
             holes(point);
         }
     }
+    
+    private void drawImage(Powerups power) {
+    	switch (power.getPower()) {
+    	case "Fast":
+    		Image image = new Image("file:SpaceLightning.png");
+    		context.drawImage(image, power.getPosition().getX(), power.getPosition().getY(), 50.0, 50.0);
+    		
+    	}
+    }
 
     private void drawPoint(Point point) {
         context.fillOval(point.getX() - 2.5, point.getY() - 2.5, 5, 5);
     }
+
+	public void addPowerup(Powerups power) {
+		powers.add(power);
+		drawImage(power);
+	}
 }
 
 

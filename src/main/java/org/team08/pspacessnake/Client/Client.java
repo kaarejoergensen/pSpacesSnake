@@ -11,6 +11,7 @@ import org.jspace.RemoteSpace;
 import org.jspace.Space;
 import org.team08.pspacessnake.GUI.SpaceGui;
 import org.team08.pspacessnake.Model.Player;
+import org.team08.pspacessnake.Model.Powerups;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
 import org.team08.pspacessnake.Server.Server;
@@ -87,6 +88,7 @@ public class Client extends Application {
         new Thread(new GameReader(new RemoteSpace(roomUID), gui, token)).start();
         new Thread(new ChatReader(new RemoteSpace(roomUID), gui, token)).start();
         new Thread(new PlayersReader(new RemoteSpace(roomUID), gui)).start();
+        new Thread(new ReadPowerup(new RemoteSpace(roomUID), gui, token)).start();
     }
 
     public void sendMessage(String text, Token token) throws InterruptedException {
@@ -101,6 +103,33 @@ public class Client extends Application {
             roomSpace.put("player", token, player);
         }
     }
+}
+
+class ReadPowerup implements Runnable {
+	private Space space;
+    private SpaceGui spaceGui;
+    private Token token;
+    public ReadPowerup(Space space, SpaceGui spaceGui, Token token) {
+    	this.space = space;
+    	this.spaceGui = spaceGui;
+    	this.token = token;
+    }
+	@Override
+	public void run() {
+		
+		try {
+            space.query(new ActualField("Game started"), new ActualField(true));
+            while (true) {
+                Object[] newPower = space.get(new ActualField("New Powerup"), new FormalField(Powerups.class), new ActualField(token));
+                spaceGui.addPowerup((Powerups) newPower[1]);
+
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+		
+		
+	}
 }
 
 class PlayersReader implements Runnable {

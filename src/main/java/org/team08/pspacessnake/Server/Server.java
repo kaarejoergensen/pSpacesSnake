@@ -73,6 +73,7 @@ class PowerUp implements Runnable {
                 } catch (InterruptedException e) {
                 }
                 Powerups newPowerup = new Powerups();
+                newPowerup.setPosition(new Point(50,50,null));
                 gameLogic.addPowerup(newPowerup);
 
                 	/*if (player.isDead()) {
