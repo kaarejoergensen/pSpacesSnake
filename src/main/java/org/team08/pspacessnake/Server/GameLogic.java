@@ -21,6 +21,7 @@ public class GameLogic {
 	private ListIterator<Point>[][] boardCellsIterators;
 	private Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE};
 	private ArrayList<Powerups> powerups = new ArrayList<Powerups>();
+	private static int i = 0;
 
 	public GameLogic() {
 		this.players = new ArrayList<>();
@@ -63,7 +64,7 @@ public class GameLogic {
 	}
 
 	public boolean playerIsOnBoard(Point point) {
-		return (point.getX() < 0d && point.getY() > (double) gameSettings.getWidth() && point.getY() < 0d && point.getY() > gameSettings.getHeight());
+		return (0d <= point.getX() && point.getX() <= gameSettings.getWidth() && 0d <= point.getY() && point.getY() <= gameSettings.getHeight());
 	}
 
 /*
@@ -115,6 +116,17 @@ public class GameLogic {
 		return false;
 	}
 	
+	public boolean checkBufferedPointsCollision(Player currentPlayer) {
+		for (Player thisPlayer : players) {
+			if (thisPlayer == currentPlayer) continue;
+			for (Point bufferPoint : thisPlayer.getPointBuffer())
+				if (currentPlayer.getPosition().distance(bufferPoint) < currentPlayer.getPosition().getRadius() + bufferPoint.getRadius()) {
+					return true;
+				}
+			}
+		return false;
+	}
+	
 	public int getCellX(Point point) {
 		return (int) point.getX() / gameSettings.getCellSize();
 	}
@@ -124,10 +136,17 @@ public class GameLogic {
 	}
 
 	/*
-	 * Adds new player position point to appropriate cell.
+	 * Adds new player position to buffer and releases non-overlapping buffered points to appropriate cell.  
 	 */
-	public void addPoint(Point point) {
-		boardCellsIterators[getCellY(point)][getCellX(point)].add(point);
+	public void addPoint(Player currentPlayer) {
+		Point playerPos = currentPlayer.getPosition();
+		for (Point bufferPoint : currentPlayer.getPointBuffer()) {
+			if (playerPos.distance(bufferPoint) > playerPos.getRadius() + bufferPoint.getRadius()) {
+				boardCellsIterators[getCellY(bufferPoint)][getCellX(bufferPoint)].add(bufferPoint);
+				currentPlayer.getPointBuffer().remove(bufferPoint);
+			}
+		}
+		currentPlayer.getPointBuffer().add(currentPlayer.getPosition());
 	}
 
 	public GameSettings getGameSettings() {
@@ -166,14 +185,16 @@ public class GameLogic {
 		for (Player player : players) {
 			//if (player.isDead()) continue;	// We might just remove dead player from players ???
 			player.turn();
-			// player.move(gameSettings.getWidth(), gameSettings.getHeight());
-			//Point newPoint = player.move(gameSettings.getWidth(), gameSettings.getHeight());
-			/*if (!playerIsOnBoard(newPoint)) {
+			//player.move(gameSettings.getWidth(), gameSettings.getHeight());
+			//player.move();
+			// Point newPoint = player.move(gameSettings.getWidth(), gameSettings.getHeight());
+			Point newPoint = player.move();
+			if (!playerIsOnBoard(newPoint)) {
 				player.kill();
 				continue;
 			}
-			addPoint(newPoint);*/
-			addPoint(player.move());
+			addPoint(player);
+			//addPoint(player.getPosition());
 			// if (checkCollision(newPoint)) player.kill();
 			
 		}
