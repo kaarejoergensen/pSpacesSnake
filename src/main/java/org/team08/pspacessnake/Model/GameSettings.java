@@ -5,6 +5,8 @@ public class GameSettings {
     private int size = 5;
     private int width = 1000;
     private int height = 800;
+    private int setHoleIntervalMin = 1000;
+    private int setHoleIntervalMax = 5000;
     private int cellSize = 5;
     private int frameRate = 24; // [fps]
     
@@ -63,5 +65,21 @@ public class GameSettings {
 	 */
 	public int getCellSize() {
 		return cellSize;
+	}
+
+	public int getSetHoleIntervalMin() {
+		return setHoleIntervalMin;
+	}
+
+	public void setSetHoleIntervalMin(int setHoleIntervalMin) {
+		this.setHoleIntervalMin = setHoleIntervalMin;
+	}
+
+	public int getSetHoleIntervalMax() {
+		return setHoleIntervalMax;
+	}
+
+	public void setSetHoleIntervalMax(int setHoleIntervalMax) {
+		this.setHoleIntervalMax = setHoleIntervalMax;
 	}
 }

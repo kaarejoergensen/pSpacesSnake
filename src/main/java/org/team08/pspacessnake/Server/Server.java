@@ -109,13 +109,14 @@ class GameWriter implements Runnable {
 
                     float time = System.currentTimeMillis();
                     List<Player> players = gameLogic.nextFrame();
-                    for (Player player : players) {
-                        for (Player player1 : players) {
-                            if (player1.isDead()) {
-                                space.put("message", "Player '" + player.getToken().getName() + "' died!",
+                    for (Player startedPlayer : gameLogic.getStartedPlayers()) {
+                        for (Player activePlayer : players) {
+                            if (activePlayer.isDead()) {
+                                space.put("message", "Player '" + activePlayer.getToken().getName() + "' died!",
                                         new Token("0", "System"));
+                                gameLogic.getPlayers().remove(activePlayer);
                             } else {
-                                space.put("Player moved", player, player1.getToken());
+                                space.put("Player moved", activePlayer, startedPlayer.getToken());
                             }
                         }
                     }
@@ -149,7 +150,7 @@ class SetHoles implements Runnable {
     public void run() {
         while (true) {
             try {
-                int randomNum = ThreadLocalRandom.current().nextInt(1000, 5000);
+                int randomNum = ThreadLocalRandom.current().nextInt(logic.getGameSettings().getSetHoleIntervalMin(), logic.getGameSettings().getSetHoleIntervalMax());
                 Thread.sleep((long) (randomNum));
                 logic.setRemember(false, player);
                 Thread.sleep((long) (300));
@@ -181,6 +182,7 @@ class StartGame implements Runnable {
                 gameLogic.setStarted(players.stream().allMatch(Player::isReady) &&
                         players.size() == gameLogic.getPlayers().size() && players.size() > 0);
             }
+            gameLogic.setStartedPlayers();
             space.get(new ActualField("Game started"), new ActualField(false));
             space.put("Game started", true);
         } catch (InterruptedException e) {
