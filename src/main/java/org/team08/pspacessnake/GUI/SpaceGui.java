@@ -10,6 +10,7 @@ import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -18,14 +19,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.image.Image;
-
 import org.team08.pspacessnake.Client.Client;
-import org.team08.pspacessnake.Model.Player;
-import org.team08.pspacessnake.Model.Point;
-import org.team08.pspacessnake.Model.Powerups;
-import org.team08.pspacessnake.Model.Room;
-import org.team08.pspacessnake.Model.Token;
+import org.team08.pspacessnake.Model.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -190,7 +185,7 @@ public class SpaceGui {
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(s -> {
             try {
-                selectedRoom = client.createRoom(s, token);
+                selectedRoom = client.createRoom(s);
                 enterGame(selectedRoom);
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();

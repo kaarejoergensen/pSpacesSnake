@@ -80,8 +80,6 @@ class PowerUp implements Runnable {
                         space.put("New Powerup", newPowerup, player.getToken());
                    
                 }
-
-
             }
         	} catch (InterruptedException e) {
                 e.printStackTrace();
@@ -306,12 +304,8 @@ class HeartbeatClient implements Runnable {
     public void run() {
         while (true) {
             try {
-                space.get(new ActualField("roomLock"));
-                Object[] roomGet = space.get(new ActualField("room"), new ActualField(roomURL), new FormalField(Room.class));
-                Room room = (Room) roomGet[2];
-                space.put("room", roomURL, room);
-                space.put("roomLock");
-                Thread.sleep(5000);
+                space.put("heartbeat", roomURL);
+                Thread.sleep(25000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
