@@ -168,9 +168,18 @@ public class GameLogic {
 			}
 			addPoint(player);
 			if (checkCollision(player.getPosition()) || checkBufferedPointsCollision(player)) player.kill();
+			// collisionPowerup(player); 
 		}
 		return players;
 	}
+	
+//	public void collisionPowerup(Player player) {
+//		Powerups powerup = collisionPowerup(player.getPosition());
+//		switch (powerup.getPower()) {
+//		case "Fast": player.setSpeed(8d);;
+//		player.setPower(powerup);
+//		}
+//	}
 
 	public void setRemember(Boolean holes, Player player) {
 		for(Player player1 : players) {
