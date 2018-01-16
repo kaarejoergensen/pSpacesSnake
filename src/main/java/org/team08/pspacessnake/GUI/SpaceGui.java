@@ -40,7 +40,7 @@ public class SpaceGui {
     private boolean leftKeyPressed = false;
     private boolean rightKeyPressed = false;
     private List<Point> points;
-    private List<Powerups> powers;
+    private List<Powerups> powers = new ArrayList<>();
     private GraphicsContext context;
     private List<Room> rooms;
     private Room selectedRoom;
