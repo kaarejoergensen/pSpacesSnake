@@ -6,6 +6,7 @@ import org.team08.pspacessnake.Model.*;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -110,15 +111,21 @@ class GameWriter implements Runnable {
                     float time = System.currentTimeMillis();
                     List<Player> players = gameLogic.nextFrame();
                     for (Player startedPlayer : gameLogic.getStartedPlayers()) {
-                        for (Player activePlayer : players) {
+                        for (Iterator<Player> it = players.iterator(); it.hasNext();) {
+                            Player activePlayer = it.next();
                             if (activePlayer.isDead()) {
                                 space.put("message", "Player '" + activePlayer.getToken().getName() + "' died!",
                                         new Token("0", "System"));
-                                gameLogic.getPlayers().remove(activePlayer);
+                                it.remove();
                             } else {
                                 space.put("Player moved", activePlayer, startedPlayer.getToken());
                             }
                         }
+                    }
+                    if (gameLogic.getPlayers().size() == 1) {
+                        space.put("message", "Player '" + gameLogic.getPlayers().get(0).getToken().getName() + "' won!",
+                                new Token("0", "System"));
+                        break;
                     }
                     time = System.currentTimeMillis() - time;
                     if (time < 1000.0f / frameRate) {
