@@ -324,10 +324,11 @@ public class SpaceGui {
     }
     
     private void drawImage(Powerups power) {
+
     	switch (power.getPower()) {
     	case "Fast":
-    		Image image = new Image("file:SpaceLightning.png");
-    		context.drawImage(image, power.getPosition().getX(), power.getPosition().getY(), 50.0, 50.0);
+    		Image image = new Image("SpaceLightning.png");
+    		context.drawImage(image, power.getPosition().getX(), power.getPosition().getY(), 20.0, 20.0);
     		
     	}
     }
@@ -338,6 +339,7 @@ public class SpaceGui {
 
 	public void addPowerup(Powerups power) {
 		powers.add(power);
+		System.out.println(power.getPower());
 		drawImage(power);
 	}
 }

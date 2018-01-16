@@ -39,7 +39,7 @@ public class Player {
     		this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getPosition().getRadius(), this.getPosition().getColor(), boardWidth, boardHeight);
     	else
     		this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getPosition().getRadius(), this.getPosition().getColor()); 
-    	System.out.println(this.position);
+    	//System.out.println(this.position);
     	return this.position;
     }
 
