@@ -15,21 +15,11 @@ public class GameLogic {
     private List<Player> players;
     private boolean isStarted = false;
     private GameSettings gameSettings;
-/*
-    private int numRows;
-    private int numCols;
-    private LinkedList<Point>[][] boardCells;
-    private ListIterator<Point>[][] boardCellsIterators;
-    private static Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE};
-    private int i = 0;
-*/
-
 	private int numRows;
 	private int numCols;
 	private LinkedList<Point>[][] boardCells;
 	private ListIterator<Point>[][] boardCellsIterators;
 	private Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE};
-	private static int i = 0;
 	private ArrayList<Powerups> powerups = new ArrayList<Powerups>();
 
 	public GameLogic() {
@@ -201,24 +191,12 @@ public class GameLogic {
 
 	public Player makePlayer(Token token) {
         Player newPlayer = new Player(token);
-        Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5), ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), colorList[i]);
-        // Point newPoint = new Point(ThreadLocalRandom.current().nextInt(0, 80), ThreadLocalRandom.current().nextInt(0, 100), colorList[i]);
-        newPlayer.setColor(colorList[i]);
+        newPlayer.setColor(colorList[ThreadLocalRandom.current().nextInt(0,5)]);
+        Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5),
+                ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), newPlayer.getColor());
         newPlayer.setPosition(newPoint);
         newPlayer.setAngle(newPlayer.getPosition().getAngleToPoint(gameSettings.getWidth() / 2d, gameSettings.getHeight() / 2d));
         System.out.printf("START: [%f, %f]\tAngle: %f rad\t MIDT: [%f, %f] ", newPoint.getX(), newPoint.getY(), newPlayer.getAngle(), gameSettings.getWidth() / 2d, gameSettings.getHeight() / 2d);
-        // i++;
         return newPlayer;
     }
-
-/*
-	public Player makePlayer(Token token) {
-		Player newPlayer = new Player(token);
-		Point newPoint = new Point(ThreadLocalRandom.current().nextInt(0, 80), ThreadLocalRandom.current().nextInt(0, 100), colorList[i]);
-		newPlayer.setColor(colorList[i]);
-		newPlayer.setPosition(newPoint);
-		i++;
-		return newPlayer;
-
-	}*/
 }

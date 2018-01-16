@@ -16,7 +16,7 @@ public class Point {
         this.radius = 2.5d; // default value
         this.color = new Color(0.5, 0.5, 1.0, 1.0); // default value
     }
-    
+
     public Point(final double x, final double y, final Color color) {
         this.x = x;
         this.y = y;
@@ -30,7 +30,7 @@ public class Point {
         this.radius = radius;
         this.color = new Color(1.0, 0.5, 0.5, 1.0); // default value
     }
-    
+
     public Point(final double x, final double y, final double radius, Color color) {
         this.x = x;
         this.y = y;
@@ -41,7 +41,7 @@ public class Point {
     public Color getColor() {
         return color;
     }
-    
+
 	public void setColor(Color color) {
 		this.color = color;
 	}
@@ -69,7 +69,7 @@ public class Point {
     public Point translate(double dx, double dy, Color color) {
         return new Point(x + dx, y + dy, this.getRadius(), color);
     }
-    
+
     public Point translate(double dx, double dy, double radius, Color color) {
         return new Point(x + dx, y + dy, radius, color);
     }
@@ -110,16 +110,6 @@ public class Point {
         return result;
     }
 
-/*
-    @Override
-    public String toString() {
-    	return "Point{" +                "x=" + x +
-                ", y=" + y +
-                ", radius=" + radius +
-                ", color=" + getColor().toString() + 
-                "}";
-    }
-*/
     @Override
     public String toString() {
         return "Point{" +

@@ -37,14 +37,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
-
 @SuppressWarnings("restriction")
 public class SpaceGui {
-    private final static int SIZE = 5;
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 800;
-    // private static final int CELL_SIZE = 5; // only used serverside.
-
+    
     private Client client;
     private Token token;
     private boolean leftKeyPressed = false;
@@ -88,7 +85,7 @@ public class SpaceGui {
     }
 
     @FXML
-    public void onEnterName(ActionEvent ae){
+    public void onEnterName(ActionEvent ae) {
         onClickEnterNameButton();
     }
 
@@ -109,7 +106,7 @@ public class SpaceGui {
             roomsLayout.setVisible(true);
             roomsListView.setOnMouseClicked(event -> {
                 String roomName = roomsListView.getSelectionModel().getSelectedItem();
-                if (roomName != null ) {
+                if (roomName != null) {
                     joinGameButton.setDisable(false);
                     for (Room room : rooms) {
                         if (room.getName().equals(roomName)) {
@@ -272,7 +269,7 @@ public class SpaceGui {
         int i = 100;
         for (Player player : players) {
             context.setFill(player.getColor());
-            context.fillText(player.getToken().getName() + "\t\t\t" + (player.isReady() ? "Ready!" : "Not ready"), WIDTH/2, i);
+            context.fillText(player.getToken().getName() + "\t\t\t" + (player.isReady() ? "Ready!" : "Not ready"), WIDTH / 2, i);
             i += 50;
         }
     }
@@ -282,49 +279,32 @@ public class SpaceGui {
         context.fillRect(0, 0, WIDTH, HEIGHT);
     }
 
-	private void holes(Point point) {
-		clear();
-
-		// drawPoint(point);
-		context.setFill(point.getColor());
-        
-		//context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
-		drawPoint(point);
-
-		
-		for (Point point1 : points) {
+    private void holes(Point point) {
+        clear();
+        context.setFill(point.getColor());
+        drawPoint(point);
+        points.remove(points.size() - 1);
+        for (Point point1 : points) {
             context.setFill(point1.getColor());
-
-            //context.fillOval(point1.getX(), point1.getY(), SIZE, SIZE);
             drawPoint(point1);
-
-		}
-	}
-	
-
+        }
+        points.add(point);
+    }
 
     public void updateGui(Player player) {
+        Point point = player.getPosition();
+        context.setFill(point.getColor());
 
-
-    	Point point = player.getPosition();
-    	context.setFill(point.getColor());
-
-		if(player.getRemember()) {
-        	// drawPoint(point);
-			//context.fillOval(point.getX(), point.getY(), SIZE, SIZE);
-			drawPoint(point);
-        	points.add(point);
-    	}
-    	else {
-    		holes(point);
-    	}
+        if (player.getRemember()) {
+            drawPoint(point);
+            points.add(point);
+        } else {
+            holes(point);
+        }
     }
-    
+
     private void drawPoint(Point point) {
-    	//System.out.printf("SIZE = %d\t RADIUS = %f\t DrawPointX = %f / %f \n", SIZE, point.getRadius(), point.getX() - point.getRadius(), point.getX() - SIZE / 2.0);
-    	// context.fillOval(point.getX() - point.getRadius(), point.getY() - point.getRadius(), 2*point.getRadius(), 2*point.getRadius());
-    	
-    	context.fillOval(point.getX() - 2.5, point.getY() - 2.5, 5, 5);
+        context.fillOval(point.getX() - 2.5, point.getY() - 2.5, 5, 5);
     }
 }
 
