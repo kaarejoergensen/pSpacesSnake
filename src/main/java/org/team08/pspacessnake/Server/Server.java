@@ -316,7 +316,6 @@ class HeartbeatClient implements Runnable {
                 e.printStackTrace();
             }
 
-
         }
     }
 }
