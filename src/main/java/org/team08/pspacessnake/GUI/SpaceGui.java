@@ -283,7 +283,18 @@ public class SpaceGui {
         clear();
         context.setFill(point.getColor());
         drawPoint(point);
-        points.remove(points.size() - 1);
+        points.remove(points.size() - 1); //SIMON: Jeg tror der sker en fejl, hvis hullet kommer i begyndelsen af spillet.
+        /*
+         * jan. 16, 2018 11:51:32 AM javafx.fxml.FXMLLoader$ValueElement processValue
+		 * WARNING: Loading FXML document with JavaFX API of version 9.0.1 by JavaFX runtime of version 8.0.121
+		 * Exception in thread "Thread-10" java.lang.IndexOutOfBoundsException: Index: -1, Size: 0
+		 * 	at java.util.LinkedList.checkElementIndex(LinkedList.java:555)
+		 * 	at java.util.LinkedList.remove(LinkedList.java:525)
+		 * 	at org.team08.pspacessnake.GUI.SpaceGui.holes(SpaceGui.java:286)
+		 * 	at org.team08.pspacessnake.GUI.SpaceGui.updateGui(SpaceGui.java:302)
+		 * 	at org.team08.pspacessnake.Client.GameReader.run(Client.java:154)
+		 * 	at java.lang.Thread.run(Thread.java:745)
+         */
         for (Point point1 : points) {
             context.setFill(point1.getColor());
             drawPoint(point1);
