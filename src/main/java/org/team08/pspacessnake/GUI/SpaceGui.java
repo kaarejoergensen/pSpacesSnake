@@ -92,7 +92,7 @@ public class SpaceGui {
                 token = client.enterName(name);
                 rooms = client.getRooms(token);
                 ObservableList<String> roomNames = FXCollections.observableArrayList(rooms.stream().
-                        map(Room::getName).collect(Collectors.toList()));
+                        map(r -> r.getName() + " " + r.getTokens().size() + "/6").collect(Collectors.toList()));
                 roomsListView.setItems(roomNames);
             } catch (InterruptedException e) {
                 e.printStackTrace();

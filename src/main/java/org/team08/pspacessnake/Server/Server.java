@@ -46,6 +46,7 @@ public class Server {
         new Thread(new EnterRoom(space, new RemoteSpace(roomURL), roomURL, gameLogic)).start();
         new Thread(new StartGame(new RemoteSpace(roomURL), gameLogic)).start();
         new Thread(new PowerUp(new RemoteSpace(roomURL), gameLogic)).start();
+        new Thread(new HeartbeatClient(space, roomURL)).start();
 
         System.out.println("New room with name " + name + " and UID " + UID + " created!");
         return room;
@@ -118,7 +119,13 @@ class GameWriter implements Runnable {
                     		//continue;	// don't send new coordinates for dead players.
                     	}*/
                         for (Player player1 : players) {
-                            space.put("Player moved", player, player1.getToken());
+                            if (player1.isDead()) {
+                                space.put("message", "Player '" + player.getToken().getName() + "' died!",
+                                        new Token("0", "System"));
+                            } else {
+                                space.put("Player moved", player, player1.getToken());
+                            }
+
                         }
                     }
                     time = System.currentTimeMillis() - time;
@@ -292,6 +299,33 @@ class Chat implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+}
+
+class HeartbeatClient implements Runnable {
+    private Space space;
+    private String roomURL;
+
+    public HeartbeatClient(Space space, String roomURL) {
+        this.space = space;
+        this.roomURL = roomURL;
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                Object[] roomGet = space.get(new ActualField("room"), new ActualField(roomURL), new FormalField(Room.class));
+                Room room = (Room) roomGet[2];
+                room.setHeartbet(System.currentTimeMillis());
+                space.put("room", roomURL, room);
+                Thread.sleep(30000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
         }
     }
 }
