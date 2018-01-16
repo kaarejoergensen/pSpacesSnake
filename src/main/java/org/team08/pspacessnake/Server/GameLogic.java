@@ -5,10 +5,12 @@ import org.team08.pspacessnake.Model.*;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 //@SuppressWarnings("restriction")
 public class GameLogic {
     private List<Player> players;
+    private List<Player> startedPlayers;
     private boolean isStarted = false;
     private GameSettings gameSettings;
 	private int numRows;
@@ -62,33 +64,6 @@ public class GameLogic {
 	public boolean playerIsOnBoard(Point point) {
 		return (0d <= point.getX() && point.getX() <= gameSettings.getWidth() && 0d <= point.getY() && point.getY() <= gameSettings.getHeight());
 	}
-
-/*
-	public boolean checkCollision(Point point) {
-		int pointCellX = getCellX(point); //the x coordinate of the bin the point belongs to.
-		int pointCellY = getCellY(point); //the y coordinate of the bin the point belongs to.
-		
-		
-		Point occupiedPoint;
-		Iterator<Point> tempIterator;
-		for (int dx = -1; dx <= 1; dx++) {
-			if (!(pointCellX + dx >= 0 && pointCellX + dx <= numRows))
-				continue;
-			for (int dy = -1; dy <= 1; dy++) {
-				if (!(pointCellY + dy >= 0 && pointCellY + dy <= numCols))
-					continue;
-				tempIterator = boardCells[pointCellY + dy][pointCellX + dx].listIterator();
-				while (tempIterator.hasNext()) {
-					occupiedPoint = (Point)tempIterator.next();
-					// if (point.distance(occupiedPoint) < point.getRadius() + occupiedPoint.getRadius()) return true;
-					if (point.distance(occupiedPoint) < 2.5 + 2.5) return true;
-				}
-					
-			}
-		}
-		return false;
-	}
-*/
 
 	public boolean checkCollision(Point point) {
 		int pointCellX = getCellX(point); //the x coordinate of the bin the point belongs to.
@@ -210,4 +185,12 @@ public class GameLogic {
         System.out.printf("START: [%f, %f]\tAngle: %f rad\t MIDT: [%f, %f] ", newPoint.getX(), newPoint.getY(), newPlayer.getAngle(), gameSettings.getWidth() / 2d, gameSettings.getHeight() / 2d);
         return newPlayer;
     }
+
+	public List<Player> getStartedPlayers() {
+		return startedPlayers;
+	}
+	
+	public void setStartedPlayers() {
+		startedPlayers = players.stream().collect(Collectors.toList());
+	}
 }
