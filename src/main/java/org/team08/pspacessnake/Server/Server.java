@@ -67,23 +67,23 @@ class PowerUp implements Runnable {
     @Override
     public void run() {
         while (true) {
+        	try {
             if (gameLogic.isStarted()) {
-                try {
+
                     Thread.sleep((long) (7000));
-                } catch (InterruptedException e) {
-                }
                 Powerups newPowerup = new Powerups();
                 newPowerup.setPosition(new Point(50,50,null));
                 gameLogic.addPowerup(newPowerup);
                 for (Player player : gameLogic.getPlayers()) {
-                    try {
+                    
                         space.put("New Powerup", newPowerup, player.getToken());
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                   
                 }
 
 
+            }
+        	} catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
 
