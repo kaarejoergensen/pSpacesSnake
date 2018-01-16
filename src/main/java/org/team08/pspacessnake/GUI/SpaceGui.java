@@ -50,6 +50,8 @@ public class SpaceGui {
     private List<Room> rooms;
     private Room selectedRoom;
     private ObservableList<String> messages;
+    private ObservableList<String> roomNames;
+    private boolean roomEntered = false;
 
     @FXML
     private VBox enterNameLayout;
@@ -94,9 +96,26 @@ public class SpaceGui {
         if (name != null && !name.equals("")) {
             try {
                 token = client.enterName(name);
-                rooms = client.getRooms(token);
-                ObservableList<String> roomNames = FXCollections.observableArrayList(rooms.stream().
-                        map(r -> r.getName() + " " + r.getTokens().size() + "/6").collect(Collectors.toList()));
+                roomNames = FXCollections.observableArrayList(new ArrayList<>());
+                new Thread(() -> {
+                    while (!roomEntered) {
+                        Platform.runLater(() -> {
+                            try {
+                                rooms = client.getRooms(token);
+                                roomNames.clear();
+                                roomNames.addAll(rooms.
+                                        stream().map(r -> r.getName() + " " + r.getTokens().size() + "/6").collect(Collectors.toList()));
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
                 roomsListView.setItems(roomNames);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -182,6 +201,7 @@ public class SpaceGui {
 
     private void enterGame(Room room) throws InterruptedException, IOException {
         if (client.enterRoom(room.getURL(), token)) {
+            roomEntered = true;
             roomsLayout.setVisible(false);
             gameContainerLayout.setVisible(true);
             initGame(room.getURL());
