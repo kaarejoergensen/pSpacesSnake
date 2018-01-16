@@ -7,6 +7,7 @@ import org.team08.pspacessnake.Model.Token;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +25,7 @@ public class Supervisor {
         repository.add("space", new SequentialSpace());
 
         Space space = repository.get("space");
-        space.put("roomLock");
+        space.put("heartbeats", new ArrayList<>());
         System.out.println("Supervisor started!");
 
         new Thread(new CreateClients(space)).start();
@@ -65,19 +66,18 @@ class HeartbeatServer implements Runnable {
     public void run() {
         while (true) {
             try {
-                space.get(new ActualField("roomLock"));
-                List<Object[]> roomsGet = space.getAll(new ActualField("room"), new FormalField(String.class),
+                List<Object[]> roomsQuery = space.queryAll(new ActualField("room"), new FormalField(String.class),
                         new FormalField(Room.class));
-                List<Room> rooms = roomsGet.stream().map(o -> (Room) o[2]).collect(Collectors.toList());
-                for (Room room : rooms) {
-                    if (System.currentTimeMillis() - room.getHeartbet() <= 30000) {
-                        space.put("room", room.getURL(), room);
-                    } else {
-                        System.out.println("HEARBEAT: Dropping room " + room.getName() + " " + room.getURL());
+                if (roomsQuery != null) {
+                    List<String> URLs = roomsQuery.stream().map(o -> (String) o[1]).collect(Collectors.toList());
+                    for (String URL : URLs) {
+                        if (space.getp(new ActualField("heartbeat"), new ActualField(URL)) == null) {
+                            Object[] room = space.get(new ActualField("room"), new ActualField(URL), new FormalField(Room.class));
+                            System.out.println("HEARTBEAT: Removed room " + ((Room)room[2]).getName() + " " + URL);
+                        }
                     }
                 }
-                space.put("roomLock");
-                Thread.sleep(30000);
+                Thread.sleep(60000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
