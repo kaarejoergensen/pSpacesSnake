@@ -1,31 +1,30 @@
 package org.team08.pspacessnake.Model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Room {
-    private String ID;
+    private String URL;
     private String name;
     private List<Token> tokens = new ArrayList<>();
 
-    public Room(String ID, String name) {
-        this.ID = ID;
+    public Room(String URL, String name) {
+        this.URL = URL;
         this.name = name;
     }
 
-    public Room(String ID, String name, Token token) {
-        this.ID = ID;
+    public Room(String URL, String name, Token token) {
+        this.URL = URL;
         this.name = name;
         this.tokens.add(token);
     }
 
-    public String getID() {
-        return ID;
+    public String getURL() {
+        return URL;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setURL(String URL) {
+        this.URL = URL;
     }
 
     public String getName() {

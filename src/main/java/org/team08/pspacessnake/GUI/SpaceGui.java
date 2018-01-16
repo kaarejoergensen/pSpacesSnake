@@ -18,17 +18,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.Image;
-
 import org.team08.pspacessnake.Client.Client;
 import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Point;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
 
-
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -41,7 +36,7 @@ import java.util.stream.Collectors;
 public class SpaceGui {
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 800;
-    
+
     private Client client;
     private Token token;
     private boolean leftKeyPressed = false;
@@ -171,8 +166,8 @@ public class SpaceGui {
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(s -> {
             try {
-                String UID = client.createRoom(s, token);
-                enterGame(new Room(UID, s));
+                selectedRoom = client.createRoom(s, token);
+                enterGame(selectedRoom);
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
             }
@@ -181,10 +176,10 @@ public class SpaceGui {
     }
 
     private void enterGame(Room room) throws InterruptedException, IOException {
-        if (client.enterRoom(room.getID(), token)) {
+        if (client.enterRoom(room.getURL(), token)) {
             roomsLayout.setVisible(false);
             gameContainerLayout.setVisible(true);
-            initGame(room.getID());
+            initGame(room.getURL());
         }
     }
 
@@ -283,18 +278,9 @@ public class SpaceGui {
         clear();
         context.setFill(point.getColor());
         drawPoint(point);
-        points.remove(points.size() - 1); //SIMON: Jeg tror der sker en fejl, hvis hullet kommer i begyndelsen af spillet.
-        /*
-         * jan. 16, 2018 11:51:32 AM javafx.fxml.FXMLLoader$ValueElement processValue
-		 * WARNING: Loading FXML document with JavaFX API of version 9.0.1 by JavaFX runtime of version 8.0.121
-		 * Exception in thread "Thread-10" java.lang.IndexOutOfBoundsException: Index: -1, Size: 0
-		 * 	at java.util.LinkedList.checkElementIndex(LinkedList.java:555)
-		 * 	at java.util.LinkedList.remove(LinkedList.java:525)
-		 * 	at org.team08.pspacessnake.GUI.SpaceGui.holes(SpaceGui.java:286)
-		 * 	at org.team08.pspacessnake.GUI.SpaceGui.updateGui(SpaceGui.java:302)
-		 * 	at org.team08.pspacessnake.Client.GameReader.run(Client.java:154)
-		 * 	at java.lang.Thread.run(Thread.java:745)
-         */
+        if (!points.isEmpty()) {
+            points.remove(points.size() - 1);
+        }
         for (Point point1 : points) {
             context.setFill(point1.getColor());
             drawPoint(point1);

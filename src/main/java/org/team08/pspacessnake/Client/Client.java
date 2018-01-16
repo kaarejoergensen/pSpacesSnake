@@ -13,6 +13,7 @@ import org.team08.pspacessnake.GUI.SpaceGui;
 import org.team08.pspacessnake.Model.Player;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
+import org.team08.pspacessnake.Server.Server;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -21,12 +22,16 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("restriction")
 public class Client extends Application {
-    private final static String REMOTE_URI = "tcp://127.0.0.1:9001/";
+    private final static String REMOTE_URI = "tcp://ec2-18-218-0-120.us-east-2.compute.amazonaws.com:9001/";
+    private final static String TYPE = "?keep";
+
     private static Space space;
     private static Space roomSpace;
+    private static Server server;
 
     public static void main(String[] args) throws IOException {
-        space = new RemoteSpace(REMOTE_URI + "space?keep");
+        space = new RemoteSpace(REMOTE_URI + "space" + TYPE);
+        server = new Server(space);
         Application.launch(args);
     }
 
@@ -57,11 +62,8 @@ public class Client extends Application {
         return rooms.stream().map(objects -> (Room) objects[2]).collect(Collectors.toList());
     }
 
-    public String createRoom(String name, Token token) throws InterruptedException {
-        space.put("createRoom", name, token);
-        Object[] room = space.get(new ActualField("createRoomResult"), new FormalField(String.class), new
-                ActualField(name), new ActualField(token));
-        return (String) room[1];
+    public Room createRoom(String name, Token token) throws InterruptedException, IOException {
+        return server.createRoom(name);
     }
 
     public boolean enterRoom(String UID, Token token) throws InterruptedException, IOException {
@@ -70,7 +72,7 @@ public class Client extends Application {
                 ActualField(token));
         boolean returnResult = (Boolean) result[1];
         if (returnResult) {
-            roomSpace = new RemoteSpace(REMOTE_URI + UID + "?keep");
+            roomSpace = new RemoteSpace(UID);
         }
         return returnResult;
     }
@@ -79,10 +81,10 @@ public class Client extends Application {
         roomSpace.put("Changed direction", direction, token);
     }
 
-    public void startGame(SpaceGui gui, Token token, String RoomUID) throws IOException {
-        new Thread(new GameReader(new RemoteSpace(REMOTE_URI + RoomUID+ "?keep"), gui, token)).start();
-        new Thread(new ChatReader(new RemoteSpace(REMOTE_URI + RoomUID+ "?keep"), gui, token)).start();
-        new Thread(new PlayersReader(new RemoteSpace(REMOTE_URI + RoomUID+ "?keep"), gui)).start();
+    public void startGame(SpaceGui gui, Token token, String roomUID) throws IOException {
+        new Thread(new GameReader(new RemoteSpace(roomUID), gui, token)).start();
+        new Thread(new ChatReader(new RemoteSpace(roomUID), gui, token)).start();
+        new Thread(new PlayersReader(new RemoteSpace(roomUID), gui)).start();
     }
 
     public void sendMessage(String text, Token token) throws InterruptedException {
@@ -110,21 +112,17 @@ class PlayersReader implements Runnable {
 
     @Override
     public void run() {
-        boolean gameStarted = false;
-        while (!gameStarted) {
-            try {
+        try {
+            while (!(boolean) space.query(new ActualField("Game started"), new FormalField(Boolean.class))[1]) {
                 List<Object[]> playersQuery = space.queryAll(new ActualField("player"), new FormalField(Token.class),
                         new FormalField(Player.class));
                 List<Player> players = playersQuery.stream().map(o -> (Player) o[2]).
                         sorted(Comparator.comparing(player -> player.getToken().getName())).collect(Collectors.toList());
-                gameStarted = players.stream().allMatch(Player::isReady);
-                if (!gameStarted) {
-                    spaceGui.drawPlayers(players);
-                    Thread.sleep(1000);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                spaceGui.drawPlayers(players);
+                Thread.sleep(1000);
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
@@ -141,20 +139,18 @@ class GameReader implements Runnable {
     }
 
     @Override
-	public void run() {
-		boolean firstRun = true;
-        while (true) {
-			try {
-				Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(Player.class),
+    public void run() {
+        try {
+            space.query(new ActualField("Game started"), new ActualField(true));
+            gui.clear();
+            while (true) {
+                Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(Player.class),
                         new ActualField(token));
-				if (firstRun) {
-				    gui.clear();
-				    firstRun = false;
-                }
                 gui.updateGui((Player) newPoint[1]);
-			} catch (InterruptedException e) {
-			    e.printStackTrace();
+
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
