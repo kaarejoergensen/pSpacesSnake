@@ -166,8 +166,8 @@ public class SpaceGui {
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(s -> {
             try {
-                String UID = client.createRoom(s, token);
-                enterGame(new Room(UID, s));
+                selectedRoom = client.createRoom(s, token);
+                enterGame(selectedRoom);
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
             }
@@ -176,10 +176,10 @@ public class SpaceGui {
     }
 
     private void enterGame(Room room) throws InterruptedException, IOException {
-        if (client.enterRoom(room.getID(), token)) {
+        if (client.enterRoom(room.getURL(), token)) {
             roomsLayout.setVisible(false);
             gameContainerLayout.setVisible(true);
-            initGame(room.getID());
+            initGame(room.getURL());
         }
     }
 
@@ -278,7 +278,9 @@ public class SpaceGui {
         clear();
         context.setFill(point.getColor());
         drawPoint(point);
-        points.remove(points.size() - 1);
+        if (!points.isEmpty()) {
+            points.remove(points.size() - 1);
+        }
         for (Point point1 : points) {
             context.setFill(point1.getColor());
             drawPoint(point1);

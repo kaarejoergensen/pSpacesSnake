@@ -5,89 +5,50 @@ import org.team08.pspacessnake.Helpers.Utils;
 import org.team08.pspacessnake.Model.*;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class Server {
-    final static String URI = "tcp://127.0.0.1:9001/";
-    private final static String GATE_URI = URI + "?keep";
+    private static final String PROTOCOL = "tcp://";
+    private static final String TYPE = "?keep";
 
-    public static void main(String[] args) {
-        SpaceRepository repository = new SpaceRepository();
-        repository.addGate(GATE_URI);
-        repository.add("space", new SequentialSpace());
-
-        Space space = repository.get("space");
-        System.out.println("Server started!");
-
-        new Thread(new CreateClients(space)).start();
-        new Thread(new CreateRooms(repository, space)).start();
-    }
-}
-
-class CreateClients implements Runnable {
-    private Space space;
-
-    CreateClients(Space space) {
-        this.space = space;
-    }
-
-    @Override
-    public void run() {
-        while (true) {
-            try {
-                Object[] createClient = space.get(new ActualField("createClient"), new FormalField(String.class));
-                String UID = Utils.generateServerUUID(8, space);
-                space.put("createClientResult", createClient[1], new Token(UID, (String) createClient[1]));
-                System.out.println("New player with name " + createClient[1] + " and UID " + UID + " created.");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-}
-
-class CreateRooms implements Runnable {
-
-
+    private String hostURL;
     private SpaceRepository repository;
     private Space space;
 
-    CreateRooms(SpaceRepository repository, Space space) {
-        this.repository = repository;
+    public Server(Space space) throws IOException {
+        InetAddress address = InetAddress.getLocalHost();
+        hostURL = address.getHostAddress();
+        String host = PROTOCOL + hostURL + "/" + TYPE;
+
+        repository = new SpaceRepository();
+        repository.addGate(host);
+
         this.space = space;
     }
 
-    @Override
-    public void run() {
-        while (true) {
-            try {
-                Object[] create = space.get(new ActualField("createRoom"), new FormalField(String.class), new
-                        FormalField
-                        (Token.class));
-                String UID = Utils.generateServerUUID(8, space);
-                repository.add(UID, new SequentialSpace());
+    public Room createRoom(String name) throws IOException, InterruptedException {
+        String UID = Utils.generateServerUUID(8, space);
+        repository.add(UID, new SequentialSpace());
 
-                Room room = new Room(UID, (String) create[1]);
-                space.put("room", UID, room);
+        String roomURL = PROTOCOL + hostURL + "/" + UID + TYPE;
+        Room room = new Room(roomURL, name);
+        space.put("room", roomURL, room);
 
-                GameSettings gameSettings = new GameSettings(1000, 800);
-                GameLogic gameLogic = new GameLogic(gameSettings);
-                new RemoteSpace(Server.URI + UID + "?keep").put("Game started", false);
-                new Thread(new Chat(new RemoteSpace(Server.URI + UID + "?keep"))).start();
-                new Thread(new GameReader(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
-                new Thread(new GameWriter(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
-                new Thread(new EnterRoom(space, new RemoteSpace(Server.URI + UID + "?keep"), UID, gameLogic)).start();
-                new Thread(new StartGame(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
-                new Thread(new PowerUp(new RemoteSpace(Server.URI + UID + "?keep"), gameLogic)).start();
+        GameSettings gameSettings = new GameSettings(1000, 800);
+        GameLogic gameLogic = new GameLogic(gameSettings);
+        new RemoteSpace(roomURL).put("Game started", false);
+        new Thread(new Chat(new RemoteSpace(roomURL))).start();
+        new Thread(new GameReader(new RemoteSpace(roomURL), gameLogic)).start();
+        new Thread(new GameWriter(new RemoteSpace(roomURL), gameLogic)).start();
+        new Thread(new EnterRoom(space, new RemoteSpace(roomURL), roomURL, gameLogic)).start();
+        new Thread(new StartGame(new RemoteSpace(roomURL), gameLogic)).start();
+        new Thread(new PowerUp(new RemoteSpace(roomURL), gameLogic)).start();
 
-                space.put("createRoomResult", UID, create[1], create[2]);
-                System.out.println("New room with name " + create[1] + " and UID " + UID + " created!");
-            } catch (InterruptedException | IOException e) {
-                e.printStackTrace();
-            }
-        }
+        System.out.println("New room with name " + name + " and UID " + UID + " created!");
+        return room;
     }
 }
 
@@ -224,7 +185,8 @@ class StartGame implements Runnable {
                 List<Object[]> ready = space.queryAll(new ActualField("player"), new FormalField(Token.class),
                         new FormalField(Player.class));
                 List<Player> players = ready.stream().map(o -> (Player) o[2]).collect(Collectors.toList());
-                gameLogic.setStarted(players.stream().allMatch(Player::isReady) && players.size() == gameLogic.getPlayers().size());
+                gameLogic.setStarted(players.stream().allMatch(Player::isReady) &&
+                        players.size() == gameLogic.getPlayers().size() && players.size() > 0);
             }
             space.get(new ActualField("Game started"), new ActualField(false));
             space.put("Game started", true);

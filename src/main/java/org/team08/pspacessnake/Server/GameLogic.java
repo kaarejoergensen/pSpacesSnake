@@ -1,11 +1,7 @@
 package org.team08.pspacessnake.Server;
 
 import javafx.scene.paint.Color;
-import org.team08.pspacessnake.Model.GameSettings;
-import org.team08.pspacessnake.Model.Player;
-import org.team08.pspacessnake.Model.Point;
-import org.team08.pspacessnake.Model.Powerups;
-import org.team08.pspacessnake.Model.Token;
+import org.team08.pspacessnake.Model.*;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -212,7 +208,7 @@ public class GameLogic {
 
 	public Player makePlayer(Token token) {
         Player newPlayer = new Player(token);
-        newPlayer.setColor(colorList[ThreadLocalRandom.current().nextInt(0,5)]);
+        newPlayer.setColor(colorList[ThreadLocalRandom.current().nextInt(0,4)]);
         Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5),
                 ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), newPlayer.getColor());
         newPlayer.setPosition(newPoint);
