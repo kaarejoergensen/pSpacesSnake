@@ -29,7 +29,6 @@ public class Client extends Application {
 
     public static void main(String[] args) throws IOException {
         space = new RemoteSpace(REMOTE_URI + "space" + TYPE);
-        server = new Server(space);
         Application.launch(args);
     }
 
@@ -61,6 +60,7 @@ public class Client extends Application {
     }
 
     public Room createRoom(String name) throws InterruptedException, IOException {
+        server = new Server(space);
         return server.createRoom(name);
     }
 
