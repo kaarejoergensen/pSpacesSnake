@@ -5,7 +5,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class PowerUps {
 
 
-    private static String[] powers = {"Fast","Big", "Edge"};
+    //private static String[] powers = {"Fast","Big", "Edge", "Angle"};
+    private static String[] powers = {"Angle"};
     private Point position;
     private String power;
 

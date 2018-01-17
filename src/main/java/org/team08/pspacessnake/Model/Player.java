@@ -15,7 +15,7 @@ public class Player {
     private boolean remember = true;
     private boolean ready;
     private boolean edgeJumper;
-
+    private boolean coarseTurner;
 
     public Player(Token token) {
         this.setToken(token);
@@ -25,16 +25,33 @@ public class Player {
         this.setDAngle(.17);
         this.setDirection("none");
         this.setEdgeJumper(false);
+        this.setCoarseTurner(false);
     }
 
     public Point move(int boardWidth, int boardHeight) {
+        double angle = this.isCoarseTurner() ? coarseAngle(this.getAngle()) : this.getAngle();
     	if (this.isEdgeJumper())
-    		this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle),
-                    this.getPosition().getRadius(), this.position.getColor(), boardWidth, boardHeight);
+   	        this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getPosition().getRadius(), this.position.getColor(), boardWidth, boardHeight);
     	else
-    		this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle),
-                    this.getPosition().getRadius(), this.position.getColor());
+            this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getPosition().getRadius(), this.position.getColor());
     	return this.position;
+    }
+
+    public double coarseAngle(double angle) {
+        angle = reduceAngleToPrimaryInterval(angle);
+        angle -= this.getCoarseStartAngle();
+        angle /= Math.PI/2; // scale to interval [0;4[
+        angle = Math.round(angle);
+        angle *= Math.PI/2;
+        angle += this.getCoarseStartAngle();
+        return angle;
+    }
+
+    public static double reduceAngleToPrimaryInterval(double angle) {
+        while (angle < 0){  // make sure the angle i positive to prevent odd modulo operation behaviour.
+            angle += 2*Math.PI;
+        }
+        return angle % (Math.PI * 2);
     }
 
     public double turn() {
@@ -72,16 +89,10 @@ public class Player {
         return speed;
     }
 
-    /**
-	 * @return the size
-	 */
 	public double getSize() {
 		return size;
 	}
 
-	/**
-	 * @param size the size to set
-	 */
 	public void setSize(double size) {
 		this.size = size;
 	}
@@ -120,7 +131,6 @@ public class Player {
 
     public void kill() {
         this.isDead = true;
-        System.out.printf("Player: %s is dead\n", this.getToken().getName());
     }
 
     public void setRemember(boolean holes) {
@@ -139,7 +149,6 @@ public class Player {
         this.ready = ready;
     }
 
-
 	public boolean isEdgeJumper() {
 		return edgeJumper;
 	}
@@ -147,4 +156,22 @@ public class Player {
 	public void setEdgeJumper(boolean edgeJumper) {
 		this.edgeJumper = edgeJumper;
 	}
+
+    public boolean isCoarseTurner() {
+        return coarseTurner;
+    }
+
+    public void setCoarseTurner(boolean coarseTurner) {
+        this.coarseTurner = coarseTurner;
+    }
+    public double getCoarseStartAngle() {
+        return coarseStartAngle;
+    }
+
+    public void setCoarseStartAngle(double coarseStartAngle) {
+        this.coarseStartAngle = coarseStartAngle;
+    }
+
+    private double coarseStartAngle;
+
 }
