@@ -82,7 +82,8 @@ public class GameLogic {
                     continue;
                 tempIterator = boardCells[pointCellY + dy][pointCellX + dx].listIterator();
                 while (tempIterator.hasNext()) {
-                    if (point.distance((Point) tempIterator.next()) < 5d)
+                    Point next = tempIterator.next();
+                    if (point.distance(next) <= (point.getRadius() + next.getRadius()))
                         return true;
                 }
 
@@ -124,10 +125,11 @@ public class GameLogic {
      */
     private void addPoint(Player currentPlayer) {
         Point playerPos = currentPlayer.getPosition();
-        for (Point bufferPoint : currentPlayer.getPointBuffer()) {
+        for (Iterator<Point> it = currentPlayer.getPointBuffer().iterator(); it.hasNext(); ) {
+            Point bufferPoint = it.next();
             if (playerPos.distance(bufferPoint) > playerPos.getRadius() + bufferPoint.getRadius()) {
                 boardCellsIterators[getCellY(bufferPoint)][getCellX(bufferPoint)].add(bufferPoint);
-                currentPlayer.getPointBuffer().remove(bufferPoint);
+                it.remove();
             }
         }
         currentPlayer.getPointBuffer().add(currentPlayer.getPosition());

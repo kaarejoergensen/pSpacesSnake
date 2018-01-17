@@ -10,7 +10,8 @@ public class PowerUps {
     private String power;
 
     public PowerUps() {
-        power = powers[ThreadLocalRandom.current().nextInt(0, powers.length)];
+        power = powers[1];
+//        power = powers[ThreadLocalRandom.current().nextInt(0, powers.length)];
     }
 
     public Point getPosition() {
