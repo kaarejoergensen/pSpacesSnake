@@ -207,7 +207,7 @@ public class GameLogic {
             }
             if (checkCollision(player.getPosition()) || checkBufferedPointsCollision(player)) player.kill();
             PowerUps powerUps = hitPowerUp(player);
-            if (powerUps != null && player.getPower() == null) {
+            if (powerUps != null && player.getPosition().getPowerUps() == null) {
                 collisionPowerUp(player, powerUps);
                 player.getPosition().setPowerUps(powerUps);
                 powerups.remove(powerUps);
@@ -220,9 +220,8 @@ public class GameLogic {
 
     public Player makePlayer(Token token) {
         Player newPlayer = new Player(token);
-        newPlayer.setColor(players.size());
         Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5),
-                ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), newPlayer.getColor());
+                ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), players.size());
         newPlayer.setPosition(newPoint);
         newPlayer.setAngle(newPlayer.getPosition().getAngleToPoint(gameSettings.getWidth() / 2d, gameSettings.getHeight() / 2d));
         System.out.printf("START: [%f, %f]\tAngle: %f rad\t MIDT: [%f, %f] ", newPoint.getX(), newPoint.getY(), newPlayer.getAngle(), gameSettings.getWidth() / 2d, gameSettings.getHeight() / 2d);

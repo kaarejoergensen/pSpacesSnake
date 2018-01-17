@@ -10,12 +10,10 @@ public class Player {
     private double size;		// diameter of snake head. 
     private Double angle;		//current angler of movement
     private double dAngle;		//the change of angle per frame.
-    private int color;
     private String direction;    //change of angle
     private boolean isDead = false;
     private boolean remember = true;
     private boolean ready;
-    private PowerUps power;
     private boolean edgeJumper;
 
 
@@ -32,10 +30,10 @@ public class Player {
     public Point move(int boardWidth, int boardHeight) {
     	if (this.isEdgeJumper())
     		this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle),
-                    this.getPosition().getRadius(), this.getColor(), boardWidth, boardHeight);
+                    this.getPosition().getRadius(), this.position.getColor(), boardWidth, boardHeight);
     	else
     		this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle),
-                    this.getPosition().getRadius(), this.getColor());
+                    this.getPosition().getRadius(), this.position.getColor());
     	return this.position;
     }
 
@@ -108,14 +106,6 @@ public class Player {
         this.dAngle = dAngle;
     }
 
-    public int getColor() {
-        return color;
-    }
-
-    public void setColor(int color) {
-        this.color = color;
-    }
-
     public String getDirection() {
         return direction;
     }
@@ -149,14 +139,6 @@ public class Player {
         this.ready = ready;
     }
 
-
-	public PowerUps getPower() {
-		return power;
-	}
-
-	public void setPower(PowerUps power) {
-		this.power = power;
-	}
 
 	public boolean isEdgeJumper() {
 		return edgeJumper;

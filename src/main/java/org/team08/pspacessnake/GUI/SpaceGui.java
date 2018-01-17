@@ -284,7 +284,7 @@ public class SpaceGui {
         clear();
         int i = 100;
         for (Player player : players) {
-            context.setFill(colorList[player.getColor()]);
+            context.setFill(colorList[player.getPosition().getColor()]);
             context.fillText(player.getToken().getName() + "\t\t\t" + (player.isReady() ? "Ready!" : "Not ready"), WIDTH / 2, i);
             i += 50;
         }

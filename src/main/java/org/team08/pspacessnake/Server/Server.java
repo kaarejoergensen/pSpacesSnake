@@ -113,8 +113,6 @@ class GameWriter implements Runnable {
                                 it.remove();
                             }
                             space.put("Player moved", activePlayer.getPosition(), startedPlayer.getToken());
-
-                            if (activePlayer.getPower() != null) space.put("Collided with powerup", activePlayer.getPower(), startedPlayer.getToken());
                         }
                     }
                     if (gameLogic.getPlayers().size() == 1 && gameLogic.getStartedPlayers().size() > 1) {
