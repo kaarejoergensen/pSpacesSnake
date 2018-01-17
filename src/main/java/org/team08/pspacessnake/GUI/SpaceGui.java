@@ -338,12 +338,10 @@ public class SpaceGui {
     private void clearPowerUp(PowerUps powerUps) {
         context.clearRect(powerUps.getPosition().getX() - 10, powerUps.getPosition().getY() - 10,
                 20, 20);
-//        points.stream().skip(Math.max(0, points.size() - 10)).forEach(this::drawPoint);
     }
 
     public void addPowerUp(PowerUps power) {
         powers.add(power);
-        System.out.println(power.getPower());
         drawImage(power);
     }
 }
