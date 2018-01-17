@@ -102,6 +102,17 @@ public class GameLogic {
 		return false;
 	}
 	
+	private boolean hitsPowerUp(Player player) {
+		for (PowerUps thisPowerUp : powerups) {
+			if (player.getPosition().distance(thisPowerUp.getPosition()) < player.getPosition().getRadius() + 10) {
+				powerups.remove(thisPowerUp);
+				player.setPower(thisPowerUp);
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	private int getCellX(Point point) {
 		return (int) point.getX() / gameSettings.getCellSize();
 	}
@@ -167,6 +178,8 @@ public class GameLogic {
 		}
 	} */
 
+	
+	
 	public List<Player> nextFrame() {
 		for (Player player : players) {
 			player.turn();
@@ -177,13 +190,9 @@ public class GameLogic {
 			}
 			if (player.getRemember()) {
 				addPoint(player);
-				player.getPosition().setRadius(2.5d);
-				// player.getPosition().setColor(Color.DARKORANGE);
 			}
-			// else player.getPosition().setColor(Color.BLACK);
-//			else player.getPosition().setRadius(0d);;
 			if (checkCollision(player.getPosition()) || checkBufferedPointsCollision(player)) player.kill();
-			//collisionPowerUp(player);
+			if (hitsPowerUp(player)) {}
 		}
 		return players;
 	}

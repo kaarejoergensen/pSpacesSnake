@@ -304,6 +304,10 @@ public class SpaceGui {
 
     public void updateGui(Player player) {
         Point point = player.getPosition();
+        PowerUps playerPower = player.getPower();
+        if (playerPower != null) {
+        	playerPower
+        }
         if (player.getRemember()) {
             drawPoint(point);
             points.add(point);
@@ -316,7 +320,7 @@ public class SpaceGui {
         switch (power.getPower()) {
             case "Fast":
                 Image image = new Image("SpaceLightning.png");
-                context.drawImage(image, power.getPosition().getX(), power.getPosition().getY(), 20.0, 20.0);
+                context.drawImage(image, power.getPosition().getX() - 10, power.getPosition().getY() - 10, 20.0, 20.0);
         }
     }
 
