@@ -201,7 +201,7 @@ public class GameLogic {
             }
             if (player.getRemember()) {
                 addPoint(player);
-                player.getPosition().setRadius(2.5d);
+                //player.getPosition().setRadius(2.5d);
             } else {
                 player.getPosition().setHole(true);
             }
