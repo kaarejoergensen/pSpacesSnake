@@ -64,10 +64,10 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0">
+                  <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #000000;">
                      <children>
                         <Canvas fx:id="gameLayout" height="800.0" width="1000.0" />
-                        <Button fx:id="readyButton" alignment="BOTTOM_CENTER" mnemonicParsing="false" text="Ready" StackPane.alignment="BOTTOM_CENTER" onAction="#onClickReady">
+                        <Button fx:id="readyButton" alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#onClickReady" text="Ready" StackPane.alignment="BOTTOM_CENTER">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -79,19 +79,19 @@
                   </StackPane>
                   <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="400.0" GridPane.columnIndex="1">
                      <children>
-                        <ListView fx:id="chatListView" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="730.0" prefWidth="380.0" focusTraversable="false">
+                        <ListView fx:id="chatListView" focusTraversable="false" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="730.0" prefWidth="380.0">
                            <VBox.margin>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </VBox.margin>
                         </ListView>
                         <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="400.0">
                            <children>
-                              <TextField fx:id="chatTextField" onAction="#onEnterChat" prefWidth="310.0" promptText="Enter message" focusTraversable="false">
+                              <TextField fx:id="chatTextField" focusTraversable="false" onAction="#onEnterChat" prefWidth="310.0" promptText="Enter message">
                                  <HBox.margin>
                                     <Insets right="10.0" />
                                  </HBox.margin>
                               </TextField>
-                              <Button fx:id="chatSendButton" mnemonicParsing="false" onAction="#onClickChatMessage" text="Send" focusTraversable="false" />
+                              <Button fx:id="chatSendButton" focusTraversable="false" mnemonicParsing="false" onAction="#onClickChatMessage" text="Send" />
                            </children>
                         </HBox>
                      </children>

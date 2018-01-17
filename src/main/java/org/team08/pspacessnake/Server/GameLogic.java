@@ -5,7 +5,6 @@ import org.team08.pspacessnake.Model.*;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 //@SuppressWarnings("restriction")
 public class GameLogic {
@@ -18,7 +17,7 @@ public class GameLogic {
 	private LinkedList<Point>[][] boardCells;
 	private ListIterator<Point>[][] boardCellsIterators;
 	private Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE};
-	private ArrayList<Powerups> powerups = new ArrayList<Powerups>();
+	private ArrayList<PowerUps> powerups = new ArrayList<PowerUps>();
 	private static int i = 0;
 
 	public GameLogic() {
@@ -52,12 +51,12 @@ public class GameLogic {
 		return this.players;
 	}
 	
-	public ArrayList<Powerups> getPowerups() {
+	public ArrayList<PowerUps> getPowerups() {
 		return powerups;
 	}
 	
-	public Powerups makePowerup() {
-		Powerups newPowerup = new Powerups();
+	public PowerUps makePowerup() {
+		PowerUps newPowerup = new PowerUps();
 		Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5),
                 ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), null);
 		newPowerup.setPosition(newPoint);
@@ -173,7 +172,7 @@ public class GameLogic {
 
 			}
 			// else player.getPosition().setColor(Color.BLACK);
-			else player.getPosition().setRadius(0d);;
+//			else player.getPosition().setRadius(0d);;
 			if (checkCollision(player.getPosition()) || checkBufferedPointsCollision(player)) player.kill();
 		}
 		return players;

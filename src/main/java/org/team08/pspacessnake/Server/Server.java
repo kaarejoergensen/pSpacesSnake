@@ -71,7 +71,7 @@ class PowerUp implements Runnable {
             try {
                 if (gameLogic.isStarted()) {
                     Thread.sleep((long) (3000));
-                    Powerups newPowerup = gameLogic.makePowerup();
+                    PowerUps newPowerup = gameLogic.makePowerup();
                     for (Player player : gameLogic.getPlayers()) {
                         space.put("New Powerup", newPowerup, player.getToken());
                     }

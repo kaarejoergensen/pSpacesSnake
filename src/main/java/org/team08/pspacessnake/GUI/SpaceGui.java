@@ -40,7 +40,7 @@ public class SpaceGui {
     private boolean leftKeyPressed = false;
     private boolean rightKeyPressed = false;
     private List<Point> points;
-    private List<Powerups> powers = new ArrayList<>();
+    private List<PowerUps> powers = new ArrayList<>();
     private GraphicsContext context;
     private List<Room> rooms;
     private Room selectedRoom;
@@ -290,23 +290,14 @@ public class SpaceGui {
     }
 
     public void clear() {
-        context.setFill(new Color(0.1, 0.1, 0.1, 1));
-        context.fillRect(0, 0, WIDTH, HEIGHT);
+        context.clearRect(0, 0, WIDTH, HEIGHT);
     }
 
+
     private void holes(Point point) {
-        clear();
-        context.setFill(point.getColor());
         drawPoint(point);
         if (!points.isEmpty()) {
-            points.remove(points.size() - 1);
-        }
-        for (Point point1 : points) {
-            context.setFill(point1.getColor());
-            drawPoint(point1);
-        }
-        for (Powerups power1 : powers) {
-            drawImage(power1);
+            clearPoint(points.remove(points.size() - 1));
         }
         points.add(point);
     }
@@ -317,30 +308,34 @@ public class SpaceGui {
             drawPoint(point);
             points.add(point);
         } else {
-        	drawPoint(point);
-            //holes(point);
+            holes(point);
         }
     }
-    
-    private void drawImage(Powerups power) {
 
-    	switch (power.getPower()) {
-    	case "Fast":
-    		Image image = new Image("SpaceLightning.png");
-    		context.drawImage(image, power.getPosition().getX(), power.getPosition().getY(), 20.0, 20.0);
-    	}
+    private void drawImage(PowerUps power) {
+        switch (power.getPower()) {
+            case "Fast":
+                Image image = new Image("SpaceLightning.png");
+                context.drawImage(image, power.getPosition().getX(), power.getPosition().getY(), 20.0, 20.0);
+        }
     }
 
     private void drawPoint(Point point) {
-    	context.setFill(point.getColor());
-        context.fillOval(point.getX() - point.getRadius(), point.getY() - point.getRadius(), 2*point.getRadius(), 2*point.getRadius());
+        context.setFill(point.getColor());
+        context.fillOval(point.getX() - point.getRadius(), point.getY() - point.getRadius(),
+                2 * point.getRadius(), 2 * point.getRadius());
     }
 
-	public void addPowerup(Powerups power) {
-		powers.add(power);
-		System.out.println(power.getPower());
-		drawImage(power);
-	}
+    public void clearPoint(Point point) {
+        context.clearRect(point.getX() - point.getRadius(), point.getY() - point.getRadius(),
+                2 * point.getRadius(), 2 * point.getRadius());
+    }
+
+    public void addPowerUp(PowerUps power) {
+        powers.add(power);
+        System.out.println(power.getPower());
+        drawImage(power);
+    }
 }
 
 
