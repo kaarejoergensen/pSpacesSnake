@@ -156,6 +156,16 @@ public class GameLogic {
 			}
 		}
 	}
+/*	public void collisionPowerUp(Player player) {
+		for (Powerups power : powerups) {
+			if (checkPowerUpCollision(player.getPosition(),powerups)) {
+				switch (power.getPower()) {
+					case "Fast": player.setSpeed(player.getSpeed()*2);
+				}
+
+			}
+		}
+	} */
 
 	public List<Player> nextFrame() {
 		for (Player player : players) {
@@ -173,6 +183,7 @@ public class GameLogic {
 			// else player.getPosition().setColor(Color.BLACK);
 			else player.getPosition().setRadius(0d);;
 			if (checkCollision(player.getPosition()) || checkBufferedPointsCollision(player)) player.kill();
+			//collisionPowerUp(player);
 		}
 		return players;
 	}
