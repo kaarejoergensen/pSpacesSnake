@@ -337,5 +337,3 @@ public class SpaceGui {
         drawImage(power);
     }
 }
-
-
