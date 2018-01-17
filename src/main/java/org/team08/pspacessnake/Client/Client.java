@@ -169,9 +169,10 @@ class GameReader implements Runnable {
             space.query(new ActualField("Game started"), new ActualField(true));
             gui.clear();
             while (true) {
-                Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(Point.class),
+                List<Object[]> newPoint = space.getAll(new ActualField("Player moved"), new FormalField(Point.class),
                         new ActualField(token));
-                gui.updateGui((Point) newPoint[1]);
+//                gui.updateGui((Point) newPoint.get(1));
+                newPoint.stream().map(o -> (Point) o[1]).forEach(p -> gui.updateGui(p));
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
