@@ -47,6 +47,7 @@ public class SpaceGui {
     private ObservableList<String> messages;
     private ObservableList<String> roomNames;
     private boolean roomEntered = false;
+    private Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE, Color.YELLOW, Color.SADDLEBROWN};
 
     @FXML
     private VBox enterNameLayout;
@@ -283,7 +284,7 @@ public class SpaceGui {
         clear();
         int i = 100;
         for (Player player : players) {
-            context.setFill(player.getColor());
+            context.setFill(colorList[player.getPosition().getColor()]);
             context.fillText(player.getToken().getName() + "\t\t\t" + (player.isReady() ? "Ready!" : "Not ready"), WIDTH / 2, i);
             i += 50;
         }
@@ -302,14 +303,12 @@ public class SpaceGui {
         points.add(point);
     }
 
-    public void updateGui(Player player) {
-        Point point = player.getPosition();
-        PowerUps playerPower = player.getPower();
+    public void updateGui(Point point) {
+        PowerUps playerPower = point.getPowerUps();
         if (playerPower != null) {
         	clearPowerUp(playerPower);
-        	player.setPower(null);
         }
-        if (player.getRemember()) {
+        if (!point.isHole()) {
             drawPoint(point);
             points.add(point);
         } else {
@@ -326,7 +325,7 @@ public class SpaceGui {
     }
 
     private void drawPoint(Point point) {
-        context.setFill(point.getColor());
+        context.setFill(colorList[point.getColor()]);
         context.fillOval(point.getX() - point.getRadius(), point.getY() - point.getRadius(),
                 2 * point.getRadius(), 2 * point.getRadius());
     }
@@ -339,12 +338,10 @@ public class SpaceGui {
     private void clearPowerUp(PowerUps powerUps) {
         context.clearRect(powerUps.getPosition().getX() - 10, powerUps.getPosition().getY() - 10,
                 20, 20);
-//        points.stream().skip(Math.max(0, points.size() - 10)).forEach(this::drawPoint);
     }
 
     public void addPowerUp(PowerUps power) {
         powers.add(power);
-        System.out.println(power.getPower());
         drawImage(power);
     }
 }

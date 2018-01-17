@@ -10,10 +10,7 @@ import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
 import org.jspace.Space;
 import org.team08.pspacessnake.GUI.SpaceGui;
-import org.team08.pspacessnake.Model.Player;
-import org.team08.pspacessnake.Model.PowerUps;
-import org.team08.pspacessnake.Model.Room;
-import org.team08.pspacessnake.Model.Token;
+import org.team08.pspacessnake.Model.*;
 import org.team08.pspacessnake.Server.Server;
 
 import java.io.IOException;
@@ -120,7 +117,6 @@ class ReadPowerup implements Runnable {
             while (true) {
                 Object[] newPower = space.get(new ActualField("New Powerup"), new FormalField(PowerUps.class), new ActualField(token));
                 spaceGui.addPowerUp((PowerUps) newPower[1]);
-
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -173,10 +169,9 @@ class GameReader implements Runnable {
             space.query(new ActualField("Game started"), new ActualField(true));
             gui.clear();
             while (true) {
-                Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(Player.class),
+                Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(Point.class),
                         new ActualField(token));
-                gui.updateGui((Player) newPoint[1]);
-
+                gui.updateGui((Point) newPoint[1]);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
