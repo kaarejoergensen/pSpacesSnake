@@ -65,27 +65,25 @@ class PowerUp implements Runnable {
 
     }
 
-	@Override
-	public void run() {
-		while (true) {
-			try {
-				System.out.println(gameLogic.isStarted());
-				if (gameLogic.isStarted()) {
-					Thread.sleep((long) (3000));
-					Powerups newPowerup = gameLogic.makePowerup();
-					for (Player player : gameLogic.getPlayers()) {
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                if (gameLogic.isStarted()) {
+                    Thread.sleep((long) (3000));
+                    Powerups newPowerup = gameLogic.makePowerup();
+                    for (Player player : gameLogic.getPlayers()) {
+                        space.put("New Powerup", newPowerup, player.getToken());
+                    }
+                } else {
+                    Thread.sleep(100);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
-						space.put("New Powerup", newPowerup, player.getToken());
-
-
-					}
-				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-
-	}
+    }
 }
 
 class GameWriter implements Runnable {
@@ -108,11 +106,11 @@ class GameWriter implements Runnable {
                     float time = System.currentTimeMillis();
                     List<Player> players = gameLogic.nextFrame();
                     for (Player startedPlayer : gameLogic.getStartedPlayers()) {
-                        for (Iterator<Player> it = players.iterator(); it.hasNext();) {
-                        	Player activePlayer = it.next();
+                        for (Iterator<Player> it = players.iterator(); it.hasNext(); ) {
+                            Player activePlayer = it.next();
                             if (activePlayer.isDead()) {
                                 space.put("message", "Player '" + activePlayer.getToken().getName() + "' died!", new Token("0", "System"));
-								it.remove();
+                                it.remove();
                             }
                             space.put("Player moved", activePlayer, startedPlayer.getToken());
                         }
@@ -284,24 +282,23 @@ class Chat implements Runnable {
 }
 
 class HeartbeatClient implements Runnable {
-	private Space space;
-	private String roomURL;
+    private Space space;
+    private String roomURL;
 
-	public HeartbeatClient(Space space, String roomURL) {
-		this.space = space;
-		this.roomURL = roomURL;
-	}
+    public HeartbeatClient(Space space, String roomURL) {
+        this.space = space;
+        this.roomURL = roomURL;
+    }
 
-	@Override
-	public void run() {
-		while (true) {
-			try {
-				space.put("heartbeat", roomURL);
-				Thread.sleep(25000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-		}
-	}
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                space.put("heartbeat", roomURL);
+                Thread.sleep(25000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

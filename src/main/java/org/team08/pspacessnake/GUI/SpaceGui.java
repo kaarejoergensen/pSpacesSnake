@@ -328,7 +328,6 @@ public class SpaceGui {
     	case "Fast":
     		Image image = new Image("SpaceLightning.png");
     		context.drawImage(image, power.getPosition().getX(), power.getPosition().getY(), 20.0, 20.0);
-    		
     	}
     }
 
