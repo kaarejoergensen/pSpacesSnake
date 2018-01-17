@@ -2,13 +2,13 @@ package org.team08.pspacessnake.Model;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Powerups {
+public class PowerUps {
 
 
 	private static String[] powers = {"Fast"};
     private Point position;
     private String power;
-	public Powerups() {
+	public PowerUps() {
 		power = powers[ThreadLocalRandom.current().nextInt(0, powers.length)];
 	}
 	public Point getPosition() {

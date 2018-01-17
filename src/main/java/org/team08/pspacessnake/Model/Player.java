@@ -3,7 +3,6 @@ package org.team08.pspacessnake.Model;
 import javafx.scene.paint.Color;
 
 import java.util.LinkedList;
-import java.util.ListIterator;
 
 public class Player {
     private Token token;
@@ -18,7 +17,7 @@ public class Player {
     private boolean isDead = false;
     private boolean remember = true;
     private boolean ready;
-    private Powerups power;
+    private PowerUps power;
     private boolean edgeJumper;
 
 
@@ -151,11 +150,11 @@ public class Player {
     }
 
 
-	public Powerups getPower() {
+	public PowerUps getPower() {
 		return power;
 	}
 
-	public void setPower(Powerups power) {
+	public void setPower(PowerUps power) {
 		this.power = power;
 	}
 

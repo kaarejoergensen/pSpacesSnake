@@ -20,7 +20,7 @@ public class GameLogic {
 	private LinkedList<Point>[][] boardCells;
 	private ListIterator<Point>[][] boardCellsIterators;
 	private Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE};
-	private ArrayList<Powerups> powerups = new ArrayList<Powerups>();
+	private ArrayList<PowerUps> powerups = new ArrayList<PowerUps>();
 	private static int i = 0;
 
 	public GameLogic() {
@@ -54,12 +54,12 @@ public class GameLogic {
 		return this.players;
 	}
 	
-	public ArrayList<Powerups> getPowerups() {
+	public ArrayList<PowerUps> getPowerups() {
 		return powerups;
 	}
 	
-	public Powerups makePowerup() {
-		Powerups newPowerup = new Powerups();
+	public PowerUps makePowerup() {
+		PowerUps newPowerup = new PowerUps();
 		Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5),
                 ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), null);
 		newPowerup.setPosition(newPoint);
@@ -104,7 +104,18 @@ public class GameLogic {
 			}
 		return false;
 	}
-	
+
+	private boolean hitsPowerUp(Player player) {
+		for (PowerUps thisPowerUp : powerups) {
+			if (player.getPosition().distance(thisPowerUp.getPosition()) < player.getPosition().getRadius() + 10) {
+				player.setPower(thisPowerUp);
+				powerups.remove(thisPowerUp);
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private int getCellX(Point point) {
 		return (int) point.getX() / gameSettings.getCellSize();
 	}
@@ -159,6 +170,8 @@ public class GameLogic {
 		}
 	}
 	public void collisionPowerUp(Player player) {
+
+	/*	public void collisionPowerUp(Player player) {
 		for (Powerups power : powerups) {
 			if (checkPowerUpCollision(player.getPosition(),power)) {
 				ScheduledThreadPoolExecutor execute = new ScheduledThreadPoolExecutor(1);
@@ -208,6 +221,8 @@ public class GameLogic {
 		}
 	}
 
+
+
 	public List<Player> nextFrame() {
 		for (Player player : players) {
 			player.turn();
@@ -218,15 +233,15 @@ public class GameLogic {
 			}
 			if (player.getRemember()) {
 				addPoint(player);
+<<<<<<< HEAD
+=======
 				player.getPosition().setRadius(2.5d);
-				// player.getPosition().setColor(Color.DARKORANGE);
-				
-
+>>>>>>> branch 'master' of https://github.com/kaarejoergensen/pSpacesSnake.git
 			}
 			// else player.getPosition().setColor(Color.BLACK);
 			else player.getPosition().setRadius(0d);;
 			if (checkCollision(player.getPosition()) || checkBufferedPointsCollision(player)) player.kill();
-			//collisionPowerUp(player);
+			if (hitsPowerUp(player)) {}
 		}
 		return players;
 	}

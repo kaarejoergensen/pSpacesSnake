@@ -11,7 +11,7 @@ import org.jspace.RemoteSpace;
 import org.jspace.Space;
 import org.team08.pspacessnake.GUI.SpaceGui;
 import org.team08.pspacessnake.Model.Player;
-import org.team08.pspacessnake.Model.Powerups;
+import org.team08.pspacessnake.Model.PowerUps;
 import org.team08.pspacessnake.Model.Room;
 import org.team08.pspacessnake.Model.Token;
 import org.team08.pspacessnake.Server.Server;
@@ -118,8 +118,8 @@ class ReadPowerup implements Runnable {
 		try {
             space.query(new ActualField("Game started"), new ActualField(true));
             while (true) {
-                Object[] newPower = space.get(new ActualField("New Powerup"), new FormalField(Powerups.class), new ActualField(token));
-                spaceGui.addPowerup((Powerups) newPower[1]);
+                Object[] newPower = space.get(new ActualField("New Powerup"), new FormalField(PowerUps.class), new ActualField(token));
+                spaceGui.addPowerUp((PowerUps) newPower[1]);
 
             }
         } catch (InterruptedException e) {
