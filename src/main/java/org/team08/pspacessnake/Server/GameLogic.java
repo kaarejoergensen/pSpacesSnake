@@ -155,7 +155,8 @@ public class GameLogic {
 			}
 		}
 	}
-/*	public void collisionPowerUp(Player player) {
+
+	/*	public void collisionPowerUp(Player player) {
 		for (Powerups power : powerups) {
 			if (checkPowerUpCollision(player.getPosition(),powerups)) {
 				switch (power.getPower()) {
