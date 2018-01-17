@@ -1,10 +1,11 @@
 package org.team08.pspacessnake.Server;
 
-import javafx.scene.paint.Color;
 import org.team08.pspacessnake.Model.*;
 
 import java.util.*;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 //@SuppressWarnings("restriction")
 public class GameLogic {
@@ -16,7 +17,6 @@ public class GameLogic {
     private int numCols;
     private LinkedList<Point>[][] boardCells;
     private ListIterator<Point>[][] boardCellsIterators;
-    private Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE, Color.YELLOW, Color.SADDLEBROWN};
     private ArrayList<PowerUps> powerups = new ArrayList<PowerUps>();
     private static int i = 0;
 
@@ -129,10 +129,11 @@ public class GameLogic {
      */
     private void addPoint(Player currentPlayer) {
         Point playerPos = currentPlayer.getPosition();
-        for (Point bufferPoint : currentPlayer.getPointBuffer()) {
+        for (Iterator<Point> it = currentPlayer.getPointBuffer().iterator(); it.hasNext(); ) {
+            Point bufferPoint = it.next();
             if (playerPos.distance(bufferPoint) > playerPos.getRadius() + bufferPoint.getRadius()) {
                 boardCellsIterators[getCellY(bufferPoint)][getCellX(bufferPoint)].add(bufferPoint);
-                currentPlayer.getPointBuffer().remove(bufferPoint);
+                it.remove();
             }
         }
         currentPlayer.getPointBuffer().add(currentPlayer.getPosition());
@@ -170,48 +171,63 @@ public class GameLogic {
         }
     }
 
-	/*	public void collisionPowerUp(Player player) {
-		for (Powerups power : powerups) {
-			if (checkPowerUpCollision(player.getPosition(),powerups)) {
-				switch (power.getPower()) {
-					case "Fast": player.setSpeed(player.getSpeed()*2);
-				}
+    public void collisionPowerUp(Player player, PowerUps power) {
+        ScheduledThreadPoolExecutor execute = new ScheduledThreadPoolExecutor(1);
+        switch (power.getPower()) {
+            case "Fast":
+                player.setSpeed(player.getSpeed() * 2);
+                execute.schedule(() -> player.setSpeed(player.getSpeed() / 2), 4, TimeUnit.SECONDS);
+                break;
+            case "Big":
+                player.getPosition().setRadius(player.getPosition().getRadius() * 2);
+                execute.schedule(() -> player.getPosition().setRadius(player.getPosition().getRadius() / 2), 4, TimeUnit.SECONDS);
+                break;
+            case "Angle":
+                double startAngle = player.getDAngle();
+                player.setDAngle(Math.PI / 2);
+                execute.schedule(() -> player.setDAngle(startAngle), 4, TimeUnit.SECONDS);
+                break;
+            case "Edge":
+                player.setEdgeJumper(true);
+                execute.schedule(() -> {
+                    player.setEdgeJumper(false);
+                }, 8, TimeUnit.SECONDS);
+                break;
+        }
+    }
 
-			}
-		}
-	} */
 
-	
-	
-	public List<Player> nextFrame() {
-		for (Player player : players) {
-			player.turn();
-			player.move(gameSettings.getWidth(), gameSettings.getHeight());
-			if (!playerIsOnBoard(player.getPosition())) {
-				player.kill();
-				continue;
-			}
-			if (player.getRemember()) {
-				addPoint(player);
-				player.getPosition().setRadius(2.5d);
-			}
-			if (checkCollision(player.getPosition()) || checkBufferedPointsCollision(player)) player.kill();
-			PowerUps powerUps = hitPowerUp(player);
-			if (powerUps != null && player.getPower() == null) {
-                player.setPower(powerUps);
+    public List<Player> nextFrame() {
+        for (Player player : players) {
+            player.turn();
+            player.move(gameSettings.getWidth(), gameSettings.getHeight());
+            if (!playerIsOnBoard(player.getPosition())) {
+                player.kill();
+                continue;
+            }
+            if (player.getRemember()) {
+                addPoint(player);
+                //player.getPosition().setRadius(2.5d);
+            } else {
+                player.getPosition().setHole(true);
+            }
+            if (checkCollision(player.getPosition()) || checkBufferedPointsCollision(player)) player.kill();
+            PowerUps powerUps = hitPowerUp(player);
+            if (powerUps != null && player.getPosition().getPowerUps() == null) {
+                collisionPowerUp(player, powerUps);
+                player.getPosition().setPowerUps(powerUps);
                 powerups.remove(powerUps);
             } else {
-			    player.setPower(null);
+                player.getPosition().setPowerUps(null);
             }
-		}
-		return players;
-	}
+        }
+        return players;
+    }
 
     public Player makePlayer(Token token) {
         Player newPlayer = new Player(token);
-        newPlayer.setColor(colorList[players.size()]);
         Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5),
-                ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), newPlayer.getColor());
+                ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), players.size());
         newPlayer.setPosition(newPoint);
         newPlayer.setAngle(newPlayer.getPosition().getAngleToPoint(gameSettings.getWidth() / 2d, gameSettings.getHeight() / 2d));
         System.out.printf("START: [%f, %f]\tAngle: %f rad\t MIDT: [%f, %f] ", newPoint.getX(), newPoint.getY(), newPlayer.getAngle(), gameSettings.getWidth() / 2d, gameSettings.getHeight() / 2d);

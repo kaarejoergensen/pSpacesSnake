@@ -1,22 +1,23 @@
 package org.team08.pspacessnake.Model;
-import javafx.scene.paint.Color;
 
 @SuppressWarnings("restriction")
 public class Point {
     private final double x;    // The X coordinate
     private final double y;    // The Y coordinate
     private double radius;
-    private Color color;
+    private int color;
+    private boolean hole;
+    private PowerUps powerUps;
 
 
     public Point(final double x, final double y) {
     	this.x = x;
         this.y = y;
         this.setRadius(2.5d); // default value
-        this.color = new Color(0.5, 0.5, 1.0, 1.0); // default value
+        this.color = 1;
     }
 
-    public Point(final double x, final double y, final Color color) {
+    public Point(final double x, final double y, final int color) {
         this.x = x;
         this.y = y;
         this.setRadius(2.5d); // default value
@@ -27,23 +28,16 @@ public class Point {
         this.x = x;
         this.y = y;
         this.setRadius(radius);
-        this.color = new Color(1.0, 0.5, 0.5, 1.0); // default value
+        this.color = 1;
     }
 
-    public Point(final double x, final double y, final double radius, Color color) {
+    public Point(final double x, final double y, final double radius, int color) {
         this.x = x;
         this.y = y;
         this.setRadius(radius);
-        this.setColor(color);
+        this.color = color;
     }
 
-    public Color getColor() {
-        return color;
-    }
-
-	public void setColor(Color color) {
-		this.color = color;
-	}
 
     public double getX() {
         return x;
@@ -60,7 +54,31 @@ public class Point {
 	public void setRadius(double radius) {
 		this.radius = radius;
 	}
- 	
+
+    public PowerUps getPowerUps() {
+        return powerUps;
+    }
+
+    public void setPowerUps(PowerUps powerUps) {
+        this.powerUps = powerUps;
+    }
+
+    public boolean isHole() {
+        return hole;
+    }
+
+    public void setHole(boolean hole) {
+        this.hole = hole;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
     public Point translate(double dx, double dy) {
         return new Point(x + dx, y + dy, this.getRadius(), this.getColor());
     }
@@ -69,15 +87,15 @@ public class Point {
         return new Point(x + dx, y + dy, radius, this.getColor());
     }
 
-    public Point translate(double dx, double dy, Color color) {
+    public Point translate(double dx, double dy, int color) {
         return new Point(x + dx, y + dy, this.getRadius(), color);
     }
     
-    public Point translate(double dx, double dy, double radius, Color color) {
+    public Point translate(double dx, double dy, double radius, int color) {
         return new Point(x + dx, y + dy, radius, color);
     }
 
-    public Point translate(double dx, double dy, double radius, Color color, int boardWidth, int boardHeight) {
+    public Point translate(double dx, double dy, double radius, int color, int boardWidth, int boardHeight) {
         return new Point((x + dx + boardWidth) % boardWidth, (y + dy + boardHeight) % boardHeight, radius, color);
     }
 
