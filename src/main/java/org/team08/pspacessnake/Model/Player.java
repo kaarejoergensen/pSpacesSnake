@@ -37,7 +37,6 @@ public class Player {
     		this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getPosition().getRadius(), this.getColor(), boardWidth, boardHeight);
     	else
     		this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getPosition().getRadius(), this.getColor()); 
-    	System.out.println(this.position);
     	return this.position;
     }
 
@@ -132,7 +131,7 @@ public class Player {
 
     public void kill() {
         this.isDead = true;
-        System.out.printf("Spiller: %s er død\n", this.getToken().getName());
+        System.out.printf("Player: %s is dead\n", this.getToken().getName());
     }
 
     public void setRemember(boolean holes) {
