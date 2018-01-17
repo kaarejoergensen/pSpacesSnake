@@ -105,8 +105,8 @@ public class GameLogic {
 	private boolean hitsPowerUp(Player player) {
 		for (PowerUps thisPowerUp : powerups) {
 			if (player.getPosition().distance(thisPowerUp.getPosition()) < player.getPosition().getRadius() + 10) {
-				powerups.remove(thisPowerUp);
 				player.setPower(thisPowerUp);
+				powerups.remove(thisPowerUp);
 				return true;
 			}
 		}
