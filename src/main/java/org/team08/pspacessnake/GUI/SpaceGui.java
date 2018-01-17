@@ -294,15 +294,6 @@ public class SpaceGui {
         context.clearRect(0, 0, WIDTH, HEIGHT);
     }
 
-
-    private void holes(Point point) {
-        drawPoint(point);
-        if (!points.isEmpty()) {
-            clearPoint(points.remove(points.size() - 1));
-        }
-        points.add(point);
-    }
-
     public void updateGui(Point point) {
         PowerUps playerPower = point.getPowerUps();
         if (playerPower != null) {
@@ -311,8 +302,6 @@ public class SpaceGui {
         if (!point.isHole()) {
             drawPoint(point);
             points.add(point);
-        } else {
-            holes(point);
         }
     }
 
