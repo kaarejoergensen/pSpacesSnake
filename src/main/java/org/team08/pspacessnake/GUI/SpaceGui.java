@@ -47,6 +47,7 @@ public class SpaceGui {
     private ObservableList<String> messages;
     private ObservableList<String> roomNames;
     private boolean roomEntered = false;
+    private Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE, Color.YELLOW, Color.SADDLEBROWN};
 
     @FXML
     private VBox enterNameLayout;
@@ -283,7 +284,7 @@ public class SpaceGui {
         clear();
         int i = 100;
         for (Player player : players) {
-            context.setFill(player.getColor());
+            context.setFill(colorList[player.getColor()]);
             context.fillText(player.getToken().getName() + "\t\t\t" + (player.isReady() ? "Ready!" : "Not ready"), WIDTH / 2, i);
             i += 50;
         }
@@ -326,7 +327,7 @@ public class SpaceGui {
     }
 
     private void drawPoint(Point point) {
-        context.setFill(point.getColor());
+        context.setFill(colorList[point.getColor()]);
         context.fillOval(point.getX() - point.getRadius(), point.getY() - point.getRadius(),
                 2 * point.getRadius(), 2 * point.getRadius());
     }

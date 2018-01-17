@@ -1,6 +1,5 @@
 package org.team08.pspacessnake.Server;
 
-import javafx.scene.paint.Color;
 import org.team08.pspacessnake.Model.*;
 
 import java.util.*;
@@ -18,7 +17,6 @@ public class GameLogic {
     private int numCols;
     private LinkedList<Point>[][] boardCells;
     private ListIterator<Point>[][] boardCellsIterators;
-    private Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE, Color.YELLOW, Color.SADDLEBROWN};
     private ArrayList<PowerUps> powerups = new ArrayList<PowerUps>();
     private static int i = 0;
 
@@ -60,7 +58,7 @@ public class GameLogic {
     public PowerUps makePowerup() {
         PowerUps newPowerup = new PowerUps();
         Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5),
-                ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), null);
+                ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), 0);
         newPowerup.setPosition(newPoint);
         powerups.add(newPowerup);
 
@@ -185,10 +183,8 @@ public class GameLogic {
                 break;
             case "Edge":
                 player.setEdgeJumper(true);
-                player.setColor(player.getColor().desaturate());
                 execute.schedule(() -> {
                     player.setEdgeJumper(false);
-                    player.setColor(player.getColor().saturate());
                 }, 8, TimeUnit.SECONDS);
                 break;
         }
@@ -222,7 +218,7 @@ public class GameLogic {
 
     public Player makePlayer(Token token) {
         Player newPlayer = new Player(token);
-        newPlayer.setColor(colorList[players.size()]);
+        newPlayer.setColor(players.size());
         Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5),
                 ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), newPlayer.getColor());
         newPlayer.setPosition(newPoint);
