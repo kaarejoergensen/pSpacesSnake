@@ -306,7 +306,8 @@ public class SpaceGui {
         Point point = player.getPosition();
         PowerUps playerPower = player.getPower();
         if (playerPower != null) {
-        	playerPower
+        	clearPowerUp(playerPower);
+        	player.setPower(null);
         }
         if (player.getRemember()) {
             drawPoint(point);
@@ -330,9 +331,15 @@ public class SpaceGui {
                 2 * point.getRadius(), 2 * point.getRadius());
     }
 
-    public void clearPoint(Point point) {
+    private void clearPoint(Point point) {
         context.clearRect(point.getX() - point.getRadius(), point.getY() - point.getRadius(),
                 2 * point.getRadius(), 2 * point.getRadius());
+    }
+
+    private void clearPowerUp(PowerUps powerUps) {
+        context.clearRect(powerUps.getPosition().getX() - 10, powerUps.getPosition().getY() - 10,
+                20, 20);
+//        points.stream().skip(Math.max(0, points.size() - 10)).forEach(this::drawPoint);
     }
 
     public void addPowerUp(PowerUps power) {
