@@ -315,7 +315,7 @@ public class SpaceGui {
     private void drawImage(PowerUps power) {
         switch (power.getPower()) {
             case "Fast":
-                Image image = new Image("SpaceLightning.png");
+                Image image = new Image("powerup.png");
                 context.drawImage(image, power.getPosition().getX(), power.getPosition().getY(), 20.0, 20.0);
         }
     }

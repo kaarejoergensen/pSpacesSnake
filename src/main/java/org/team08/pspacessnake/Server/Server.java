@@ -106,14 +106,19 @@ class GameWriter implements Runnable {
                     float time = System.currentTimeMillis();
                     List<Player> players = gameLogic.nextFrame();
                     for (Player startedPlayer : gameLogic.getStartedPlayers()) {
-                        for (Iterator<Player> it = players.iterator(); it.hasNext();) {
-                        	Player activePlayer = it.next();
+                        for (Iterator<Player> it = players.iterator(); it.hasNext(); ) {
+                            Player activePlayer = it.next();
                             if (activePlayer.isDead()) {
                                 space.put("message", "Player '" + activePlayer.getToken().getName() + "' died!", new Token("0", "System"));
-								it.remove();
+                                it.remove();
                             }
                             space.put("Player moved", activePlayer, startedPlayer.getToken());
                         }
+                    }
+                    if (gameLogic.getPlayers().size() == 1 && gameLogic.getStartedPlayers().size() > 1) {
+                        space.put("message", "Player '" + gameLogic.getPlayers().get(0).getToken().getName() + "' won!",
+                                new Token("0", "System"));
+                        break;
                     }
                     time = System.currentTimeMillis() - time;
                     if (time < 1000.0f / frameRate) {
@@ -282,24 +287,24 @@ class Chat implements Runnable {
 }
 
 class HeartbeatClient implements Runnable {
-	private Space space;
-	private String roomURL;
+    private Space space;
+    private String roomURL;
 
-	public HeartbeatClient(Space space, String roomURL) {
-		this.space = space;
-		this.roomURL = roomURL;
-	}
+    public HeartbeatClient(Space space, String roomURL) {
+        this.space = space;
+        this.roomURL = roomURL;
+    }
 
-	@Override
-	public void run() {
-		while (true) {
-			try {
-				space.put("heartbeat", roomURL);
-				Thread.sleep(25000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                space.put("heartbeat", roomURL);
+                Thread.sleep(25000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
-		}
-	}
+        }
+    }
 }

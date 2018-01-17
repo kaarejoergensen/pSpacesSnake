@@ -177,10 +177,7 @@ public class GameLogic {
 			if (player.getRemember()) {
 				addPoint(player);
 				player.getPosition().setRadius(2.5d);
-				// player.getPosition().setColor(Color.DARKORANGE);
 			}
-			// else player.getPosition().setColor(Color.BLACK);
-//			else player.getPosition().setRadius(0d);;
 			if (checkCollision(player.getPosition()) || checkBufferedPointsCollision(player)) player.kill();
 			//collisionPowerUp(player);
 		}
