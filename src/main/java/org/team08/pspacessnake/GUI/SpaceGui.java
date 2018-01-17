@@ -331,7 +331,8 @@ public class SpaceGui {
     }
 
     private void clearPoint(Point point) {
-        context.clearRect(point.getX() - point.getRadius(), point.getY() - point.getRadius(),
+        context.setFill(new Color(0.1,0.1,0.1,1));
+        context.fillOval(point.getX() - point.getRadius(), point.getY() - point.getRadius(),
                 2 * point.getRadius(), 2 * point.getRadius());
     }
 

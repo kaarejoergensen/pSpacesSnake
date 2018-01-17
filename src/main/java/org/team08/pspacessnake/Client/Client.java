@@ -172,7 +172,7 @@ class GameReader implements Runnable {
                 Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(Point.class),
                         new ActualField(token));
                 gui.updateGui((Point) newPoint[1]);
-                List<Object[]> points = space.getAll((new ActualField("Player moved"), new FormalField(Point.class),
+                List<Object[]> points = space.getAll(new ActualField("Player moved"), new FormalField(Point.class),
                         new ActualField(token));
                 points.stream().map(o -> (Point) o[1]).forEach(p -> gui.updateGui(p));
             }
