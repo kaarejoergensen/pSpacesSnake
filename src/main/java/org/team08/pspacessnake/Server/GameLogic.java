@@ -4,7 +4,9 @@ import javafx.scene.paint.Color;
 import org.team08.pspacessnake.Model.*;
 
 import java.util.*;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 //@SuppressWarnings("restriction")
@@ -156,16 +158,55 @@ public class GameLogic {
 			}
 		}
 	}
-/*	public void collisionPowerUp(Player player) {
+	public void collisionPowerUp(Player player) {
 		for (Powerups power : powerups) {
-			if (checkPowerUpCollision(player.getPosition(),powerups)) {
+			if (checkPowerUpCollision(player.getPosition(),power)) {
+				ScheduledThreadPoolExecutor execute = new ScheduledThreadPoolExecutor(1);
 				switch (power.getPower()) {
-					case "Fast": player.setSpeed(player.getSpeed()*2);
+					case "Fast":
+						player.setSpeed(player.getSpeed()*2);
+						execute.schedule(new Runnable() {
+							@Override
+							public void run() {
+								player.setSpeed(player.getSpeed()/2);
+							}
+						}, 4, TimeUnit.SECONDS);
+					case "Big":
+						player.getPosition().setRadius(player.getPosition().getRadius()*2);
+						execute.schedule(new Runnable() {
+							@Override
+							public void run() {
+								player.getPosition().setRadius(player.getPosition().getRadius()/2);
+							}
+						}, 4, TimeUnit.SECONDS);
+
+					case "Angel":
+						double startAngle = player.getDAngle();
+						player.setDAngle(Math.PI/2);
+						execute.schedule(new Runnable() {
+							@Override
+							public void run() {
+								player.setDAngle(startAngle);
+							}
+						}, 4, TimeUnit.SECONDS);
+					case "Edge":
+						player.setEdgeJumper(true);
+						player.setColor(player.getColor().desaturate());
+						execute.schedule(new Runnable() {
+							@Override
+							public void run() {
+								player.setEdgeJumper(false);
+								player.setColor(player.getColor().saturate());
+							}
+						}, 8, TimeUnit.SECONDS);
+
+
 				}
+				player.setPower(power);
 
 			}
 		}
-	} */
+	}
 
 	public List<Player> nextFrame() {
 		for (Player player : players) {
