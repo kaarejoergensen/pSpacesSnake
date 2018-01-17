@@ -57,8 +57,11 @@ public class GameLogic {
 
     public PowerUps makePowerup() {
         PowerUps newPowerup = new PowerUps();
-        Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5),
-                ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), null);
+        Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5), ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), 10d);
+        while (checkCollision(newPoint)) {
+        	newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5), ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), 10d);
+        	
+        }
         newPowerup.setPosition(newPoint);
         powerups.add(newPowerup);
 
@@ -72,6 +75,7 @@ public class GameLogic {
     private boolean checkCollision(Point point) {
         int pointCellX = getCellX(point); //the x coordinate of the bin the point belongs to.
         int pointCellY = getCellY(point); //the y coordinate of the bin the point belongs to.
+        Point usedPoint;
 
         Iterator<Point> tempIterator;
         for (int dx = -1; dx <= 1; dx++) {
@@ -82,7 +86,8 @@ public class GameLogic {
                     continue;
                 tempIterator = boardCells[pointCellY + dy][pointCellX + dx].listIterator();
                 while (tempIterator.hasNext()) {
-                    if (point.distance((Point) tempIterator.next()) < 5d)
+                	usedPoint = (Point) tempIterator.next();
+                    if (point.distance(usedPoint) < point.getRadius() + usedPoint.getRadius())
                         return true;
                 }
 
@@ -104,7 +109,7 @@ public class GameLogic {
 
     private PowerUps hitPowerUp(Player player) {
         for (PowerUps thisPowerUp : powerups) {
-            if (player.getPosition().distance(thisPowerUp.getPosition()) < player.getPosition().getRadius() + 10) {
+            if (player.getPosition().distance(thisPowerUp.getPosition()) < player.getPosition().getRadius() + thisPowerUp.getPosition().getRadius()) {
                 return thisPowerUp;
             }
         }
