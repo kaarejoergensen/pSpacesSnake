@@ -202,6 +202,8 @@ public class GameLogic {
             if (player.getRemember()) {
                 addPoint(player);
                 player.getPosition().setRadius(2.5d);
+            } else {
+                player.getPosition().setHole(true);
             }
             if (checkCollision(player.getPosition()) || checkBufferedPointsCollision(player)) player.kill();
             PowerUps powerUps = hitPowerUp(player);

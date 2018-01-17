@@ -6,6 +6,7 @@ public class Point {
     private final double y;    // The Y coordinate
     private double radius;
     private int color;
+    private boolean hole;
 
 
     public Point(final double x, final double y) {
@@ -52,6 +53,14 @@ public class Point {
 	public void setRadius(double radius) {
 		this.radius = radius;
 	}
+
+    public boolean isHole() {
+        return hole;
+    }
+
+    public void setHole(boolean hole) {
+        this.hole = hole;
+    }
 
     public int getColor() {
         return color;
