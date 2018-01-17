@@ -190,6 +190,10 @@ public class GameLogic {
 			}
 			if (player.getRemember()) {
 				addPoint(player);
+<<<<<<< HEAD
+=======
+				player.getPosition().setRadius(2.5d);
+>>>>>>> branch 'master' of https://github.com/kaarejoergensen/pSpacesSnake.git
 			}
 			if (checkCollision(player.getPosition()) || checkBufferedPointsCollision(player)) player.kill();
 			if (hitsPowerUp(player)) {}
