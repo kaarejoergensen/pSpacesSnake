@@ -4,10 +4,7 @@ import javafx.scene.paint.Color;
 import org.team08.pspacessnake.Model.*;
 
 import java.util.*;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 //@SuppressWarnings("restriction")
 public class GameLogic {
@@ -15,214 +12,172 @@ public class GameLogic {
     private List<Player> startedPlayers;
     private boolean isStarted = false;
     private GameSettings gameSettings;
-	private int numRows;
-	private int numCols;
-	private LinkedList<Point>[][] boardCells;
-	private ListIterator<Point>[][] boardCellsIterators;
-	private Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE};
-	private ArrayList<PowerUps> powerups = new ArrayList<PowerUps>();
-	private static int i = 0;
+    private int numRows;
+    private int numCols;
+    private LinkedList<Point>[][] boardCells;
+    private ListIterator<Point>[][] boardCellsIterators;
+    private Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE, Color.YELLOW, Color.SADDLEBROWN};
+    private ArrayList<PowerUps> powerups = new ArrayList<PowerUps>();
+    private static int i = 0;
 
-	public GameLogic() {
-		this.players = new ArrayList<>();
-		initiateCellLists();
-	}
+    public GameLogic() {
+        this.players = new ArrayList<>();
+        initiateCellLists();
+    }
 
-	public GameLogic(GameSettings gameSettings) {
-		this.players = new ArrayList<>();
-		this.gameSettings = gameSettings;
-		initiateCellLists();
-	}
+    public GameLogic(GameSettings gameSettings) {
+        this.players = new ArrayList<>();
+        this.gameSettings = gameSettings;
+        initiateCellLists();
+    }
 
-	// Initialiste 2D arrays
-	private void initiateCellLists() {
+    // Initialiste 2D arrays
+    private void initiateCellLists() {
 
-		numRows = (int) Math.floor(gameSettings.getHeight() / (double) gameSettings.getCellSize()) + 1;
-		numCols = (int) Math.floor(gameSettings.getWidth() / (double) gameSettings.getCellSize()) + 1;
-		boardCells = (LinkedList<Point>[][]) new LinkedList<?>[numRows][numCols];
-		boardCellsIterators = (ListIterator<Point>[][]) new ListIterator<?>[numRows][numCols];
+        numRows = (int) Math.floor(gameSettings.getHeight() / (double) gameSettings.getCellSize()) + 1;
+        numCols = (int) Math.floor(gameSettings.getWidth() / (double) gameSettings.getCellSize()) + 1;
+        boardCells = (LinkedList<Point>[][]) new LinkedList<?>[numRows][numCols];
+        boardCellsIterators = (ListIterator<Point>[][]) new ListIterator<?>[numRows][numCols];
 
-		for (int row = 0; row < numRows; row++) {
-			for (int col = 0; col < numCols; col++) {
-				boardCells[row][col] = new LinkedList<Point>();
-				boardCellsIterators[row][col] = boardCells[row][col].listIterator();
-			}
-		}
-	}
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                boardCells[row][col] = new LinkedList<Point>();
+                boardCellsIterators[row][col] = boardCells[row][col].listIterator();
+            }
+        }
+    }
 
-	public List<Player> getPlayers() {
-		return this.players;
-	}
-	
-	public ArrayList<PowerUps> getPowerups() {
-		return powerups;
-	}
-	
-	public PowerUps makePowerup() {
-		PowerUps newPowerup = new PowerUps();
-		Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5),
+    public List<Player> getPlayers() {
+        return this.players;
+    }
+
+    public ArrayList<PowerUps> getPowerups() {
+        return powerups;
+    }
+
+    public PowerUps makePowerup() {
+        PowerUps newPowerup = new PowerUps();
+        Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5),
                 ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), null);
-		newPowerup.setPosition(newPoint);
-		powerups.add(newPowerup);
-		
-		return newPowerup;
-	}
+        newPowerup.setPosition(newPoint);
+        powerups.add(newPowerup);
 
-	private boolean playerIsOnBoard(Point point) {
-		return (0d <= point.getX() && point.getX() <= gameSettings.getWidth() && 0d <= point.getY() && point.getY() <= gameSettings.getHeight());
-	}
+        return newPowerup;
+    }
 
-	private boolean checkCollision(Point point) {
-		int pointCellX = getCellX(point); //the x coordinate of the bin the point belongs to.
-		int pointCellY = getCellY(point); //the y coordinate of the bin the point belongs to.
+    private boolean playerIsOnBoard(Point point) {
+        return (0d <= point.getX() && point.getX() <= gameSettings.getWidth() && 0d <= point.getY() && point.getY() <= gameSettings.getHeight());
+    }
 
-		Iterator<Point> tempIterator;
-		for (int dx = -1; dx <= 1; dx++) {
-			if (!(pointCellX + dx >= 0 && pointCellX + dx <= numRows))
-				continue;
-			for (int dy = -1; dy <= 1; dy++) {
-				if (!(pointCellY + dy >= 0 && pointCellY + dy <= numCols))
-					continue;
-				tempIterator = boardCells[pointCellY + dy][pointCellX + dx].listIterator();
-				while (tempIterator.hasNext()) {
-					if (point.distance((Point) tempIterator.next()) < 5d)
-						return true;
-				}
+    private boolean checkCollision(Point point) {
+        int pointCellX = getCellX(point); //the x coordinate of the bin the point belongs to.
+        int pointCellY = getCellY(point); //the y coordinate of the bin the point belongs to.
 
-			}
-		}
-		return false;
-	}
-	
-	private boolean checkBufferedPointsCollision(Player currentPlayer) {
-		for (Player thisPlayer : players) {
-			if (thisPlayer == currentPlayer) continue;
-			for (Point bufferPoint : thisPlayer.getPointBuffer())
-				if (currentPlayer.getPosition().distance(bufferPoint) < currentPlayer.getPosition().getRadius() + bufferPoint.getRadius()) {
-					return true;
-				}
-			}
-		return false;
-	}
+        Iterator<Point> tempIterator;
+        for (int dx = -1; dx <= 1; dx++) {
+            if (!(pointCellX + dx >= 0 && pointCellX + dx <= numRows))
+                continue;
+            for (int dy = -1; dy <= 1; dy++) {
+                if (!(pointCellY + dy >= 0 && pointCellY + dy <= numCols))
+                    continue;
+                tempIterator = boardCells[pointCellY + dy][pointCellX + dx].listIterator();
+                while (tempIterator.hasNext()) {
+                    if (point.distance((Point) tempIterator.next()) < 5d)
+                        return true;
+                }
 
-	private boolean hitsPowerUp(Player player) {
-		for (PowerUps thisPowerUp : powerups) {
-			if (player.getPosition().distance(thisPowerUp.getPosition()) < player.getPosition().getRadius() + 10) {
-				player.setPower(thisPowerUp);
-				powerups.remove(thisPowerUp);
-				return true;
-			}
-		}
-		return false;
-	}
+            }
+        }
+        return false;
+    }
 
-	private int getCellX(Point point) {
-		return (int) point.getX() / gameSettings.getCellSize();
-	}
+    private boolean checkBufferedPointsCollision(Player currentPlayer) {
+        for (Player thisPlayer : players) {
+            if (thisPlayer == currentPlayer) continue;
+            for (Point bufferPoint : thisPlayer.getPointBuffer())
+                if (currentPlayer.getPosition().distance(bufferPoint) < currentPlayer.getPosition().getRadius() + bufferPoint.getRadius()) {
+                    return true;
+                }
+        }
+        return false;
+    }
 
-	private int getCellY(Point point) {
-		return (int) point.getY() / gameSettings.getCellSize();
-	}
+    private PowerUps hitPowerUp(Player player) {
+        for (PowerUps thisPowerUp : powerups) {
+            if (player.getPosition().distance(thisPowerUp.getPosition()) < player.getPosition().getRadius() + 10) {
+                return thisPowerUp;
+            }
+        }
+        return null;
+    }
 
-	/*
-	 * Adds new player position to buffer and releases non-overlapping buffered points to appropriate cell.  
-	 */
-	private void addPoint(Player currentPlayer) {
-		Point playerPos = currentPlayer.getPosition();
-		for (Point bufferPoint : currentPlayer.getPointBuffer()) {
-			if (playerPos.distance(bufferPoint) > playerPos.getRadius() + bufferPoint.getRadius()) {
-				boardCellsIterators[getCellY(bufferPoint)][getCellX(bufferPoint)].add(bufferPoint);
-				currentPlayer.getPointBuffer().remove(bufferPoint);
-			}
-		}
-		currentPlayer.getPointBuffer().add(currentPlayer.getPosition());
-	}
+    private int getCellX(Point point) {
+        return (int) point.getX() / gameSettings.getCellSize();
+    }
 
-	public GameSettings getGameSettings() {
-		return this.gameSettings;
-	}
+    private int getCellY(Point point) {
+        return (int) point.getY() / gameSettings.getCellSize();
+    }
 
-	public void addPlayer(Player player) {
-		if (this.players == null) {
-			this.players = new ArrayList<>();
-		}
-		this.players.add(player);
-	}
+    /*
+     * Adds new player position to buffer and releases non-overlapping buffered points to appropriate cell.
+     */
+    private void addPoint(Player currentPlayer) {
+        Point playerPos = currentPlayer.getPosition();
+        for (Point bufferPoint : currentPlayer.getPointBuffer()) {
+            if (playerPos.distance(bufferPoint) > playerPos.getRadius() + bufferPoint.getRadius()) {
+                boardCellsIterators[getCellY(bufferPoint)][getCellX(bufferPoint)].add(bufferPoint);
+                currentPlayer.getPointBuffer().remove(bufferPoint);
+            }
+        }
+        currentPlayer.getPointBuffer().add(currentPlayer.getPosition());
+    }
 
-	public boolean isStarted() {
-		return isStarted;
-	}
+    public GameSettings getGameSettings() {
+        return this.gameSettings;
+    }
 
-	public void setStarted(boolean started) {
-		isStarted = started;
-	}
+    public void addPlayer(Player player) {
+        if (this.players == null) {
+            this.players = new ArrayList<>();
+        }
+        this.players.add(player);
+    }
 
-	public void startGame() {
-		this.isStarted = true;
-	}
+    public boolean isStarted() {
+        return isStarted;
+    }
 
-	public void changeDirection(Token token, String direction) {
-		for (Player player : players) {
-			if (player.getToken().equals(token)) {
-				player.setDirection(direction);
-				break;
-			}
-		}
-	}
-	public void collisionPowerUp(Player player) {
+    public void setStarted(boolean started) {
+        isStarted = started;
+    }
+
+    public void startGame() {
+        this.isStarted = true;
+    }
+
+    public void changeDirection(Token token, String direction) {
+        for (Player player : players) {
+            if (player.getToken().equals(token)) {
+                player.setDirection(direction);
+                break;
+            }
+        }
+    }
 
 	/*	public void collisionPowerUp(Player player) {
 		for (Powerups power : powerups) {
-			if (checkPowerUpCollision(player.getPosition(),power)) {
-				ScheduledThreadPoolExecutor execute = new ScheduledThreadPoolExecutor(1);
+			if (checkPowerUpCollision(player.getPosition(),powerups)) {
 				switch (power.getPower()) {
-					case "Fast":
-						player.setSpeed(player.getSpeed()*2);
-						execute.schedule(new Runnable() {
-							@Override
-							public void run() {
-								player.setSpeed(player.getSpeed()/2);
-							}
-						}, 4, TimeUnit.SECONDS);
-					case "Big":
-						player.getPosition().setRadius(player.getPosition().getRadius()*2);
-						execute.schedule(new Runnable() {
-							@Override
-							public void run() {
-								player.getPosition().setRadius(player.getPosition().getRadius()/2);
-							}
-						}, 4, TimeUnit.SECONDS);
-
-					case "Angel":
-						double startAngle = player.getDAngle();
-						player.setDAngle(Math.PI/2);
-						execute.schedule(new Runnable() {
-							@Override
-							public void run() {
-								player.setDAngle(startAngle);
-							}
-						}, 4, TimeUnit.SECONDS);
-					case "Edge":
-						player.setEdgeJumper(true);
-						player.setColor(player.getColor().desaturate());
-						execute.schedule(new Runnable() {
-							@Override
-							public void run() {
-								player.setEdgeJumper(false);
-								player.setColor(player.getColor().saturate());
-							}
-						}, 8, TimeUnit.SECONDS);
-
-
+					case "Fast": player.setSpeed(player.getSpeed()*2);
 				}
-				player.setPower(power);
 
 			}
 		}
-	}
+	} */
 
-
-
+	
+	
 	public List<Player> nextFrame() {
 		for (Player player : players) {
 			player.turn();
@@ -233,22 +188,23 @@ public class GameLogic {
 			}
 			if (player.getRemember()) {
 				addPoint(player);
-<<<<<<< HEAD
-=======
 				player.getPosition().setRadius(2.5d);
->>>>>>> branch 'master' of https://github.com/kaarejoergensen/pSpacesSnake.git
 			}
-			// else player.getPosition().setColor(Color.BLACK);
-			else player.getPosition().setRadius(0d);;
 			if (checkCollision(player.getPosition()) || checkBufferedPointsCollision(player)) player.kill();
-			if (hitsPowerUp(player)) {}
+			PowerUps powerUps = hitPowerUp(player);
+			if (powerUps != null && player.getPower() == null) {
+                player.setPower(powerUps);
+                powerups.remove(powerUps);
+            } else {
+			    player.setPower(null);
+            }
 		}
 		return players;
 	}
 
-	public Player makePlayer(Token token) {
+    public Player makePlayer(Token token) {
         Player newPlayer = new Player(token);
-        newPlayer.setColor(colorList[ThreadLocalRandom.current().nextInt(0,4)]);
+        newPlayer.setColor(colorList[players.size()]);
         Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5),
                 ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), newPlayer.getColor());
         newPlayer.setPosition(newPoint);
@@ -257,11 +213,11 @@ public class GameLogic {
         return newPlayer;
     }
 
-	public List<Player> getStartedPlayers() {
-		return startedPlayers;
-	}
-	
-	public void setStartedPlayers() {
-		startedPlayers = new ArrayList<>(players);
-	}
+    public List<Player> getStartedPlayers() {
+        return startedPlayers;
+    }
+
+    public void setStartedPlayers() {
+        startedPlayers = new ArrayList<>(players);
+    }
 }
