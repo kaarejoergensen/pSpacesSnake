@@ -168,78 +168,57 @@ public class GameLogic {
     }
 
     public void collisionPowerUp(Player player, PowerUps power) {
-
-                ScheduledThreadPoolExecutor execute = new ScheduledThreadPoolExecutor(1);
-                switch (power.getPower()) {
-                    case "Fast":
-                        player.setSpeed(player.getSpeed()*2);
-                        execute.schedule(new Runnable() {
-                            @Override
-                            public void run() {
-                                player.setSpeed(player.getSpeed()/2);
-                            }
-                        }, 4, TimeUnit.SECONDS);
-                    case "Big":
-                        player.getPosition().setRadius(player.getPosition().getRadius()*2);
-                        execute.schedule(new Runnable() {
-                            @Override
-                            public void run() {
-                                player.getPosition().setRadius(player.getPosition().getRadius()/2);
-                            }
-                        }, 4, TimeUnit.SECONDS);
-
-                    case "Angel":
-                        double startAngle = player.getDAngle();
-                        player.setDAngle(Math.PI/2);
-                        execute.schedule(new Runnable() {
-                            @Override
-                            public void run() {
-                                player.setDAngle(startAngle);
-                            }
-                        }, 4, TimeUnit.SECONDS);
-                    case "Edge":
-                        player.setEdgeJumper(true);
-                        player.setColor(player.getColor().desaturate());
-                        execute.schedule(new Runnable() {
-                            @Override
-                            public void run() {
-                                player.setEdgeJumper(false);
-                                player.setColor(player.getColor().saturate());
-                            }
-                        }, 8, TimeUnit.SECONDS);
-
-
-                }
-
-
+        ScheduledThreadPoolExecutor execute = new ScheduledThreadPoolExecutor(1);
+        switch (power.getPower()) {
+            case "Fast":
+                player.setSpeed(player.getSpeed() * 2);
+                execute.schedule(() -> player.setSpeed(player.getSpeed() / 2), 4, TimeUnit.SECONDS);
+                break;
+            case "Big":
+                player.getPosition().setRadius(player.getPosition().getRadius() * 2);
+                execute.schedule(() -> player.getPosition().setRadius(player.getPosition().getRadius() / 2), 4, TimeUnit.SECONDS);
+                break;
+            case "Angel":
+                double startAngle = player.getDAngle();
+                player.setDAngle(Math.PI / 2);
+                execute.schedule(() -> player.setDAngle(startAngle), 4, TimeUnit.SECONDS);
+                break;
+            case "Edge":
+                player.setEdgeJumper(true);
+                player.setColor(player.getColor().desaturate());
+                execute.schedule(() -> {
+                    player.setEdgeJumper(false);
+                    player.setColor(player.getColor().saturate());
+                }, 8, TimeUnit.SECONDS);
+                break;
+        }
     }
 
-	
-	
-	public List<Player> nextFrame() {
-		for (Player player : players) {
-			player.turn();
-			player.move(gameSettings.getWidth(), gameSettings.getHeight());
-			if (!playerIsOnBoard(player.getPosition())) {
-				player.kill();
-				continue;
-			}
-			if (player.getRemember()) {
-				addPoint(player);
-				player.getPosition().setRadius(2.5d);
-			}
-			if (checkCollision(player.getPosition()) || checkBufferedPointsCollision(player)) player.kill();
-			PowerUps powerUps = hitPowerUp(player);
-			if (powerUps != null && player.getPower() == null) {
-			    collisionPowerUp(player, powerUps);
+
+    public List<Player> nextFrame() {
+        for (Player player : players) {
+            player.turn();
+            player.move(gameSettings.getWidth(), gameSettings.getHeight());
+            if (!playerIsOnBoard(player.getPosition())) {
+                player.kill();
+                continue;
+            }
+            if (player.getRemember()) {
+                addPoint(player);
+                player.getPosition().setRadius(2.5d);
+            }
+            if (checkCollision(player.getPosition()) || checkBufferedPointsCollision(player)) player.kill();
+            PowerUps powerUps = hitPowerUp(player);
+            if (powerUps != null && player.getPower() == null) {
+                collisionPowerUp(player, powerUps);
                 player.setPower(powerUps);
                 powerups.remove(powerUps);
             } else {
-			    player.setPower(null);
+                player.setPower(null);
             }
-		}
-		return players;
-	}
+        }
+        return players;
+    }
 
     public Player makePlayer(Token token) {
         Player newPlayer = new Player(token);
