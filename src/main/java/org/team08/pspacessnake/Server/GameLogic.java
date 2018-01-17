@@ -176,7 +176,7 @@ public class GameLogic {
                 player.getPosition().setRadius(player.getPosition().getRadius() * 2);
                 execute.schedule(() -> player.getPosition().setRadius(player.getPosition().getRadius() / 2), 4, TimeUnit.SECONDS);
                 break;
-            case "Angel":
+            case "Angle":
                 double startAngle = player.getDAngle();
                 player.setDAngle(Math.PI / 2);
                 execute.schedule(() -> player.setDAngle(startAngle), 4, TimeUnit.SECONDS);
