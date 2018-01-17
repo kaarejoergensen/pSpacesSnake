@@ -67,10 +67,12 @@ class CreatePowerUp implements Runnable {
 
     @Override
     public void run() {
+        int waitTime;
         try {
             space.query(new ActualField("Game started"), new ActualField(true));
             while (gameLogic.isStarted()) {
-                Thread.sleep((long) (10000/gameLogic.getPlayers().size()));
+                waitTime = gameLogic.getPlayers().size() == 0 ? 10000 : 10000/gameLogic.getPlayers().size();
+                Thread.sleep((long) waitTime);
                 PowerUps newPowerup = gameLogic.makePowerup();
                 for (Player player : gameLogic.getPlayers()) {
                     space.put("New Powerup", newPowerup, player.getToken());

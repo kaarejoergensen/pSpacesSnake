@@ -189,6 +189,7 @@ public class GameLogic {
             case "Small":
                 player.getPosition().setRadius(player.getPosition().getRadius() / 2);
                 execute.schedule(() -> player.getPosition().setRadius(player.getPosition().getRadius() * 2), 4, TimeUnit.SECONDS);
+                break;
             case "Angle":
                 player.setCoarseStartAngle(Player.reduceAngleToPrimaryInterval(player.getAngle()));
                 player.setCoarseTurner(true);
