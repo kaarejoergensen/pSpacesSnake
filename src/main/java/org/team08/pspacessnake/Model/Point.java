@@ -7,6 +7,7 @@ public class Point {
     private double radius;
     private int color;
     private boolean hole;
+    private PowerUps powerUps;
 
 
     public Point(final double x, final double y) {
@@ -53,6 +54,14 @@ public class Point {
 	public void setRadius(double radius) {
 		this.radius = radius;
 	}
+
+    public PowerUps getPowerUps() {
+        return powerUps;
+    }
+
+    public void setPowerUps(PowerUps powerUps) {
+        this.powerUps = powerUps;
+    }
 
     public boolean isHole() {
         return hole;

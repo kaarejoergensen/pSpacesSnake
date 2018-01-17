@@ -209,10 +209,10 @@ public class GameLogic {
             PowerUps powerUps = hitPowerUp(player);
             if (powerUps != null && player.getPower() == null) {
                 collisionPowerUp(player, powerUps);
-                player.setPower(powerUps);
+                player.getPosition().setPowerUps(powerUps);
                 powerups.remove(powerUps);
             } else {
-                player.setPower(null);
+                player.getPosition().setPowerUps(null);
             }
         }
         return players;

@@ -172,7 +172,6 @@ class GameReader implements Runnable {
                 Object[] newPoint = space.get(new ActualField("Player moved"), new FormalField(Point.class),
                         new ActualField(token));
                 gui.updateGui((Point) newPoint[1]);
-
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

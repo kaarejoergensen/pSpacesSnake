@@ -304,11 +304,10 @@ public class SpaceGui {
     }
 
     public void updateGui(Point point) {
-//        PowerUps playerPower = player.getPower();
-//        if (playerPower != null) {
-//        	clearPowerUp(playerPower);
-//        	player.setPower(null);
-//        }
+        PowerUps playerPower = point.getPowerUps();
+        if (playerPower != null) {
+        	clearPowerUp(playerPower);
+        }
         if (!point.isHole()) {
             drawPoint(point);
             points.add(point);
