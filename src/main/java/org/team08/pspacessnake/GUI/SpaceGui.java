@@ -326,6 +326,12 @@ public class SpaceGui {
     }
 
     private void clearPowerUp(PowerUps powerUps) {
+        if (powerUps.getPower().equals("Clear")) {
+            clear();
+            for (int i = 0; i < powers.size(); i++) {
+                drawImage(powers.get(i));
+            }
+        }
         context.clearRect(powerUps.getPosition().getX() - 10, powerUps.getPosition().getY() - 10,
                 20, 20);
     }

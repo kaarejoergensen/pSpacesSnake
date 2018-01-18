@@ -16,6 +16,7 @@ public class Player {
     private boolean ready;
     private boolean edgeJumper;
     private boolean coarseTurner;
+    private PowerUps power;
 
     public Player(Token token) {
         this.setToken(token);
@@ -36,6 +37,8 @@ public class Player {
             this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getPosition().getRadius(), this.position.getColor());
     	return this.position;
     }
+
+
 
     public double coarseAngle(double angle) {
         angle = reduceAngleToPrimaryInterval(angle);
@@ -174,4 +177,11 @@ public class Player {
 
     private double coarseStartAngle;
 
+    public PowerUps getPower() {
+        return power;
+    }
+
+    public void setPower(PowerUps power) {
+        this.power = power;
+    }
 }

@@ -119,6 +119,8 @@ class GameWriter implements Runnable {
                                 new Token("0", "System"));
                         break;
                     }
+
+
                     time = System.currentTimeMillis() - time;
                     if (time < 1000.0f / frameRate) {
                         Thread.sleep((long) (1000.0f / frameRate - time));
