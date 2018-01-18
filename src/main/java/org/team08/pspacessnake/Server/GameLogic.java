@@ -204,7 +204,10 @@ public class GameLogic {
                     player.setEdgeJumper(false);
                 }, 8, TimeUnit.SECONDS);
                 break;
+            case "Clear":
+                player.getPosition().setPowerUps(power);
         }
+
     }
 
 

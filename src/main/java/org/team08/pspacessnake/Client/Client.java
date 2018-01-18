@@ -115,8 +115,14 @@ class ReadPowerup implements Runnable {
 		try {
             space.query(new ActualField("Game started"), new ActualField(true));
             while (true) {
-                Object[] newPower = space.get(new ActualField("New Powerup"), new FormalField(PowerUps.class), new ActualField(token));
-                spaceGui.addPowerUp((PowerUps) newPower[1]);
+                Object[] newPower = space.get(new FormalField(String.class), new FormalField(PowerUps.class), new ActualField(token));
+                System.out.println((String) newPower[0]);
+                if (newPower[0] == "Clear") {
+                    spaceGui.clear();
+                } else {
+                    spaceGui.addPowerUp((PowerUps) newPower[1]);
+                }
+
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

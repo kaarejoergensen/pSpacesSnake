@@ -3,6 +3,7 @@ package org.team08.pspacessnake.Model;
 import java.util.LinkedList;
 
 public class Player {
+<<<<<<< HEAD
         private Token token;
         private Point position;
         private LinkedList<Point> pointBuffer = new LinkedList<Point>();
@@ -16,6 +17,22 @@ public class Player {
         private boolean ready;
         private boolean edgeJumper;
         private boolean coarseTurner;
+=======
+    private Token token;
+    private Point position;
+    private LinkedList<Point> pointBuffer = new LinkedList<Point>();
+    private Double speed;
+    private double size;		// diameter of snake head. 
+    private Double angle;		//current angler of movement
+    private double dAngle;		//the change of angle per frame.
+    private String direction;    //change of angle
+    private boolean isDead = false;
+    private boolean remember = true;
+    private boolean ready;
+    private boolean edgeJumper;
+    private boolean coarseTurner;
+    private PowerUps power;
+>>>>>>> branch 'master' of https://github.com/kaarejoergensen/pSpacesSnake.git
 
     public Player(Token token) {
         this.setToken(token);
@@ -36,6 +53,8 @@ public class Player {
             this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getPosition().getRadius(), this.position.getColor());
     	return this.position;
     }
+
+
 
     public double coarseAngle(double angle) {
         angle = reduceAngleToPrimaryInterval(angle);
@@ -174,4 +193,11 @@ public class Player {
 
     private double coarseStartAngle;
 
+    public PowerUps getPower() {
+        return power;
+    }
+
+    public void setPower(PowerUps power) {
+        this.power = power;
+    }
 }
