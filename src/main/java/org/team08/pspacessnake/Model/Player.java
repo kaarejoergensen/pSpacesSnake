@@ -28,16 +28,13 @@ public class Player {
 		this.setCoarseTurner(false);
 	}
 
-	public Point move(int boardWidth, int boardHeight) {
+	public void move(int boardWidth, int boardHeight) {
 		double angle = this.isCoarseTurner() ? coarseAngle(this.getAngle()) : this.getAngle();
 		if (this.isEdgeJumper())
 			this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getPosition().getRadius(), this.position.getColor(), boardWidth, boardHeight);
 		else
 			this.position = this.position.translate(speed * Math.cos(angle), -speed * Math.sin(angle), this.getPosition().getRadius(), this.position.getColor());
-		return this.position;
 	}
-
-
 
 	public double coarseAngle(double angle) {
 		angle = reduceAngleToPrimaryInterval(angle);
@@ -56,7 +53,7 @@ public class Player {
 		return angle % (Math.PI * 2);
 	}
 
-	public double turn() {
+	public void turn() {
 		if (!this.direction.equals("none")) {
 			if (this.direction.equals("left")) {
 				this.angle += this.dAngle;
@@ -64,7 +61,6 @@ public class Player {
 				this.angle -= this.dAngle;
 			}
 		}
-		return this.angle;
 	}
 
 	public Token getToken() {
