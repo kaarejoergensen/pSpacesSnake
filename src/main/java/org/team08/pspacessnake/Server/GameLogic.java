@@ -32,7 +32,7 @@ public class GameLogic {
     }
 
     // Initialiste 2D arrays
-    private void initiateCellLists() {
+    public void initiateCellLists() {
 
         numRows = (int) Math.floor(gameSettings.getHeight() / (double) gameSettings.getCellSize()) + 1;
         numCols = (int) Math.floor(gameSettings.getWidth() / (double) gameSettings.getCellSize()) + 1;

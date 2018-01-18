@@ -3,19 +3,19 @@ package org.team08.pspacessnake.Model;
 import java.util.LinkedList;
 
 public class Player {
-    private Token token;
-    private Point position;
-    private LinkedList<Point> pointBuffer = new LinkedList<Point>();
-    private Double speed;
-    private double size;		// diameter of snake head. 
-    private Double angle;		//current angler of movement
-    private double dAngle;		//the change of angle per frame.
-    private String direction;    //change of angle
-    private boolean isDead = false;
-    private boolean remember = true;
-    private boolean ready;
-    private boolean edgeJumper;
-    private boolean coarseTurner;
+        private Token token;
+        private Point position;
+        private LinkedList<Point> pointBuffer = new LinkedList<Point>();
+        private Double speed;
+        private double size;		// diameter of snake head.
+        private Double angle;		//current angler of movement
+        private double dAngle;		//the change of angle per frame.
+        private String direction;    //change of angle
+        private boolean isDead = false;
+        private boolean remember = true;
+        private boolean ready;
+        private boolean edgeJumper;
+        private boolean coarseTurner;
 
     public Player(Token token) {
         this.setToken(token);
