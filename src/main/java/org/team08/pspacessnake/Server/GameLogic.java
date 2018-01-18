@@ -180,15 +180,15 @@ public class GameLogic {
                 break;
             case "Slow":
                 player.setSpeed(player.getSpeed() / 2);
-                execute.schedule(() -> player.setSpeed(player.getSpeed() * 2), 4, TimeUnit.SECONDS);
+                execute.schedule(() -> player.setSpeed(player.getSpeed() * 2), 6, TimeUnit.SECONDS);
                 break;
             case "Big":
                 player.getPosition().setRadius(player.getPosition().getRadius() * 2);
-                execute.schedule(() -> player.getPosition().setRadius(player.getPosition().getRadius() / 2), 4, TimeUnit.SECONDS);
+                execute.schedule(() -> player.getPosition().setRadius(player.getPosition().getRadius() / 2), 6, TimeUnit.SECONDS);
                 break;
             case "Small":
                 player.getPosition().setRadius(player.getPosition().getRadius() / 2);
-                execute.schedule(() -> player.getPosition().setRadius(player.getPosition().getRadius() * 2), 4, TimeUnit.SECONDS);
+                execute.schedule(() -> player.getPosition().setRadius(player.getPosition().getRadius() * 2), 6, TimeUnit.SECONDS);
                 break;
             case "Angle":
                 player.setCoarseStartAngle(Player.reduceAngleToPrimaryInterval(player.getAngle()));
@@ -196,7 +196,7 @@ public class GameLogic {
                 execute.schedule(() -> {
                     player.setCoarseTurner(false);
                     player.setAngle(player.coarseAngle(player.getAngle()));
-                }, 4, TimeUnit.SECONDS);
+                }, 8, TimeUnit.SECONDS);
                 break;
             case "Edge":
                 player.setEdgeJumper(true);
