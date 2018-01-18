@@ -206,6 +206,11 @@ public class GameLogic {
                 break;
             case "Clear":
                 player.getPosition().setPowerUps(power);
+                initiateCellLists();
+                for (Player thisPlayer : players) {
+                	thisPlayer.getPointBuffer().clear();
+                }
+                break;
         }
 
     }
