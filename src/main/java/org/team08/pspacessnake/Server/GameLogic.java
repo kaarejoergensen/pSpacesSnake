@@ -60,7 +60,6 @@ public class GameLogic {
         Point newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5), ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), 10d);
         while (checkCollision(newPoint)) {
         	newPoint = new Point(ThreadLocalRandom.current().nextInt(5, gameSettings.getWidth() - 5), ThreadLocalRandom.current().nextInt(5, gameSettings.getHeight() - 5), 10d);
-        	
         }
         newPowerup.setPosition(newPoint);
         powerups.add(newPowerup);
@@ -200,8 +199,12 @@ public class GameLogic {
                 break;
             case "Edge":
                 player.setEdgeJumper(true);
+                int playerColor = player.getPosition().getColor();
+                player.getPosition().setColor(6);
                 execute.schedule(() -> {
                     player.setEdgeJumper(false);
+                    player.getPosition().setColor(playerColor);
+                    
                 }, 8, TimeUnit.SECONDS);
                 break;
             case "Clear":

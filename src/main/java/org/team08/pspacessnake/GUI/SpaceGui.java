@@ -47,7 +47,7 @@ public class SpaceGui {
     private ObservableList<String> messages;
     private ObservableList<String> roomNames;
     private boolean roomEntered = false;
-    private Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE, Color.YELLOW, Color.SADDLEBROWN};
+    private Color[] colorList = {Color.RED, Color.BLUE, Color.GREEN, Color.WHITE, Color.YELLOW, Color.SADDLEBROWN, Color.GRAY};
 
     @FXML
     private VBox enterNameLayout;
